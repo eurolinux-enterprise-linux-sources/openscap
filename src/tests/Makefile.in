@@ -178,8 +178,8 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = API bz2 codestyle CPE DS sources schemas oscap_string \
-	oval_details probes mitre sce bindings
+DIST_SUBDIRS = API bz2 codestyle CPE DS sources schemas nist \
+	oscap_string oval_details probes mitre sce bindings
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/test_common.sh.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 am__relativize = \
@@ -953,6 +953,7 @@ SUBDIRS = \
 	DS \
 	sources \
 	schemas \
+	nist \
 	oscap_string \
 	oval_details \
 	$(PROBE_SUBDIRS) $(SCE_SUBDIRS) $(BINDINGS_SUBDIRS)

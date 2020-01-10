@@ -1206,6 +1206,8 @@ EXTRA_DIST = $(top_srcdir)/tests/assume.h all.sh \
 	test_remediation_cdata.sh test_remediation_cdata.xccdf.xml \
 	test_remediation_fix_without_system.sh \
 	test_remediation_fix_without_system.xccdf.xml \
+	test_remediation_invalid_characters.sh \
+	test_remediation_invalid_characters.xccdf.xml \
 	test_remediation_simple.oval.xml test_remediation_simple.sh \
 	test_remediation_simple.xccdf.xml \
 	test_remediation_subs_plain_text.sh \
@@ -1287,6 +1289,7 @@ EXTRA_DIST = $(top_srcdir)/tests/assume.h all.sh \
 	test_xccdf_selectors_cluster3.sh \
 	test_xccdf_selectors_cluster3.xccdf.xml \
 	test_xccdf_sub_title.sh test_xccdf_sub_title.xccdf.xml \
+	test_xccdf_test_system.sh test_xccdf_test_system.xccdf.xml \
 	test_xccdf_xml_escaping_value.sh \
 	test_xccdf_xml_escaping_value.xccdf.xml oval \
 	oval_without_definitions.oval.xml unit_helper.c unit_helper.h

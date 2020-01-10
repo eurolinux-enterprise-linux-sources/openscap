@@ -59,8 +59,8 @@ static const struct oscap_string_map OSCAP_VERBOSITY_LEVELS[] = {
 #   include <pthread.h>
 static pthread_mutex_t __debuglog_mutex = PTHREAD_MUTEX_INITIALIZER;
 #  endif
-static FILE *__debuglog_fp = NULL;
-static oscap_verbosity_levels __debuglog_level = DBG_UNKNOWN;
+FILE *__debuglog_fp = NULL;
+oscap_verbosity_levels __debuglog_level = DBG_UNKNOWN;
 
 #if defined(OSCAP_THREAD_SAFE)
 # define __LOCK_FP    do { if (pthread_mutex_lock   (&__debuglog_mutex) != 0) abort(); } while(0)
@@ -84,18 +84,24 @@ oscap_verbosity_levels oscap_verbosity_level_from_cstr(const char *level_name)
 
 bool oscap_set_verbose(const char *verbosity_level, const char *filename, bool is_probe)
 {
-	if (verbosity_level == NULL || filename == NULL) {
+	if (verbosity_level == NULL) {
 		return true;
 	}
 	__debuglog_level = oscap_verbosity_level_from_cstr(verbosity_level);
 	if (__debuglog_level == DBG_UNKNOWN) {
 		return false;
 	}
+	if (!is_probe) {
+		setenv("OSCAP_PROBE_VERBOSITY_LEVEL", verbosity_level, 1);
+	}
+	if (filename == NULL) {
+		__debuglog_fp = stderr;
+		return true;
+	}
 	int fd;
 	if (is_probe) {
 		fd = open(filename, O_APPEND | O_WRONLY);
 	} else {
-		setenv("OSCAP_PROBE_VERBOSITY_LEVEL", verbosity_level, 1);
 		setenv("OSCAP_PROBE_VERBOSE_LOG_FILE", filename, 1);
 		/* Open a file. If the file doesn't exist, create it.
 		 * If the file exists, erase its content.
@@ -133,7 +139,7 @@ static const char *__oscap_path_rstrip(const char *path)
 }
 
 
-static void debug_message_start(int level)
+static void debug_message_start(int level, int indent)
 {
 	char  l;
 
@@ -164,6 +170,9 @@ static void debug_message_start(int level)
 		l = '0';
 	}
 	fprintf(__debuglog_fp, "%c: %s: ", l, program_invocation_short_name);
+	for (int i = 0; i < indent; i++) {
+		fprintf(__debuglog_fp, "  ");
+	}
 }
 
 static void debug_message_devel_metadata(const char *file, const char *fn, size_t line)
@@ -172,7 +181,11 @@ static void debug_message_devel_metadata(const char *file, const char *fn, size_
 #if defined(OSCAP_THREAD_SAFE)
 	char thread_name[THREAD_NAME_LEN];
 	pthread_t thread = pthread_self();
+#if defined(HAVE_PTHREAD_GETNAME_NP)
 	pthread_getname_np(thread, thread_name, THREAD_NAME_LEN);
+#else
+	snprintf(thread_name, THREAD_NAME_LEN, "unknown");
+#endif
 	/* XXX: non-portable usage of pthread_t */
 	fprintf(__debuglog_fp, " [%s(%ld):%s(%llx):%s:%zu:%s]",
 		program_invocation_short_name, (long) getpid(), thread_name,
@@ -199,18 +212,23 @@ static void debug_message_end()
 	return;
 }
 
-void __oscap_dlprintf(int level, const char *file, const char *fn, size_t line, const char *fmt, ...)
+void __oscap_dlprintf(int level, const char *file, const char *fn, size_t line, int delta_indent, const char *fmt, ...)
 {
+	static int indent = 0;
 	va_list ap;
 
 	if (__debuglog_fp == NULL) {
+		return;
+	}
+	indent += delta_indent;
+	if (fmt == NULL) {
 		return;
 	}
 	if (__debuglog_level < level) {
 		return;
 	}
 	va_start(ap, fmt);
-	debug_message_start(level);
+	debug_message_start(level, indent);
 	vfprintf(__debuglog_fp, fmt, ap);
 	if (__debuglog_level == DBG_D) {
 		debug_message_devel_metadata(file, fn, line);
@@ -227,7 +245,7 @@ void __oscap_debuglog_object (const char *file, const char *fn, size_t line, int
 	if (__debuglog_level < DBG_D) {
 		return;
 	}
-	debug_message_start(DBG_D);
+	debug_message_start(DBG_D, 0);
 	switch (objtype) {
 	case OSCAP_DEBUGOBJ_SEXP:
 		SEXP_fprintfa(__debuglog_fp, (SEXP_t *)obj);
@@ -238,4 +256,3 @@ void __oscap_debuglog_object (const char *file, const char *fn, size_t line, int
 	debug_message_devel_metadata(file, fn, line);
 	debug_message_end();
 }
-

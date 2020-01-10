@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['xccdf_5ffile',['xccdf_file',['../structxccdf__session.html#aa2b3c6ac18ef983d8cd89090ac59474f',1,'xccdf_session']]],
-  ['xsi_5fnil',['xsi_nil',['../structoval__entity.html#aa0fd64befc66d939b0336938210ccbb3',1,'oval_entity']]]
+  ['without_5fsys_5fchars',['without_sys_chars',['../structxccdf__session.html#a031595db2db32b97c2d31c526145d912',1,'xccdf_session']]]
 ];

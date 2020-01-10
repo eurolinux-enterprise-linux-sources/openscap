@@ -235,9 +235,6 @@
 /* Define to 1 if you have the `ldap_init' function. */
 #undef HAVE_LDAP_INIT
 
-/* Define to 1 if you have the <libdlpi.h> header file. */
-#undef HAVE_LIBDLPI_H
-
 /* Define to 1 if you have the <libxml/parser.h> header file. */
 #undef HAVE_LIBXML_PARSER_H
 
@@ -303,9 +300,6 @@
 /* Define to 1 if you have the <net/if.h> header file. */
 #undef HAVE_NET_IF_H
 
-/* Define to 1 if you have the <net/if_types.h> header file. */
-#undef HAVE_NET_IF_TYPES_H
-
 /* Define to 1 if you have the <net/route.h> header file. */
 #undef HAVE_NET_ROUTE_H
 
@@ -324,9 +318,6 @@
 /* Define to 1 if you have the `pcre_exec' function. */
 #undef HAVE_PCRE_EXEC
 
-/* Define to 1 if you have the <pcre.h> header file. */
-#undef HAVE_PCRE_H
-
 /* Define to 1 if you have the `pkgVersion' function. */
 #undef HAVE_PKGVERSION
 
@@ -339,8 +330,14 @@
 /* Define to 1 if you have the <proc/devname.h> header file. */
 #undef HAVE_PROC_DEVNAME_H
 
+/* Define to 1 if you have the `pthread_getname_np' function. */
+#undef HAVE_PTHREAD_GETNAME_NP
+
 /* Define to 1 if you have the <pthread.h> header file. */
 #undef HAVE_PTHREAD_H
+
+/* Define to 1 if you have the `pthread_setname_np' function. */
+#undef HAVE_PTHREAD_SETNAME_NP
 
 /* Define to 1 if you have the `pthread_timedjoin_np' function. */
 #undef HAVE_PTHREAD_TIMEDJOIN_NP
@@ -803,8 +800,11 @@
 /* Define if the 'realloc' function is POSIX compliant. */
 #undef HAVE_REALLOC_POSIX
 
-/* Define to 1 if you have the <regex.h> header file. */
-#undef HAVE_REGEX_H
+/* Define to 1 if rpm is newer than 4.6. */
+#undef HAVE_RPM46
+
+/* Define to 1 if rpm is newer than 4.7. */
+#undef HAVE_RPM47
 
 /* Define to 1 if you have the `rpmFreeCrypto' function. */
 #undef HAVE_RPMFREECRYPTO
@@ -931,9 +931,6 @@
 
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #undef HAVE_SYS_SOCKET_H
-
-/* Define to 1 if you have the <sys/sockio.h> header file. */
-#undef HAVE_SYS_SOCKIO_H
 
 /* Define to 1 if you have the <sys/statvfs.h> header file. */
 #undef HAVE_SYS_STATVFS_H

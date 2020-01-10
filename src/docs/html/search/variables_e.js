@@ -8,5 +8,6 @@ var searchData=
   ['result',['result',['../structxccdf__session.html#a7f73ad6515f43639f782f730033d0dae',1,'xccdf_session']]],
   ['result_5fsource',['result_source',['../structxccdf__session.html#a4f57c16bf89f9f9aa0785d2d1ea25626',1,'xccdf_session']]],
   ['result_5fsources',['result_sources',['../structxccdf__session.html#a82ac7a9e75d9c55402a355a561a1f026',1,'xccdf_session']]],
-  ['results',['results',['../structxccdf__policy.html#a0fb9cc7a5d3e90013bcb311d50f892f7',1,'xccdf_policy']]]
+  ['results',['results',['../structxccdf__policy.html#a0fb9cc7a5d3e90013bcb311d50f892f7',1,'xccdf_policy']]],
+  ['results_5fmapping',['results_mapping',['../structxccdf__session.html#aad55c50a6bbcf19e24eedd4e9c5d9904',1,'xccdf_session']]]
 ];

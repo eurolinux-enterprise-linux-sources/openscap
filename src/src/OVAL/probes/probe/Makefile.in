@@ -128,11 +128,13 @@ LTLIBRARIES = $(noinst_LTLIBRARIES)
 libprobe_la_DEPENDENCIES = $(top_builddir)/src/libopenscap.la \
 	$(top_builddir)/src/common/liboscapcommon.la \
 	$(top_builddir)/src/OVAL/results/libovalcmp.la
-am_libprobe_la_OBJECTS = libprobe_la-fini.lo libprobe_la-init.lo \
-	libprobe_la-main.lo libprobe_la-input_handler.lo \
-	libprobe_la-worker.lo libprobe_la-signal_handler.lo \
-	libprobe_la-probe.lo libprobe_la-entcmp.lo \
-	libprobe_la-icache.lo libprobe_la-option.lo
+am_libprobe_la_OBJECTS = libprobe_la-fini.lo \
+	libprobe_la-offline_mode.lo libprobe_la-preload.lo \
+	libprobe_la-init.lo libprobe_la-main.lo \
+	libprobe_la-input_handler.lo libprobe_la-worker.lo \
+	libprobe_la-signal_handler.lo libprobe_la-probe.lo \
+	libprobe_la-entcmp.lo libprobe_la-icache.lo \
+	libprobe_la-option.lo
 libprobe_la_OBJECTS = $(am_libprobe_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -952,7 +954,10 @@ libprobe_la_CFLAGS = @pthread_CFLAGS@				\
 			-DTHREAD_SAFE					\
 			-DSEAP_THREAD_SAFE
 
-libprobe_la_SOURCES = fini.c			\
+libprobe_la_SOURCES = \
+			fini.c		\
+			offline_mode.c		\
+			preload.c		\
 			init.c			\
 			main.c			\
 			input_handler.c		\
@@ -1036,7 +1041,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-init.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-input_handler.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-main.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-offline_mode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-option.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-preload.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-probe.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-signal_handler.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libprobe_la-worker.Plo@am__quote@
@@ -1068,6 +1075,20 @@ libprobe_la-fini.lo: fini.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='fini.c' object='libprobe_la-fini.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libprobe_la_CFLAGS) $(CFLAGS) -c -o libprobe_la-fini.lo `test -f 'fini.c' || echo '$(srcdir)/'`fini.c
+
+libprobe_la-offline_mode.lo: offline_mode.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libprobe_la_CFLAGS) $(CFLAGS) -MT libprobe_la-offline_mode.lo -MD -MP -MF $(DEPDIR)/libprobe_la-offline_mode.Tpo -c -o libprobe_la-offline_mode.lo `test -f 'offline_mode.c' || echo '$(srcdir)/'`offline_mode.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libprobe_la-offline_mode.Tpo $(DEPDIR)/libprobe_la-offline_mode.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='offline_mode.c' object='libprobe_la-offline_mode.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libprobe_la_CFLAGS) $(CFLAGS) -c -o libprobe_la-offline_mode.lo `test -f 'offline_mode.c' || echo '$(srcdir)/'`offline_mode.c
+
+libprobe_la-preload.lo: preload.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libprobe_la_CFLAGS) $(CFLAGS) -MT libprobe_la-preload.lo -MD -MP -MF $(DEPDIR)/libprobe_la-preload.Tpo -c -o libprobe_la-preload.lo `test -f 'preload.c' || echo '$(srcdir)/'`preload.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libprobe_la-preload.Tpo $(DEPDIR)/libprobe_la-preload.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='preload.c' object='libprobe_la-preload.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libprobe_la_CFLAGS) $(CFLAGS) -c -o libprobe_la-preload.lo `test -f 'preload.c' || echo '$(srcdir)/'`preload.c
 
 libprobe_la-init.lo: init.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libprobe_la_CFLAGS) $(CFLAGS) -MT libprobe_la-init.lo -MD -MP -MF $(DEPDIR)/libprobe_la-init.Tpo -c -o libprobe_la-init.lo `test -f 'init.c' || echo '$(srcdir)/'`init.c

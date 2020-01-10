@@ -1086,7 +1086,8 @@ xml2_LIBS = @xml2_LIBS@
 xslt_CFLAGS = @xslt_CFLAGS@
 xslt_LIBS = @xslt_LIBS@
 EXTRA_DIST = $(top_srcdir)/tests/test_common.sh all.sh \
-	test_sysctl_probe.sh test_sysctl_probe.oval.xml
+	test_sysctl_probe.sh test_sysctl_probe.oval.xml \
+	test_sysctl_probe_all.sh test_sysctl_probe_all.oval.xml
 DISTCLEANFILES = \
 	*.log \
 	oscap_debug.log.* \
@@ -1099,7 +1100,10 @@ TESTS_ENVIRONMENT = \
 		$(top_builddir)/run
 
 @WANT_PROBES_UNIX_TRUE@@probe_sysctl_enabled_TRUE@TESTS = all.sh
-check_SCRIPTS = test_sysctl_probe.sh
+check_SCRIPTS = \
+	test_sysctl_probe.sh \
+	test_sysctl_probe_all.sh
+
 all: all-am
 
 .SUFFIXES:

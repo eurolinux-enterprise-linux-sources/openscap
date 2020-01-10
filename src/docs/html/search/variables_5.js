@@ -1,7 +1,7 @@
 var searchData=
 [
   ['fd',['fd',['../union__DBusBasicValue.html#aa1e1ce96015c76757aa987137be9d8f3',1,'_DBusBasicValue::fd()'],['../structxiconf__file__t.html#a9c42502b1e7b167c13861f42fce8450a',1,'xiconf_file_t::fd()']]],
-  ['fetch_5fremote_5fresources',['fetch_remote_resources',['../structxccdf__session.html#a5f71e92a5227f631d87e207abcb6af58',1,'xccdf_session']]],
+  ['fetch_5fremote_5fresources',['fetch_remote_resources',['../structds__sds__session.html#afc11daa8ab38fb1fe34a04ede8ad454c',1,'ds_sds_session::fetch_remote_resources()'],['../structxccdf__session.html#a5f71e92a5227f631d87e207abcb6af58',1,'xccdf_session::fetch_remote_resources()']]],
   ['fflags',['fflags',['../structrpmverify__res.html#af1c15d5fcf630c7f0094750a529ae019',1,'rpmverify_res']]],
   ['file',['file',['../structrpmverify__res.html#ae896f48a90beeda74761663876509b26',1,'rpmverify_res::file()'],['../structrpmverify__res.html#ab72cace3e2675fd1fc132a86da5d04a2',1,'rpmverify_res::file()']]],
   ['filename',['filename',['../structxccdf__session.html#a7fb8757e67ec7858887e64a91e2895ba',1,'xccdf_session']]],

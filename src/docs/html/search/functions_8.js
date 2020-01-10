@@ -9,6 +9,7 @@ var searchData=
   ['sce_5fcheck_5fresult_5fset_5fbasename',['sce_check_result_set_basename',['../structsce__check__result.html#ad706ee9cad5195e87a9304ca3a21145d',1,'sce_check_result']]],
   ['sce_5fcheck_5fresult_5fset_5fexit_5fcode',['sce_check_result_set_exit_code',['../structsce__check__result.html#a92496bb53bf6de30b7f5daac054bea46',1,'sce_check_result']]],
   ['sce_5fcheck_5fresult_5fset_5fhref',['sce_check_result_set_href',['../structsce__check__result.html#ad0f2c197d7871a868996d5b336b5a31c',1,'sce_check_result']]],
+  ['sce_5fcheck_5fresult_5fset_5fstderr',['sce_check_result_set_stderr',['../structsce__check__result.html#abf35cb34a639046282fbb5a099ae0342',1,'sce_check_result']]],
   ['sce_5fcheck_5fresult_5fset_5fstdout',['sce_check_result_set_stdout',['../structsce__check__result.html#ad2ced7f2fcb4771181591fe61380468a',1,'sce_check_result']]],
   ['sce_5fcheck_5fresult_5fset_5fxccdf_5fresult',['sce_check_result_set_xccdf_result',['../structsce__check__result.html#a9dacd04a46932e19506a664ab0352301',1,'sce_check_result']]],
   ['sce_5fengine_5feval_5frule',['sce_engine_eval_rule',['../sce__engine_8c.html#a7eaa38ae1537cb73c92e1c8536918718',1,'sce_engine.c']]],

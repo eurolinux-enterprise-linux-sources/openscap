@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.3">
-<meta name="author" content="Michal Šrubař">
+<meta name="generator" content="Asciidoctor 1.5.4">
 <title>OpenSCAP User Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -421,12 +420,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <body class="article">
 <div id="header">
 <h1>OpenSCAP User Manual</h1>
-<div class="details">
-<span id="author" class="author">Michal Šrubař</span><br>
-<span id="email" class="email"><a href="mailto:msrubar@redhat.com">msrubar@redhat.com</a></span><br>
-<span id="revnumber">version 1.0,</span>
-<span id="revdate">2015-31-08</span>
-</div>
 </div>
 <div id="content">
 <div id="preamble">
@@ -470,6 +463,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_how_to_evaluate_united_states_government_configuration_baseline_usgcb">4.5. How to Evaluate United States Government Configuration Baseline (USGCB)</a></li>
 <li><a href="#_how_to_evaluate_third_party_guidances">4.6. How to Evaluate Third-Party Guidances</a></li>
 <li><a href="#_how_to_evaluate_guidances_for_red_hat_enterprise_linux_6">4.7. How to evaluate guidances for Red Hat Enterprise Linux 6</a></li>
+<li><a href="#_how_to_check_that_patches_are_up_to_date_on_red_hat_enterprise_linux_6">4.8. How to check that patches are up-to-date on Red Hat Enterprise Linux 6</a></li>
+<li><a href="#_how_to_tailor_source_data_stream">4.9. How to tailor Source data stream</a></li>
+<li><a href="#_evaluation_of_content">4.10. Evaluation of content</a></li>
 </ul>
 </li>
 <li><a href="#devs">5. Developer&#8217;s operations</a>
@@ -478,8 +474,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_debugging">5.2. Debugging</a></li>
 <li><a href="#_scanning_with_script_check_engine_sce">5.3. Scanning with Script Check Engine (SCE)</a></li>
 <li><a href="#_building_openscap_on_windows">5.4. Building OpenSCAP on Windows</a></li>
-<li><a href="#_building_openscap_for_windows_cross_compilation">5.5. Building OpenSCAP for Windows (cross-compilation)</a></li>
-<li><a href="#_openscap_reference_manual">5.6. OpenSCAP Reference Manual</a></li>
+<li><a href="#_generating_of_code_coverage">5.5. Generating of code coverage</a></li>
+<li><a href="#_building_openscap_for_windows_cross_compilation">5.6. Building OpenSCAP for Windows (cross-compilation)</a></li>
+<li><a href="#_openscap_reference_manual">5.7. OpenSCAP Reference Manual</a></li>
 </ul>
 </li>
 </ul>
@@ -507,7 +504,7 @@ SCAP please refer to <a href="http://open-scap.org/features/standards/">SCAP Sta
 <div class="paragraph">
 <p>The <code><code>oscap</code></code> tool is a part of the <a href="https://open-scap.org/">OpenSCAP</a> project.  If you&#8217;re
 interested in a graphical alternative to this tool please visit
-<a href="https://fedorahosted.org/scap-workbench/">SCAP Workbench</a> page.</p>
+<a href="https://www.open-scap.org/tools/scap-workbench/">SCAP Workbench</a> page.</p>
 </div>
 <div class="paragraph">
 <p>We will use the <em>scap-security-guide</em> <a href="http://open-scap.org/security-policies/scap-security-guide/">SSG</a> project to provide us the SCAP
@@ -766,6 +763,19 @@ Definition file, <strong>usgcb-rhel5desktop-oval.xml-0.variables-0.xml</strong> 
 file containing exported variables from the XCCDF file, and
 <strong>usgcb-results-oval.xml</strong> is the the OVAL Result file.</p>
 </div>
+<div class="paragraph">
+<p>An OVAL directives file can be used to control whether results should be "thin" or "full".
+This file can be loaded by OpenSCAP using <strong>--directives &lt;file&gt;</strong> option.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oscap oval eval --directives directives.xml --datastream-id ds.xml --oval-id xccdf.xml --results oval-results.xml scap-ds.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OVAL results file contains, by default, exported system characteristics.
+OpenSCAP provides <strong>--without-syschar</strong> option to change this behavior.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_xccdf">2.3.2. XCCDF</h4>
@@ -999,11 +1009,11 @@ unless <strong>--oval-results</strong> is used.</p>
 </div>
 <div class="paragraph">
 <p>Some content may use alternative check engines, for example the
-<a href="/page/SCE">SCE</a> check engine.</p>
+<a href="https://www.open-scap.org/features/other-standards/sce/">SCE</a> check engine.</p>
 </div>
 <div class="paragraph">
 <p>Results of rules with a check that requires a check engine not supported
-by openscap will be reported as <strong>notchecked</strong>. Check contents are not
+by OpenSCAP will be reported as <strong>notchecked</strong>. Check contents are not
 read or interpreted in any way unless the check system is known and
 supported. Following is an evaluation output of an XCCDF with unknown
 check system:</p>
@@ -1077,14 +1087,27 @@ displayed, only the identifiers themselves are displayed there.</p>
 <div class="paragraph">
 <p>Identifiers are also part of the HTML report output. If the identifier
 is a CVE you can click it to display its metadata from the official NVD
-database (requires internet connection). openscap doesn&#8217;t provide
+database (requires internet connection). OpenSCAP doesn&#8217;t provide
 metadata for other types of identifiers.</p>
+</div>
+<div class="paragraph">
+<p>Another place where these identifiers can be found are machine-readable Result Datastream files.
+This file can be generated during the scan by adding <strong>--results-arf</strong> option.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --fetch-remote-resources --results-arf results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Result data stream file <strong>results.xml</strong> contains these identifiers in &lt;rule-result&gt;
+elements.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_bundled_cce_data">2.5.2. Bundled CCE data</h4>
 <div class="paragraph">
-<p>openscap does not provide any static or product bundled CCE data. Thus
+<p>OpenSCAP does not provide any static or product bundled CCE data. Thus
 it has no way of displaying the last generated, updated and officially
 published dates of static or product bundled CCE data because the dates
 are not defined.</p>
@@ -1294,7 +1317,7 @@ can be either <code><code>report</code></code>, <code><code>guide</code></code>,
 <div class="paragraph">
 <p>The oscap tool is also capable of using the <a href="http://www.w3.org/TR/xslt">XSLT</a> (Extensible Stylesheet
 Language Transformations) language, which allows transformation of a SCAP
-content XML file into another XML, HTML, plain text or <a href="http://www.w3.org/Style/XSL/">XLS</a> document.
+content XML file into another XML, HTML, plain text or <a href="http://www.w3.org/Style/XSL/">XSL</a> document.
 This feature is very useful when you need the SCAP document in a
 human-readable form. The following commands represent the most common
 cases:</p>
@@ -2098,6 +2121,144 @@ sector.</p>
 <a href="https://github.com/OpenSCAP/scap-security-guide" class="bare">https://github.com/OpenSCAP/scap-security-guide</a></p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_how_to_check_that_patches_are_up_to_date_on_red_hat_enterprise_linux_6">4.8. How to check that patches are up-to-date on Red Hat Enterprise Linux 6</h3>
+<div class="paragraph">
+<p>This section describes how to check that software patches are up-to-date using
+external OVAL content.</p>
+</div>
+<div class="paragraph">
+<p>1) Install the SSG</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ sudo yum install -y scap-security-guide</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2) Evaluate common profile</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --fetch-remote-resources --results-arf results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command evaluates common profile for Red Hat Enterprise Linux 6. Part of
+the profile is a rule to check that patches are up-to-date. To evaluate the rule
+correctly, oscap tool needs to download an up-to-date OVAL file from Red Hat servers. This can be
+allowed using <strong>--fetch-remote-resources</strong> option. Result of this scan will be saved
+in <strong>results.xml</strong> using ARF format.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_to_tailor_source_data_stream">4.9. How to tailor Source data stream</h3>
+<div class="paragraph">
+<p>This section describes tailoring of content using Tailoring file. This allows
+you to change behavior of content without its direct modification.</p>
+</div>
+<div class="paragraph">
+<p>1) Obtain tailoring file</p>
+</div>
+<div class="paragraph">
+<p>Tailoring file can be easily generated using <a href="https://www.open-scap.org/tools/scap-workbench/">SCAP Workbench</a>.</p>
+</div>
+<div class="paragraph">
+<p>2) List profiles of tailoring file</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap info</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Document type: XCCDF Tailoring
+Imported: 2016-08-31T11:08:16
+Benchmark Hint: /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml
+Profiles:
+	xccdf_org.ssgproject.content_profile_C2S_customized</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3) Evaluate</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_C2S_customized --tailoring-file ssg-rhel6-ds-tailoring.xml --results results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command above evaluates tailored data stream by <strong>ssg-rhel6-ds-tailoring.xml</strong> tailoring file.
+XCCDF results can be found in <strong>results.xml</strong> file.</p>
+</div>
+<div class="paragraph">
+<p>Instead of external tailoring file, you can also use tailoring component integrated to data stream.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap info simple-ds.xml</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Document type: Source Data Stream
+Imported: 2016-02-02T14:06:14
+
+Stream: scap_org.open-scap_datastream_from_xccdf_simple-xccdf.xml
+Generated: (null)
+Version: 1.2
+Checklists:
+	Ref-Id: scap_org.open-scap_cref_simple-xccdf.xml
+		Status: incomplete
+		Resolved: false
+		Profiles:
+			xccdf_org.open-scap_profile_override
+		Referenced check files:
+			simple-oval.xml
+				system: http://oval.mitre.org/XMLSchema/oval-definitions-5
+	Ref-Id: scap_org.open-scap_cref_simple-tailoring.xml
+		Benchmark Hint: (null)
+		Profiles:
+			xccdf_org.open-scap_profile_default
+			xccdf_org.open-scap_profile_unselecting
+			xccdf_org.open-scap_profile_override
+Checks:
+	Ref-Id: scap_org.open-scap_cref_simple-oval.xml
+No dictionaries.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To choose tailoring component "scap_org.open-scap_cref_simple-tailoring.xml", the command below can be used.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap xccdf eval --tailoring-id scap_org.open-scap_cref_simple-tailoring.xml --profile xccdf_org.open-scap_profile_default --results results.xml simple-ds.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command above evaluates content using tailoring component <strong>scap_org.open-scap_cref_simple-tailoring.xml</strong> from source data stream.
+Scan results are stored in <strong>results.xml</strong> file.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_evaluation_of_content">4.10. Evaluation of content</h3>
+<div class="paragraph">
+<p>Specified XCCDF or data stream content can contain zero or more profiles.</p>
+</div>
+<div class="paragraph">
+<p>Scan can be evaluated without specific profile, otherwise profile can be selected using
+<strong>--profile</strong> option.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ oscap xccdf eval --results results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command above evaluates rules without specific profile. XCCDF results are stored in <strong>results.xml</strong> file.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2220,24 +2381,6 @@ installed on your system:</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>If you want to create a package for Fedora or Red Hat Enterprise Linux
-distribution, you will need the respective spec files. These spec files are
-available under the following directories:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>dist/fedora</p>
-</li>
-<li>
-<p>dist/rhel5</p>
-</li>
-<li>
-<p>dist/rhel6</p>
-</li>
-</ul>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_debugging">5.2. Debugging</h3>
@@ -2257,17 +2400,13 @@ There is no need to special compilation, the feature is available for all
 OpenSCAP users.</p>
 </div>
 <div class="paragraph">
-<p>To turn the verbose mode on, run <code><code>oscap</code></code> with both those two options:</p>
+<p>To turn the verbose mode on, run <code><code>oscap</code></code> with this option:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><code><code>--verbose VERBOSITY_LEVEL</code></code> - Turn on verbose mode at specified
 verbosity level.</p>
-</li>
-<li>
-<p><code><code>--verbose-log-file FILE</code></code> - Provide name of a log file that the log
-will be written into.</p>
 </li>
 </ul>
 </div>
@@ -2291,8 +2430,9 @@ will be written into.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>If you omit one of those two options, verbose mode can&#8217;t be turned on
-and you will get an error message.</p>
+<p>The verbose messages will be written on standard error output (stderr).
+Optionally, you can write the log into a file using
+ <code><code>--verbose-log-file FILE</code></code>.</p>
 </div>
 <div class="paragraph">
 <p>This is an example describing how to run OpenSCAP in verbose mode:</p>
@@ -2309,11 +2449,6 @@ and you will get an error message.</p>
 <div class="content">
 <pre>$ less log.txt</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Each message contains identifier and name of the process and thread which produced
-the message, then its verbosity level, and also source file, line and function
-describing specific place of its origin.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2350,7 +2485,7 @@ are evaluated.</p>
  <code><code>oscap</code></code> tool. The testing library allows you to specify custom path to
 probes via <strong>OVAL_PROBE_DIR</strong> environment variable. The easiest way how to
 achieve that without need to install libopenscap, is to use shell
-script called <strong>run</strong> in the openscap directory.</p>
+script called <strong>run</strong> in the OpenSCAP directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2448,7 +2583,7 @@ behaviour.</p>
 evaluation.  SCE allows you to call shell scripts out of the XCCDF document.
 This approach might be suitable for various use cases, mostly when OVAL checks
 are not required. More information about SCE usage is available on this page:
-<a href="http://open-scap.org/page/SCE">Using SCE</a>.</p>
+<a href="https://www.open-scap.org/features/other-standards/sce/">Using SCE</a>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2491,10 +2626,10 @@ OpenSCAP on Windows using Cygwin:</p>
 </div>
 </li>
 <li>
-<p>Checkout the portable branch of OpenSCAP:</p>
+<p>Checkout the master branch of OpenSCAP:</p>
 <div class="literalblock">
 <div class="content">
-<pre>$ git clone -b portable git://git.fedorahosted.org/git/openscap.git</pre>
+<pre>$ git clone -b master https://github.com/OpenSCAP/openscap.git</pre>
 </div>
 </div>
 </li>
@@ -2556,7 +2691,68 @@ working directory or in PATH variable directories.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_building_openscap_for_windows_cross_compilation">5.5. Building OpenSCAP for Windows (cross-compilation)</h3>
+<h3 id="_generating_of_code_coverage">5.5. Generating of code coverage</h3>
+<div class="paragraph">
+<p>Code coverage can be usefull during writing of test or performance profiling.
+We could separate the process into five phases.</p>
+</div>
+<div class="paragraph">
+<p>1) <strong>Get dependencies</strong></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre># dnf install lcov</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2) <strong>Run configure &amp; make</strong></p>
+</div>
+<div class="paragraph">
+<p>To allow code to generate statistics, we need to compile it with specific flags.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ ./configure CFLAGS="--coverage" LDFLAGS=-lgcov --enable-debug
+$ make</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3) <strong>Run code.</strong></p>
+</div>
+<div class="paragraph">
+<p>In this phase we should run code. We can run it directly or via test suite.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ ./run ./utils/.libs/oscap</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>4) <strong>Generate and browse results</strong></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ lcov -t "OpenSCAP coverage" -o ./coverage.info -c -d .
+$ genhtml -o ./coverage ./coverage.info
+$ xdg-open ./coverage/index.html # open results in browser</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>5) <strong>Clean stats</strong></p>
+</div>
+<div class="paragraph">
+<p>Every run only modify our current statistics and not rewrite them completely.
+If we want to generate new statistics, we should remove the old ones.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ lcov --directory ./ --zerocounters ; find ./ -name "*.gcno" | xargs rm
+$ rm -rf ./coverage</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_building_openscap_for_windows_cross_compilation">5.6. Building OpenSCAP for Windows (cross-compilation)</h3>
 <div class="paragraph">
 <p>Building OpenSCAP for Windows without a POSIX emulation layer is currently not
 possible. However, we are close to a native port of OpenSCAP for Windows. If you
@@ -2579,7 +2775,7 @@ OpenSCAP for Windows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre> $ git clone -b portable git://git.fedorahosted.org/git/openscap.git \
+<pre> $ git clone -b master https://github.com/OpenSCAP/openscap.git \
  openscap-portable.git
  $ cd openscap-portable.git/</pre>
 </div>
@@ -2648,7 +2844,7 @@ project</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_openscap_reference_manual">5.6. OpenSCAP Reference Manual</h3>
+<h3 id="_openscap_reference_manual">5.7. OpenSCAP Reference Manual</h3>
 <div class="paragraph">
 <p>For more information about OpenSCAP library, you can refer to this online
 reference manual: <a href="http://static.open-scap.org/openscap-1.2/">OpenSCAP
@@ -2661,8 +2857,7 @@ regenerated from project sources by Doxygen documentation system.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0<br>
-Last updated 2016-01-18 10:18:42 CET
+Last updated 2017-01-05 13:43:20 EST
 </div>
 </div>
 </body>

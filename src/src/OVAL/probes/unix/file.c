@@ -366,6 +366,7 @@ static pthread_mutex_t __file_probe_mutex;
 
 void *probe_init (void)
 {
+	probe_setoption(PROBEOPT_OFFLINE_MODE_SUPPORTED, PROBE_OFFLINE_CHROOT);
         /*
          * Initialize true/false global reference.
          */
@@ -421,7 +422,6 @@ void *probe_init (void)
 	probe_setoption(PROBEOPT_VARREF_HANDLING, false, "path");
 	probe_setoption(PROBEOPT_VARREF_HANDLING, false, "filename");
 #endif
-		probe_setoption(PROBEOPT_OFFLINE_MODE_SUPPORTED, PROBE_OFFLINE_CHROOT);
         return (NULL);
 }
 
@@ -504,7 +504,7 @@ int probe_main (probe_ctx *ctx, void *mutex)
         cbargs.ctx     = ctx;
 	cbargs.error   = 0;
 
-	if ((ofts = oval_fts_open(path, filename, filepath, behaviors)) != NULL) {
+	if ((ofts = oval_fts_open(path, filename, filepath, behaviors, probe_ctx_getresult(ctx))) != NULL) {
 		while ((ofts_ent = oval_fts_read(ofts)) != NULL) {
 			if (file_cb(ofts_ent->path, ofts_ent->file, &cbargs) != 0) {
 				oval_ftsent_free(ofts_ent);

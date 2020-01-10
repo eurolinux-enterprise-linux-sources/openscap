@@ -400,16 +400,20 @@ am__probe_routingtable_SOURCES_DIST = unix/routingtable.c
 probe_routingtable_OBJECTS = $(am_probe_routingtable_OBJECTS)
 probe_routingtable_LDADD = $(LDADD)
 probe_routingtable_DEPENDENCIES = probe/libprobe.la
-am__probe_rpminfo_SOURCES_DIST = unix/linux/rpminfo.c
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@am_probe_rpminfo_OBJECTS = probe_rpminfo-rpminfo.$(OBJEXT)
+am__probe_rpminfo_SOURCES_DIST = unix/linux/rpminfo.c \
+	unix/linux/rpm-helper.h unix/linux/rpm-helper.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@am_probe_rpminfo_OBJECTS = probe_rpminfo-rpminfo.$(OBJEXT) \
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@	probe_rpminfo-rpm-helper.$(OBJEXT)
 probe_rpminfo_OBJECTS = $(am_probe_rpminfo_OBJECTS)
 probe_rpminfo_LDADD = $(LDADD)
 probe_rpminfo_DEPENDENCIES = probe/libprobe.la
 probe_rpminfo_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(probe_rpminfo_CFLAGS) \
 	$(CFLAGS) $(probe_rpminfo_LDFLAGS) $(LDFLAGS) -o $@
-am__probe_rpmverify_SOURCES_DIST = unix/linux/rpmverify.c
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@am_probe_rpmverify_OBJECTS = probe_rpmverify-rpmverify.$(OBJEXT)
+am__probe_rpmverify_SOURCES_DIST = unix/linux/rpmverify.c \
+	unix/linux/rpm-helper.h unix/linux/rpm-helper.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@am_probe_rpmverify_OBJECTS = probe_rpmverify-rpmverify.$(OBJEXT) \
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@	probe_rpmverify-rpm-helper.$(OBJEXT)
 probe_rpmverify_OBJECTS = $(am_probe_rpmverify_OBJECTS)
 probe_rpmverify_LDADD = $(LDADD)
 probe_rpmverify_DEPENDENCIES = probe/libprobe.la
@@ -417,8 +421,10 @@ probe_rpmverify_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(probe_rpmverify_CFLAGS) $(CFLAGS) $(probe_rpmverify_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am__probe_rpmverifyfile_SOURCES_DIST = unix/linux/rpmverifyfile.c
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@am_probe_rpmverifyfile_OBJECTS = probe_rpmverifyfile-rpmverifyfile.$(OBJEXT)
+am__probe_rpmverifyfile_SOURCES_DIST = unix/linux/rpmverifyfile.c \
+	unix/linux/rpm-helper.h unix/linux/rpm-helper.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@am_probe_rpmverifyfile_OBJECTS = probe_rpmverifyfile-rpmverifyfile.$(OBJEXT) \
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@	probe_rpmverifyfile-rpm-helper.$(OBJEXT)
 probe_rpmverifyfile_OBJECTS = $(am_probe_rpmverifyfile_OBJECTS)
 probe_rpmverifyfile_LDADD = $(LDADD)
 probe_rpmverifyfile_DEPENDENCIES = probe/libprobe.la
@@ -427,8 +433,12 @@ probe_rpmverifyfile_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(probe_rpmverifyfile_CFLAGS) $(CFLAGS) \
 	$(probe_rpmverifyfile_LDFLAGS) $(LDFLAGS) -o $@
 am__probe_rpmverifypackage_SOURCES_DIST =  \
-	unix/linux/rpmverifypackage.c
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@am_probe_rpmverifypackage_OBJECTS = probe_rpmverifypackage-rpmverifypackage.$(OBJEXT)
+	unix/linux/rpmverifypackage.c unix/linux/rpm-helper.h \
+	unix/linux/rpm-helper.c unix/linux/probe-chroot.h \
+	unix/linux/probe-chroot.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@am_probe_rpmverifypackage_OBJECTS = probe_rpmverifypackage-rpmverifypackage.$(OBJEXT) \
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@	probe_rpmverifypackage-rpm-helper.$(OBJEXT) \
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@	probe_rpmverifypackage-probe-chroot.$(OBJEXT)
 probe_rpmverifypackage_OBJECTS = $(am_probe_rpmverifypackage_OBJECTS)
 probe_rpmverifypackage_LDADD = $(LDADD)
 probe_rpmverifypackage_DEPENDENCIES = probe/libprobe.la
@@ -1567,16 +1577,16 @@ probe_system_info_SOURCES = independent/system_info.c
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_selinuxsecuritycontext_enabled_TRUE@probe_selinuxsecuritycontext_SOURCES = unix/linux/selinuxsecuritycontext.c
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_selinuxsecuritycontext_enabled_TRUE@probe_selinuxsecuritycontext_CFLAGS = @selinux_CFLAGS@
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_selinuxsecuritycontext_enabled_TRUE@probe_selinuxsecuritycontext_LDFLAGS = @selinux_LIBS@
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@probe_rpminfo_SOURCES = unix/linux/rpminfo.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@probe_rpminfo_SOURCES = unix/linux/rpminfo.c unix/linux/rpm-helper.h unix/linux/rpm-helper.c
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@probe_rpminfo_CFLAGS = @rpm_CFLAGS@
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpminfo_enabled_TRUE@probe_rpminfo_LDFLAGS = @rpm_LIBS@
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@probe_rpmverify_SOURCES = unix/linux/rpmverify.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@probe_rpmverify_SOURCES = unix/linux/rpmverify.c unix/linux/rpm-helper.h unix/linux/rpm-helper.c
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@probe_rpmverify_CFLAGS = @rpm_CFLAGS@
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverify_enabled_TRUE@probe_rpmverify_LDFLAGS = @rpm_LIBS@
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@probe_rpmverifyfile_SOURCES = unix/linux/rpmverifyfile.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@probe_rpmverifyfile_SOURCES = unix/linux/rpmverifyfile.c unix/linux/rpm-helper.h unix/linux/rpm-helper.c
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@probe_rpmverifyfile_CFLAGS = @rpm_CFLAGS@
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifyfile_enabled_TRUE@probe_rpmverifyfile_LDFLAGS = @rpm_LIBS@
-@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@probe_rpmverifypackage_SOURCES = unix/linux/rpmverifypackage.c
+@WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@probe_rpmverifypackage_SOURCES = unix/linux/rpmverifypackage.c unix/linux/rpm-helper.h unix/linux/rpm-helper.c unix/linux/probe-chroot.h unix/linux/probe-chroot.c
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@probe_rpmverifypackage_CFLAGS = @rpm_CFLAGS@
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_rpmverifypackage_enabled_TRUE@probe_rpmverifypackage_LDFLAGS = @rpm_LIBS@ -lpopt
 @WANT_PROBES_LINUX_TRUE@@WANT_PROBES_UNIX_TRUE@@probe_dpkginfo_enabled_TRUE@probe_dpkginfo_SOURCES = unix/linux/dpkginfo.c \
@@ -1887,9 +1897,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_process-process58-devname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_process58-process58-devname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_process58-process58.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpminfo-rpm-helper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpminfo-rpminfo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverify-rpm-helper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverify-rpmverify.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverifyfile-rpm-helper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverifyfile-rpmverifyfile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverifypackage-probe-chroot.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverifypackage-rpm-helper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_rpmverifypackage-rpmverifypackage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_selinuxboolean-selinuxboolean.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/probe_selinuxsecuritycontext-selinuxsecuritycontext.Po@am__quote@
@@ -2282,6 +2297,20 @@ probe_rpminfo-rpminfo.obj: unix/linux/rpminfo.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpminfo_CFLAGS) $(CFLAGS) -c -o probe_rpminfo-rpminfo.obj `if test -f 'unix/linux/rpminfo.c'; then $(CYGPATH_W) 'unix/linux/rpminfo.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpminfo.c'; fi`
 
+probe_rpminfo-rpm-helper.o: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpminfo_CFLAGS) $(CFLAGS) -MT probe_rpminfo-rpm-helper.o -MD -MP -MF $(DEPDIR)/probe_rpminfo-rpm-helper.Tpo -c -o probe_rpminfo-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpminfo-rpm-helper.Tpo $(DEPDIR)/probe_rpminfo-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpminfo-rpm-helper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpminfo_CFLAGS) $(CFLAGS) -c -o probe_rpminfo-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+
+probe_rpminfo-rpm-helper.obj: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpminfo_CFLAGS) $(CFLAGS) -MT probe_rpminfo-rpm-helper.obj -MD -MP -MF $(DEPDIR)/probe_rpminfo-rpm-helper.Tpo -c -o probe_rpminfo-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpminfo-rpm-helper.Tpo $(DEPDIR)/probe_rpminfo-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpminfo-rpm-helper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpminfo_CFLAGS) $(CFLAGS) -c -o probe_rpminfo-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+
 probe_rpmverify-rpmverify.o: unix/linux/rpmverify.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverify_CFLAGS) $(CFLAGS) -MT probe_rpmverify-rpmverify.o -MD -MP -MF $(DEPDIR)/probe_rpmverify-rpmverify.Tpo -c -o probe_rpmverify-rpmverify.o `test -f 'unix/linux/rpmverify.c' || echo '$(srcdir)/'`unix/linux/rpmverify.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverify-rpmverify.Tpo $(DEPDIR)/probe_rpmverify-rpmverify.Po
@@ -2295,6 +2324,20 @@ probe_rpmverify-rpmverify.obj: unix/linux/rpmverify.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpmverify.c' object='probe_rpmverify-rpmverify.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverify_CFLAGS) $(CFLAGS) -c -o probe_rpmverify-rpmverify.obj `if test -f 'unix/linux/rpmverify.c'; then $(CYGPATH_W) 'unix/linux/rpmverify.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpmverify.c'; fi`
+
+probe_rpmverify-rpm-helper.o: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverify_CFLAGS) $(CFLAGS) -MT probe_rpmverify-rpm-helper.o -MD -MP -MF $(DEPDIR)/probe_rpmverify-rpm-helper.Tpo -c -o probe_rpmverify-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverify-rpm-helper.Tpo $(DEPDIR)/probe_rpmverify-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpmverify-rpm-helper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverify_CFLAGS) $(CFLAGS) -c -o probe_rpmverify-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+
+probe_rpmverify-rpm-helper.obj: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverify_CFLAGS) $(CFLAGS) -MT probe_rpmverify-rpm-helper.obj -MD -MP -MF $(DEPDIR)/probe_rpmverify-rpm-helper.Tpo -c -o probe_rpmverify-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverify-rpm-helper.Tpo $(DEPDIR)/probe_rpmverify-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpmverify-rpm-helper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverify_CFLAGS) $(CFLAGS) -c -o probe_rpmverify-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
 
 probe_rpmverifyfile-rpmverifyfile.o: unix/linux/rpmverifyfile.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifyfile_CFLAGS) $(CFLAGS) -MT probe_rpmverifyfile-rpmverifyfile.o -MD -MP -MF $(DEPDIR)/probe_rpmverifyfile-rpmverifyfile.Tpo -c -o probe_rpmverifyfile-rpmverifyfile.o `test -f 'unix/linux/rpmverifyfile.c' || echo '$(srcdir)/'`unix/linux/rpmverifyfile.c
@@ -2310,6 +2353,20 @@ probe_rpmverifyfile-rpmverifyfile.obj: unix/linux/rpmverifyfile.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifyfile_CFLAGS) $(CFLAGS) -c -o probe_rpmverifyfile-rpmverifyfile.obj `if test -f 'unix/linux/rpmverifyfile.c'; then $(CYGPATH_W) 'unix/linux/rpmverifyfile.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpmverifyfile.c'; fi`
 
+probe_rpmverifyfile-rpm-helper.o: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifyfile_CFLAGS) $(CFLAGS) -MT probe_rpmverifyfile-rpm-helper.o -MD -MP -MF $(DEPDIR)/probe_rpmverifyfile-rpm-helper.Tpo -c -o probe_rpmverifyfile-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifyfile-rpm-helper.Tpo $(DEPDIR)/probe_rpmverifyfile-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpmverifyfile-rpm-helper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifyfile_CFLAGS) $(CFLAGS) -c -o probe_rpmverifyfile-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+
+probe_rpmverifyfile-rpm-helper.obj: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifyfile_CFLAGS) $(CFLAGS) -MT probe_rpmverifyfile-rpm-helper.obj -MD -MP -MF $(DEPDIR)/probe_rpmverifyfile-rpm-helper.Tpo -c -o probe_rpmverifyfile-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifyfile-rpm-helper.Tpo $(DEPDIR)/probe_rpmverifyfile-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpmverifyfile-rpm-helper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifyfile_CFLAGS) $(CFLAGS) -c -o probe_rpmverifyfile-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+
 probe_rpmverifypackage-rpmverifypackage.o: unix/linux/rpmverifypackage.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -MT probe_rpmverifypackage-rpmverifypackage.o -MD -MP -MF $(DEPDIR)/probe_rpmverifypackage-rpmverifypackage.Tpo -c -o probe_rpmverifypackage-rpmverifypackage.o `test -f 'unix/linux/rpmverifypackage.c' || echo '$(srcdir)/'`unix/linux/rpmverifypackage.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifypackage-rpmverifypackage.Tpo $(DEPDIR)/probe_rpmverifypackage-rpmverifypackage.Po
@@ -2323,6 +2380,34 @@ probe_rpmverifypackage-rpmverifypackage.obj: unix/linux/rpmverifypackage.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpmverifypackage.c' object='probe_rpmverifypackage-rpmverifypackage.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -c -o probe_rpmverifypackage-rpmverifypackage.obj `if test -f 'unix/linux/rpmverifypackage.c'; then $(CYGPATH_W) 'unix/linux/rpmverifypackage.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpmverifypackage.c'; fi`
+
+probe_rpmverifypackage-rpm-helper.o: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -MT probe_rpmverifypackage-rpm-helper.o -MD -MP -MF $(DEPDIR)/probe_rpmverifypackage-rpm-helper.Tpo -c -o probe_rpmverifypackage-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifypackage-rpm-helper.Tpo $(DEPDIR)/probe_rpmverifypackage-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpmverifypackage-rpm-helper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -c -o probe_rpmverifypackage-rpm-helper.o `test -f 'unix/linux/rpm-helper.c' || echo '$(srcdir)/'`unix/linux/rpm-helper.c
+
+probe_rpmverifypackage-rpm-helper.obj: unix/linux/rpm-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -MT probe_rpmverifypackage-rpm-helper.obj -MD -MP -MF $(DEPDIR)/probe_rpmverifypackage-rpm-helper.Tpo -c -o probe_rpmverifypackage-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifypackage-rpm-helper.Tpo $(DEPDIR)/probe_rpmverifypackage-rpm-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/rpm-helper.c' object='probe_rpmverifypackage-rpm-helper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -c -o probe_rpmverifypackage-rpm-helper.obj `if test -f 'unix/linux/rpm-helper.c'; then $(CYGPATH_W) 'unix/linux/rpm-helper.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/rpm-helper.c'; fi`
+
+probe_rpmverifypackage-probe-chroot.o: unix/linux/probe-chroot.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -MT probe_rpmverifypackage-probe-chroot.o -MD -MP -MF $(DEPDIR)/probe_rpmverifypackage-probe-chroot.Tpo -c -o probe_rpmverifypackage-probe-chroot.o `test -f 'unix/linux/probe-chroot.c' || echo '$(srcdir)/'`unix/linux/probe-chroot.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifypackage-probe-chroot.Tpo $(DEPDIR)/probe_rpmverifypackage-probe-chroot.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/probe-chroot.c' object='probe_rpmverifypackage-probe-chroot.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -c -o probe_rpmverifypackage-probe-chroot.o `test -f 'unix/linux/probe-chroot.c' || echo '$(srcdir)/'`unix/linux/probe-chroot.c
+
+probe_rpmverifypackage-probe-chroot.obj: unix/linux/probe-chroot.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -MT probe_rpmverifypackage-probe-chroot.obj -MD -MP -MF $(DEPDIR)/probe_rpmverifypackage-probe-chroot.Tpo -c -o probe_rpmverifypackage-probe-chroot.obj `if test -f 'unix/linux/probe-chroot.c'; then $(CYGPATH_W) 'unix/linux/probe-chroot.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/probe-chroot.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/probe_rpmverifypackage-probe-chroot.Tpo $(DEPDIR)/probe_rpmverifypackage-probe-chroot.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='unix/linux/probe-chroot.c' object='probe_rpmverifypackage-probe-chroot.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(probe_rpmverifypackage_CFLAGS) $(CFLAGS) -c -o probe_rpmverifypackage-probe-chroot.obj `if test -f 'unix/linux/probe-chroot.c'; then $(CYGPATH_W) 'unix/linux/probe-chroot.c'; else $(CYGPATH_W) '$(srcdir)/unix/linux/probe-chroot.c'; fi`
 
 runlevel.o: unix/runlevel.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT runlevel.o -MD -MP -MF $(DEPDIR)/runlevel.Tpo -c -o runlevel.o `test -f 'unix/runlevel.c' || echo '$(srcdir)/'`unix/runlevel.c

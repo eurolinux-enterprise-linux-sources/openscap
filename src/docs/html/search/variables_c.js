@@ -9,5 +9,5 @@ var searchData=
   ['product_5fcpe',['product_cpe',['../structxccdf__session.html#a79a7eb9b46a0c313d8a24ad94c0a9c1d',1,'xccdf_session']]],
   ['profile',['profile',['../structxccdf__policy.html#aa9b356a88ddfb729745dc246d1da9614',1,'xccdf_policy']]],
   ['profile_5fid',['profile_id',['../structxccdf__session.html#a9e4d505ef24d8654a2ac5c29bff4e853',1,'xccdf_session']]],
-  ['progress',['progress',['../structxccdf__session.html#a21934d7072daa2b27162251f558e1b0e',1,'xccdf_session']]]
+  ['progress',['progress',['../structds__sds__session.html#ae01f442d074fbb95acbfea5d45fb3623',1,'ds_sds_session::progress()'],['../structxccdf__session.html#a21934d7072daa2b27162251f558e1b0e',1,'xccdf_session::progress()']]]
 ];

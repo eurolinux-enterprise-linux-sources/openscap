@@ -148,6 +148,9 @@ static struct oscap_module XCCDF_EVAL = {
         "   --export-variables\r\t\t\t\t - Export OVAL external variables provided by XCCDF.\n"
         "   --results <file>\r\t\t\t\t - Write XCCDF Results into file.\n"
         "   --results-arf <file>\r\t\t\t\t - Write ARF (result data stream) into file.\n"
+        "   --thin-results\r\t\t\t\t - Thin Results provides only minimal amount of information in OVAL/ARF results.\n"
+        "                 \r\t\t\t\t   The option --without-syschar is automatically enabled when you use Thin Results.\n"
+        "   --without-syschar \r\t\t\t\t - Don't provide system characteristic in OVAL/ARF result files.\n"
         "   --report <file>\r\t\t\t\t - Write HTML report into file.\n"
         "   --skip-valid \r\t\t\t\t - Skip validation.\n"
 	"   --fetch-remote-resources \r\t\t\t\t - Download remote content referenced by XCCDF.\n"
@@ -233,7 +236,9 @@ static struct oscap_module XCCDF_GEN_GUIDE = {
     .help = GEN_OPTS
         "\nGuide Options:\n"
         "   --output <file>\r\t\t\t\t - Write the document into file.\n"
-        "   --hide-profile-info\r\t\t\t\t - Do not output additional information about selected profile.\n",
+        "   --hide-profile-info\r\t\t\t\t - Do not output additional information about selected profile.\n"
+		"   --benchmark-id <id> \r\t\t\t\t - ID of XCCDF Benchmark in some component in the datastream that should be used.\n"
+		"                   \r\t\t\t\t   (only applicable for source datastreams)\n",
     .opt_parser = getopt_xccdf,
     .user = "xccdf-guide.xsl",
     .func = app_xccdf_xslt
@@ -323,7 +328,6 @@ static int callback_scr_rule(struct xccdf_rule *rule, void *arg)
 	}
 	xccdf_ident_iterator_free(idents);
 
-	printf("Result\r\t");
 	fflush(stdout);
 
 	return 0;
@@ -338,6 +342,7 @@ static int callback_scr_result(struct xccdf_rule_result *rule_result, void *arg)
 		return 0;
 
 	/* print result */
+	printf("Result\r\t");
 	const char * result_str = xccdf_test_result_type_get_text(result);
 	if (isatty(1))
 		printf("\033[%sm%s\033[0m\n\n", RESULT_COLORS[result], result_str);
@@ -410,15 +415,6 @@ static int callback_syslog_result(struct xccdf_rule_result *rule_result, void *a
 }
 */
 
-static void _download_reporting_callback(bool warning, const char *format, ...)
-{
-	FILE *dest = warning ? stderr : stdout;
-	va_list argptr;
-	va_start(argptr, format);
-	vfprintf(dest, format, argptr);
-	va_end(argptr);
-	fflush(dest);
-}
 
 static void _register_progress_callback(struct xccdf_session *session, bool progress)
 {
@@ -465,7 +461,10 @@ int app_evaluate_xccdf(const struct oscap_action *action)
 	if (session == NULL)
 		goto cleanup;
 	xccdf_session_set_validation(session, action->validate, getenv("OSCAP_FULL_VALIDATION") != NULL);
-
+	if (action->thin_results) {
+		xccdf_session_set_thin_results(session, true);
+		xccdf_session_set_without_sys_chars_export(session, true);
+	}
 	if (xccdf_session_is_sds(session)) {
 		xccdf_session_set_datastream_id(session, action->f_datastream_id);
 		xccdf_session_set_component_id(session, action->f_xccdf_id);
@@ -477,7 +476,7 @@ int app_evaluate_xccdf(const struct oscap_action *action)
 	if (action->tailoring_file != NULL)
 		xccdf_session_set_user_tailoring_file(session, action->tailoring_file);
 	xccdf_session_set_user_tailoring_cid(session, action->tailoring_id);
-	xccdf_session_set_remote_resources(session, action->remote_resources, _download_reporting_callback);
+	xccdf_session_set_remote_resources(session, action->remote_resources, download_reporting_callback);
 	xccdf_session_set_custom_oval_files(session, action->f_ovals);
 	xccdf_session_set_product_cpe(session, OSCAP_PRODUCTNAME);
 
@@ -499,6 +498,7 @@ int app_evaluate_xccdf(const struct oscap_action *action)
 	if (xccdf_session_evaluate(session) != 0)
 		goto cleanup;
 
+	xccdf_session_set_without_sys_chars_export(session, action->without_sys_chars);
 	xccdf_session_set_oval_results_export(session, action->oval_results);
 	xccdf_session_set_oval_variables_export(session, action->export_variables);
 	xccdf_session_set_arf_export(session, action->f_results_arf);
@@ -577,7 +577,7 @@ static int app_xccdf_export_oval_variables(const struct oscap_action *action)
 		xccdf_session_set_benchmark_id(session, action->f_benchmark_id);
 	}
 	xccdf_session_set_user_cpe(session, action->cpe);
-	xccdf_session_set_remote_resources(session, action->remote_resources, _download_reporting_callback);
+	xccdf_session_set_remote_resources(session, action->remote_resources, download_reporting_callback);
 	xccdf_session_set_custom_oval_files(session, action->f_ovals);
 	xccdf_session_set_custom_oval_eval_fn(session, resolve_variables_wrapper);
 
@@ -620,7 +620,7 @@ int app_xccdf_remediate(const struct oscap_action *action)
 		goto cleanup;
 	xccdf_session_set_validation(session, action->validate, getenv("OSCAP_FULL_VALIDATION") != NULL);
 	xccdf_session_set_user_cpe(session, action->cpe);
-	xccdf_session_set_remote_resources(session, action->remote_resources, _download_reporting_callback);
+	xccdf_session_set_remote_resources(session, action->remote_resources, download_reporting_callback);
 	xccdf_session_set_custom_oval_files(session, action->f_ovals);
 
 	if (xccdf_session_load(session) != 0)
@@ -723,7 +723,7 @@ cleanup:
 	return ret;
 }
 
-static bool _some_oval_result_exists(struct oscap_source *xccdf_source)
+static bool _some_result_exists(struct oscap_source *xccdf_source, const char *namespace)
 {
 	struct xccdf_benchmark *benchmark = NULL;
 	struct xccdf_policy_model *policy_model = NULL;
@@ -743,7 +743,7 @@ static bool _some_oval_result_exists(struct oscap_source *xccdf_source)
 	while (oscap_file_entry_iterator_has_more(files_it)) {
 		struct oscap_file_entry *file_entry = (struct oscap_file_entry *) oscap_file_entry_iterator_next(files_it);;
 		struct stat sb;
-		if (strcmp(oscap_file_entry_get_system(file_entry), "http://oval.mitre.org/XMLSchema/oval-definitions-5"))
+		if (strcmp(oscap_file_entry_get_system(file_entry), namespace))
 			continue;
 		snprintf(oval_result, PATH_MAX, "./%s.result.xml", oscap_file_entry_get_file(file_entry));
 		if (stat(oval_result, &sb) == 0) {
@@ -760,6 +760,10 @@ static bool _some_oval_result_exists(struct oscap_source *xccdf_source)
 
 int app_generate_fix(const struct oscap_action *action)
 {
+	if (!oscap_set_verbose(action->verbosity_level, action->f_verbose_log, false)) {
+		return OSCAP_ERROR;
+	}
+
 	if (action->id != NULL) {
 		/* Listen very carefully -- I shall say this only once. This is temporaly
 		 * fallback mode. Which may be dropped from future OpenSCAP releases.
@@ -836,16 +840,21 @@ cleanup:
 int app_xccdf_xslt(const struct oscap_action *action)
 {
 	const char *oval_template = action->oval_template;
+	const char *sce_template = action->sce_template;
 
-	if (action->module == &XCCDF_GEN_REPORT && oval_template == NULL) {
+	if (action->module == &XCCDF_GEN_REPORT && (oval_template == NULL || sce_template == NULL)) {
 		/* If generating the report and the option is missing -> use defaults */
 		struct oscap_source *xccdf_source = oscap_source_new_from_file(action->f_xccdf);
-		if (_some_oval_result_exists(xccdf_source))
-			/* We want to define default template because we strive to serve user the
-			 * best. However, we must not offer a template, if there is a risk it might
-			 * be incorrect. Otherwise, libxml2 will throw a lot of misleading messages
-			 * to stderr. */
+		/* We want to define default template because we strive to serve user the
+		 * best. However, we must not offer a template, if there is a risk it might
+		 * be incorrect. Otherwise, libxml2 will throw a lot of misleading messages
+		 * to stderr. */
+		if (oval_template == NULL && _some_result_exists(xccdf_source, "http://oval.mitre.org/XMLSchema/oval-definitions-5")) {
 			oval_template = "%.result.xml";
+		}
+		if (sce_template == NULL && _some_result_exists(xccdf_source, "http://open-scap.org/page/SCE")) {
+			sce_template = "%.result.xml";
+		}
 		oscap_source_free(xccdf_source);
 	}
 
@@ -856,10 +865,11 @@ int app_xccdf_xslt(const struct oscap_action *action)
 	const char *params[] = {
 		"result-id",         action->id,
 		"show",              action->show,
+		"benchmark_id",      action->f_benchmark_id,
 		"profile_id",        action->profile,
 		"template",          action->tmpl,
 		"oval-template",     oval_template,
-		"sce-template",      action->sce_template,
+		"sce-template",      sce_template,
 		"verbosity",         "",
 		"hide-profile-info", action->hide_profile_info ? "yes" : NULL,
 		NULL
@@ -952,6 +962,8 @@ bool getopt_xccdf(int argc, char **argv, struct oscap_action *action)
 		{"hide-profile-info",	no_argument, &action->hide_profile_info, 1},
 		{"export-variables",	no_argument, &action->export_variables, 1},
 		{"schematron",          no_argument, &action->schematron, 1},
+		{"without-syschar",    no_argument, &action->without_sys_chars, 1},
+		{"thin-results",        no_argument, &action->thin_results, 1},
 	// end
 		{0, 0, 0, 0}
 	};

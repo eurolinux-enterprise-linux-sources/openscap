@@ -1,0 +1,317 @@
+From 591e50e2f988a22e00a5a55b96cb1e7e9512a6fc Mon Sep 17 00:00:00 2001
+From: Martin Preisler <martin@preisler.me>
+Date: Tue, 14 Feb 2017 19:12:57 -0500
+Subject: [PATCH] Fix SCE stderr stalling (#680)
+
+* Implementation of split stdout and stderr reading in SCE
+
+Fix to SCE stderr issue, read() was blocking and no more input was provided, that was leading to a deadlock.
+
+* Test for SCE stderr stream fill-up
+
+This test ensures that even when lots of data is pushed through
+stdout or stderr streams in SCE, oscap will handle it.
+---
+ src/SCE/sce_engine.c                      | 63 ++++++++++++++++++++++++++++++-
+ src/common/oscap_string.h                 | 14 +++----
+ tests/sce/Makefile.am                     |  8 +++-
+ tests/sce/streams_fill.sh                 | 14 +++++++
+ tests/sce/test_sce_streams_fill.sh        | 32 ++++++++++++++++
+ tests/sce/test_sce_streams_fill.xccdf.xml | 34 +++++++++++++++++
+ 6 files changed, 154 insertions(+), 11 deletions(-)
+ create mode 100755 tests/sce/streams_fill.sh
+ create mode 100755 tests/sce/test_sce_streams_fill.sh
+ create mode 100644 tests/sce/test_sce_streams_fill.xccdf.xml
+
+diff --git a/src/SCE/sce_engine.c b/src/SCE/sce_engine.c
+index 77dda1a..66b8799 100644
+--- a/src/SCE/sce_engine.c
++++ b/src/SCE/sce_engine.c
+@@ -34,6 +34,7 @@
+ #include "common/util.h"
+ #include "common/list.h"
+ #include "common/oscap_acquire.h"
++#include "common/oscap_string.h"
+ #include "sce_engine_api.h"
+ 
+ #include <stdlib.h>
+@@ -327,6 +328,38 @@ void sce_parameters_allocate_session(struct sce_parameters* v)
+ 	sce_parameters_set_session(v, sce_session_new());
+ }
+ 
++static void _pipe_try_read_into_string(int fd, struct oscap_string *string, bool *eof)
++{
++	// FIXME: Read by larger chunks in the future
++	char readbuf;
++	while (true) {
++		const int read_status = read(fd, &readbuf, 1);
++		if (read_status == 1) {  // successful read
++			if (readbuf == '&') {
++				// & is a special case, we have to "escape" it manually
++				// (all else will eventually get handled by libxml)
++				oscap_string_append_string(string, "&amp;");
++			} else {
++				oscap_string_append_char(string, readbuf);
++			}
++		}
++		else if (read_status == 0) {  // EOF
++			*eof = true;
++			break;
++		}
++		else {
++			if (errno == EAGAIN) {
++				// NOOP, we are waiting for more input
++				break;
++			}
++			else {
++				*eof = true;  // signal EOF to exit the loops
++				break;
++			}
++		}
++	}
++}
++
+ xccdf_test_result_type_t sce_engine_eval_rule(struct xccdf_policy *policy, const char *rule_id, const char *id, const char *href,
+ 		struct xccdf_value_binding_iterator *value_binding_it,
+ 		struct xccdf_check_import_iterator *check_import_it,
+@@ -527,8 +560,34 @@ xccdf_test_result_type_t sce_engine_eval_rule(struct xccdf_policy *policy, const
+ 			close(stdout_pipefd[1]);
+ 			close(stderr_pipefd[1]);
+ 
+-			char* stdout_buffer = oscap_acquire_pipe_to_string(stdout_pipefd[0]);
+-			char* stderr_buffer = oscap_acquire_pipe_to_string(stderr_pipefd[0]);
++			const int flag_stdout = fcntl(stdout_pipefd[0], F_GETFL, 0);
++			fcntl(stdout_pipefd[0], F_SETFL, flag_stdout | O_NONBLOCK);
++			const int flag_stderr = fcntl(stderr_pipefd[0], F_GETFL, 0);
++			fcntl(stderr_pipefd[0], F_SETFL, flag_stderr | O_NONBLOCK);
++
++			// we have to read from both pipes at the same time to avoid stalling
++			struct oscap_string *stdout_string = oscap_string_new();
++			struct oscap_string *stderr_string = oscap_string_new();
++
++			bool stdout_eof = false;
++			bool stderr_eof = false;
++
++			while (!stdout_eof || !stderr_eof) {
++				if (!stdout_eof)
++					_pipe_try_read_into_string(stdout_pipefd[0], stdout_string, &stdout_eof);
++
++				if (!stderr_eof)
++					_pipe_try_read_into_string(stderr_pipefd[0], stderr_string, &stderr_eof);
++
++				// sleep for 10ms to avoid wasting CPU
++				usleep(10 * 1000);
++			}
++
++			close(stdout_pipefd[0]);
++			close(stderr_pipefd[0]);
++
++			char *stdout_buffer = oscap_string_bequeath(stdout_string);
++			char *stderr_buffer = oscap_string_bequeath(stderr_string);
+ 
+ 			// we are the parent process
+ 			int wstatus;
+diff --git a/src/common/oscap_string.h b/src/common/oscap_string.h
+index 524598e..4e86f47 100644
+--- a/src/common/oscap_string.h
++++ b/src/common/oscap_string.h
+@@ -58,6 +58,13 @@ void oscap_string_append_string(struct oscap_string *s, const char *t);
+  */
+ const char *oscap_string_get_cstr(const struct oscap_string *s);
+ 
++/**
++ * Return pointer to internal string
++ * Free oscap_string structure
++ * @param s buffer
++ */
++char* oscap_string_bequeath(struct oscap_string *s);
++
+ OSCAP_HIDDEN_START;
+ 
+ /**
+@@ -68,13 +75,6 @@ OSCAP_HIDDEN_START;
+ bool oscap_string_empty(const struct oscap_string *s);
+ 
+ /**
+- * Return pointer to internal string
+- * Free oscap_string structure
+- * @param s buffer
+- */
+-char* oscap_string_bequeath(struct oscap_string *s);
+-
+-/**
+  * Erases the contents of the string. Length of string becomes 0
+  * @param s string
+  */
+diff --git a/tests/sce/Makefile.am b/tests/sce/Makefile.am
+index 9528de6..eb89cea 100644
+--- a/tests/sce/Makefile.am
++++ b/tests/sce/Makefile.am
+@@ -12,7 +12,8 @@ TESTS = test_sce.sh \
+ 		test_sce_parse_errors.sh \
+ 		test_sce_in_ds.sh \
+ 		test_sce_in_report.sh \
+-		test_sce_stdout_stderr.sh
++		test_sce_stdout_stderr.sh \
++		test_sce_streams_fill.sh
+ 
+ EXTRA_DIST =	test_sce.sh \
+ 		sce_xccdf.xml \
+@@ -39,4 +40,7 @@ EXTRA_DIST =	test_sce.sh \
+ 		test_sce_parse_errors_stub-oval.xml \
+ 		test_sce_stdout_stderr.sh \
+ 		test_sce_stdout_stderr.xccdf.xml \
+-		stdout_stderr.sh
++		stdout_stderr.sh \
++		test_sce_streams_fill.sh \
++		test_sce_streams_fill.xccdf.xml \
++		streams_fill.sh
+diff --git a/tests/sce/streams_fill.sh b/tests/sce/streams_fill.sh
+new file mode 100755
+index 0000000..d8bd74c
+--- /dev/null
++++ b/tests/sce/streams_fill.sh
+@@ -0,0 +1,14 @@
++#!/bin/bash
++lines=${XCCDF_VALUE_LINES}
++
++# padding numbers so one line is exactly 10 bytes - 9 numbers and newline
++# this way last line prints size of the output
++for i in `seq -w 0000001 ${lines}`; do
++    echo "0${i}0"
++done
++
++for i in `seq -w 0000001 ${lines}`; do
++    echo "1${i}0" >&2
++done
++
++exit ${XCCDF_RESULT_PASS}
+diff --git a/tests/sce/test_sce_streams_fill.sh b/tests/sce/test_sce_streams_fill.sh
+new file mode 100755
+index 0000000..0b72e6a
+--- /dev/null
++++ b/tests/sce/test_sce_streams_fill.sh
+@@ -0,0 +1,32 @@
++#!/bin/bash
++
++# Test to check there are output streams separated
++#
++# Author:
++#   Marek Haicman <mhaicman@redhat.com>
++
++. ../test_common.sh
++
++set -e -o pipefail
++
++function test_sce_streams_fill {
++    local xccdf_file=${srcdir}/$1
++    local stderr=$(mktemp)
++    local result=$(mktemp)
++
++    # the test is actually pretty slow, which means it takes ~10 seconds on
++    # my laptop. 60s is safe margin in case of slow virtual jenkins nodes
++    timeout "60s" $OSCAP xccdf eval --results "$result" "$xccdf_file" 2> $stderr
++    echo "===== result ====="
++    cat $result
++
++    # zero is generated into stdout, 1 is stderr
++    grep "001999990" $result && grep "101999990" $result
++}
++
++# Testing.
++test_init "test_sce_streams_fill.log"
++
++test_run "SCE stream filling up" test_sce_streams_fill test_sce_streams_fill.xccdf.xml
++
++test_exit
+diff --git a/tests/sce/test_sce_streams_fill.xccdf.xml b/tests/sce/test_sce_streams_fill.xccdf.xml
+new file mode 100644
+index 0000000..a4db666
+--- /dev/null
++++ b/tests/sce/test_sce_streams_fill.xccdf.xml
+@@ -0,0 +1,34 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<Benchmark xmlns="http://checklists.nist.gov/xccdf/1.2" id="xccdf_moc.elpmaxe.www_benchmark_test">
++  <status>incomplete</status>
++  <version>1.0</version>
++  <model system="urn:xccdf:scoring:default"/>
++  <model system="urn:xccdf:scoring:flat"/>
++
++  <Value id="xccdf_test_value_small" type="string" operator="equals">
++    <value>6544</value>
++  </Value>
++  <Value id="xccdf_test_value_huge" type="string" operator="equals">
++    <value>199999</value>
++  </Value>
++
++
++  <Rule selected="true" id="xccdf_moc.elpmaxe.www_rule_1">
++    <title>Smaller stream filling</title>
++    <check system="http://open-scap.org/page/SCE">
++      <check-import import-name="stdout" />
++      <check-import import-name="stderr" />
++      <check-export value-id="xccdf_test_value_small" export-name="LINES"/>
++      <check-content-ref href="streams_fill.sh"/>
++    </check>
++  </Rule>
++  <Rule selected="true" id="xccdf_moc.elpmaxe.www_rule_2">
++    <title>Bigger stream filling</title>
++    <check system="http://open-scap.org/page/SCE">
++      <check-import import-name="stdout" />
++      <check-import import-name="stderr" />
++      <check-export value-id="xccdf_test_value_huge" export-name="LINES"/>
++      <check-content-ref href="streams_fill.sh"/>
++    </check>
++  </Rule>
++</Benchmark>
+diff --git a/tests/sce/Makefile.in b/tests/sce/Makefile.in
+index 426d077..65ef70b 100644
+--- a/tests/sce/Makefile.in
++++ b/tests/sce/Makefile.in
+@@ -1089,6 +1089,7 @@ DISTCLEANFILES = *.log *.results oscap_debug.log.*
+ CLEANFILES = *.log *.results oscap_debug.log.*
+ TESTS_ENVIRONMENT = \
+ 		builddir=$(top_builddir) \
++		OSCAP_FULL_VALIDATION=1 \
+ 		$(top_builddir)/run
+ 
+ TESTS = test_sce.sh \
+@@ -1097,7 +1098,8 @@ TESTS = test_sce.sh \
+ 		test_sce_parse_errors.sh \
+ 		test_sce_in_ds.sh \
+ 		test_sce_in_report.sh \
+-		test_sce_stdout_stderr.sh
++		test_sce_stdout_stderr.sh \
++		test_sce_streams_fill.sh
+ 
+ EXTRA_DIST = test_sce.sh \
+ 		sce_xccdf.xml \
+@@ -1124,7 +1126,10 @@ EXTRA_DIST = test_sce.sh \
+ 		test_sce_parse_errors_stub-oval.xml \
+ 		test_sce_stdout_stderr.sh \
+ 		test_sce_stdout_stderr.xccdf.xml \
+-		stdout_stderr.sh
++		stdout_stderr.sh \
++		test_sce_streams_fill.sh \
++		test_sce_streams_fill.xccdf.xml \
++		streams_fill.sh
+ 
+ all: all-am
+ 
+@@ -1362,6 +1367,13 @@ test_sce_stdout_stderr.sh.log: test_sce_stdout_stderr.sh
+ 	--log-file $$b.log --trs-file $$b.trs \
+ 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+ 	"$$tst" $(AM_TESTS_FD_REDIRECT)
++test_sce_streams_fill.sh.log: test_sce_streams_fill.sh
++	@p='test_sce_streams_fill.sh'; \
++	b='test_sce_streams_fill.sh'; \
++	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
++	--log-file $$b.log --trs-file $$b.trs \
++	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
++	"$$tst" $(AM_TESTS_FD_REDIRECT)
+ .test.log:
+ 	@p='$<'; \
+ 	$(am__set_b); \
+-- 
+2.7.4
+

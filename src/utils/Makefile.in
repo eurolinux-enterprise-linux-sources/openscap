@@ -101,6 +101,8 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @WANT_UTIL_OSCAP_SSH_TRUE@am__append_9 = oscap-ssh.8
 @WANT_UTIL_OSCAP_VM_TRUE@am__append_10 = oscap-vm
 @WANT_UTIL_OSCAP_VM_TRUE@am__append_11 = oscap-vm.8
+@WANT_UTIL_OSCAP_CHROOT_TRUE@am__append_12 = oscap-chroot
+@WANT_UTIL_OSCAP_CHROOT_TRUE@am__append_13 = oscap-chroot.8
 subdir = utils
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
@@ -1040,9 +1042,9 @@ xslt_LIBS = @xslt_LIBS@
 SUBDIRS = 
 oscap_LDADD = $(am__append_3)
 bin_SCRIPTS = $(am__append_4) $(am__append_6) $(am__append_8) \
-	$(am__append_10)
+	$(am__append_10) $(am__append_12)
 man_MANS = $(am__append_2) $(am__append_5) $(am__append_7) \
-	$(am__append_9) $(am__append_11)
+	$(am__append_9) $(am__append_11) $(am__append_13)
 @WANT_UTIL_OSCAP_TRUE@oscap_SOURCES = oscap.c oscap-tool.h \
 @WANT_UTIL_OSCAP_TRUE@	oscap-tool.c oscap-ds.c oscap-oval.c \
 @WANT_UTIL_OSCAP_TRUE@	oscap-xccdf.c oscap-cvss.c oscap-cpe.c \

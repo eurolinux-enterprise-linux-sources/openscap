@@ -1,6 +1,7 @@
 var searchData=
 [
   ['pfdata',['pfdata',['../structpfdata.html',1,'']]],
+  ['probe_5fchroot',['probe_chroot',['../structprobe__chroot.html',1,'']]],
   ['probe_5fcitem_5ft',['probe_citem_t',['../structprobe__citem__t.html',1,'']]],
   ['probe_5fctx',['probe_ctx',['../structprobe__ctx.html',1,'']]],
   ['probe_5felmatr_5ft',['probe_elmatr_t',['../structprobe__elmatr__t.html',1,'']]],

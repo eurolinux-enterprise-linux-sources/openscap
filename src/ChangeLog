@@ -1,3 +1,4468 @@
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 17:26:38 2016 -0500
+
+    Use the correct directory for output in nist_test.sh
+    
+    Don't dump results in root builddir
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 17:16:40 2016 -0500
+
+    Remove the forgotten R700 datastream from Makefile.am
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 17:07:41 2016 -0500
+
+    Added --outputdir to test_worker.py and started using it
+    
+    Also removed an unused function in test_worker.py
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 16:57:58 2016 -0500
+
+    Check the oscap return code in test_worker.py
+    
+    Might catch some more issues.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 16:54:32 2016 -0500
+
+    Removed the set_up and tear_down code from test_worker.py
+    
+    We don't add tests that require it to upstream test suite anyway. We
+    can't rely on externalities.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 16:49:18 2016 -0500
+
+    Removed the R700 test from nist tests
+    
+    It relies on file outside of build dir and needs to be changed before we
+    can include it.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 16:45:55 2016 -0500
+
+    Removed the dry-run functionality from test_worker.py
+    
+    We don't plan to use it in upstream test-suite.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 16:44:30 2016 -0500
+
+    Remove SCAPVal functionality from test_worker.py
+    
+    We don't need it in upstream because we don't plan to ship the Java
+    based SCAPVal in upstream git anyway.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 16:26:15 2016 -0500
+
+    Fixed a misleading comment in nist_test.sh
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 15:52:06 2016 -0500
+
+    Double quote variables to prevent word splitting in nist_test.sh
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Dec 6 15:35:18 2016 -0500
+
+    Use absolute builddir and srcdir in nist_test.sh
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 14:18:14 2016 +0100
+
+    Add Makefiles for NIST tests and integrate them to build system
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 14:17:07 2016 +0100
+
+    Add test harness for NIST validation test suite
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:55:38 2016 +0100
+
+    Add R3300 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:54:37 2016 +0100
+
+    Add R3010 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:53:33 2016 +0100
+
+    Add R3005 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:52:31 2016 +0100
+
+    Add R2940 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:51:33 2016 +0100
+
+    Add R2920 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:50:12 2016 +0100
+
+    Add R1200 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:46:37 2016 +0100
+
+    Add R1100 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:43:21 2016 +0100
+
+    Add R700 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:40:24 2016 +0100
+
+    Add R600 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:39:20 2016 +0100
+
+    Add R500 test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:37:45 2016 +0100
+
+    Add ind_variable_test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:34:36 2016 +0100
+
+    Add ind_unknown_test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 30 13:32:27 2016 +0100
+
+    Add ind_family_test
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Dec 1 12:39:29 2016 +0100
+
+    Merge pull request #596 from rsprudencio/maint-1.2-ds-verbose
+    
+    Added --verbose and --verbose-log-file to 'oscap ds rds-validate'.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@gmail.com>
+Date:   Wed Nov 30 17:16:31 2016 +0100
+
+    Merge pull request #602 from mpreisler/remove_arf_workaround_with_no_applicable_checks
+    
+    Remove the ARF schematron workaround when there are no applicable checks
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 29 13:41:36 2016 -0500
+
+    Changed XCCDF unit tests to reflect removal of the notchecked workaround
+    
+    See the parent commit.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 29 12:59:30 2016 -0500
+
+    Remove the ARF schematron workaround when there are no applicable checks
+    
+    The workaround helps with old ARF schematron issues, see
+    http://making-security-measurable.1364806.n2.nabble.com/Xccdf-dev-xccdf-rule-result-element-properties-td7582721.html
+    However it also causes issues in SCAPVal which expects no check elements
+    in rule-result if none are applicable.
+    
+    Resolves issues with SCAPVal requirements 370-1 and 370-2.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Tue Nov 29 10:19:20 2016 +0100
+
+    Added '[options]' to usage string in rds-validate.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Mon Nov 28 18:27:41 2016 +0100
+
+    Added --verbose and --verbose-log-file to 'oscap ds rds-validate'.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Nov 23 13:43:01 2016 -0500
+
+    Merge pull request #593 from rsprudencio/maint-1.2-sysinfo-docker
+    
+    Fixed a corner case when /etc/hostname is empty, now it sets
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 23 15:29:40 2016 +0100
+
+    Merge pull request #588 from rsprudencio/maint-1.2-improve-generate-fix
+    
+    Maint 1.2 improve generate fix
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Wed Nov 23 14:39:19 2016 +0100
+
+    Removed unneeded '&& true' from XCCDF applicability test scripts.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Wed Nov 23 14:28:41 2016 +0100
+
+    Fixed a corner case when /etc/hostname is empty, now it sets
+    sysinfo hostname to 'Unknown' instead of an empty string.
+
+Author: Watson Yuuma Sato <wsato@redhat.com>
+Date:   Mon Nov 21 13:43:13 2016 +0100
+
+    Merge pull request #592 from rsprudencio/maint-1.2-sysinfo-coverity
+    
+    Fixed some warnings reported by Coverity in #590.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Nov 21 11:17:38 2016 +0100
+
+    Bump version after release
+    
+    Next release from the maint-1.2 branch will be 1.2.13.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Mon Nov 21 10:57:01 2016 +0100
+
+    Fixed some warnings reported by Coverity in #590.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Wed Nov 16 11:40:18 2016 +0100
+
+    Template misleading name is actually related to fix-system,
+    so we check for it everytime the user provide a template.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Wed Nov 16 11:20:55 2016 +0100
+
+    Fix XCCDF applicability make check-TEST, there were
+    some semantics errors in 2 anaconda tests.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 16 11:07:14 2016 +0100
+
+    openscap-1.2.12
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 16 10:46:44 2016 +0100
+
+    Bump soname from 8.9.0 to 8.10.0
+    
+    Two new symbols were added, no symbols were removed.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Nov 15 09:40:38 2016 -0500
+
+    Merge pull request #574 from vvinay2/maint-1.2
+    
+    Skip assessment_check, scanner and discovered-datetime while parsing the CVE entry
+
+Author: Raphael Sanchez Prudencio <rsprudencio@gmail.com>
+Date:   Tue Nov 15 15:25:22 2016 +0100
+
+    Merge pull request #585 from mpreisler/export_win_namespaces
+    
+    Export OVAL windows namespaces as well
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Tue Nov 15 15:12:13 2016 +0100
+
+    Added --verbose support in 'oscap xccdf generate fix'
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Tue Nov 15 15:10:55 2016 +0100
+
+    Removed fix filtering by applicability, which was filtering fixes
+    matching CPE for the running machine that might be different
+    from the scanned one.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Nov 15 14:57:02 2016 +0100
+
+    Merge pull request #586 from mpreisler/replace_old_arfrel_ns
+    
+    Replace old arfrel ns
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 15 08:13:30 2016 -0500
+
+    Fixed the rountrip OVAL results serialization test, it was missing the win NS
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 15 07:51:57 2016 -0500
+
+    Added a comment about arfrel deprecation to rds_index.c
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 15 07:49:43 2016 -0500
+
+    NIST SP800-126 errata unified namespaces for arf vocabulary, let's use the new variant
+    
+    Resolves:
+    WARN : SCHEMATRON - [G2.R3010.results_arf.xml] NIST SP800-126 errata has updated the "arf-rel" namespace to http://scap.nist.gov/specifications/arf/vocabulary/relationships/1.0# The original namespace of http://scap.nist.gov/vocabulary/arf/relationships/1.0# has been detected.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 15 07:16:12 2016 -0500
+
+    Export OVAL windows namespaces as well
+    
+    This fixes validation issues with CPE OVALs that check for multiple platforms.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Nov 15 13:13:19 2016 +0100
+
+    Merge pull request #584 from mpreisler/segfault_fix_oval_ocil_mappings
+    
+    Create XCCDf session result maps even when no oval agents are set
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 15 05:39:23 2016 -0500
+
+    Create XCCDf session result maps even when no oval agents are set
+    
+    Resolves:
+    Program received signal SIGSEGV, Segmentation fault.
+    oscap_htable_lookup (htable=0x0, key=0x14c3470 "r3300-OCIL.xml") at list.c:441
+    
+    0  oscap_htable_lookup (htable=0x0, key=0x14c3470 "r3300-OCIL.xml") at list.c:441
+    1  0x00007ffff7b285d9 in oscap_htable_get (htable=<optimized out>, key=<optimized out>) at list.c:495
+    2  0x00007ffff7b3206d in ds_rds_report_inject_check_content_ref (arf_report_mapping=0x0,
+        check_content_ref=0x14c05a0) at rds.c:460
+    3  ds_rds_report_inject_rule_result_check_refs (doc=<optimized out>, rule_result=0x14bfbc0,
+        arf_report_mapping=0x0) at rds.c:483
+    4  ds_rds_report_inject_rule_result_refs (doc=<optimized out>, test_result_node=<optimized out>,
+        arf_report_mapping=0x0) at rds.c:499
+    5  ds_rds_report_inject_refs (report=report@entry=0x14bcb10,
+        asset_id=asset_id@entry=0x14c2bc0 "asset0", arf_report_mapping=arf_report_mapping@entry=0x0,
+        doc=<optimized out>) at rds.c:585
+    6  0x00007ffff7b32a35 in ds_rds_add_xccdf_test_results (
+        report_request_id=0x7ffff7b9830c "collection1", arf_report_mapping=0x0, assets=0x1498300,
+        relationships=0x14980c0, xccdf_result_file_doc=0x1474db0, reports=0x14b8830, doc=0x1497d80)
+        at rds.c:658
+    7  ds_rds_create_from_dom (arf_report_mapping=0x0, oval_result_mapping=0x0, oval_result_sources=0x0,
+        xccdf_result_file_doc=0x1474db0, sds_doc=<optimized out>, ret=<synthetic pointer>) at rds.c:723
+    8  ds_rds_create_source (sds_source=<optimized out>, xccdf_result_source=<optimized out>,
+        oval_result_sources=0x0, oval_result_mapping=0x0, arf_report_mapping=0x0,
+        target_file=0x1473cb0 "benchmark1.results_arf.xml") at rds.c:757
+    9  0x00007ffff7b8b16c in xccdf_session_create_arf_source (session=0x61ca80) at xccdf_session.c:229
+    10 0x00007ffff7b8cf25 in xccdf_session_create_arf_source (session=0x61ca80) at xccdf_session.c:1446
+    11 xccdf_session_export_arf (session=session@entry=0x61ca80) at xccdf_session.c:1428
+    12 0x000000000040beb0 in app_evaluate_xccdf (action=0x7fffffffde90) at oscap-xccdf.c:523
+    13 0x0000000000408120 in oscap_module_call (action=0x7fffffffde90) at oscap-tool.c:261
+    14 oscap_module_process (module=0x6154e0 <XCCDF_EVAL>, module@entry=0x614a60 <OSCAP_ROOT_MODULE>,
+        argc=argc@entry=8, argv=argv@entry=0x7fffffffe128) at oscap-tool.c:346
+    15 0x00000000004071bf in main (argc=8, argv=0x7fffffffe128) at oscap.c:80
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Nov 14 14:26:04 2016 -0500
+
+    Merge pull request #583 from jan-cerny/fix_complex_check_in_arf_results
+    
+    Fix injecting references to check-content-ref@href
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Nov 14 18:58:35 2016 +0100
+
+    Fix injecting references to check-content-ref@href
+    
+    This enables to reference OVAL results in arf:report
+    if the XCCDF rule contains xccdf:complex-check.
+    Previously xccdf:complex-check were ignored.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Nov 14 04:35:20 2016 -0500
+
+    Merge pull request #582 from jan-cerny/fix_arf_scapval_errors
+    
+    Fix invalid ARF results
+
+Author: Watson Yuuma Sato <wsato@redhat.com>
+Date:   Fri Nov 11 17:57:52 2016 +0100
+
+    Merge pull request #567 from mpreisler/sds_schematron_version
+    
+    Changed sds schematron-version attribute to the latest, 1.2
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Nov 11 13:03:33 2016 +0100
+
+    Add const modifiers on some variables
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Nov 11 12:59:21 2016 +0100
+
+    Remove an outdated comment
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 22:57:06 2016 +0100
+
+    Fix invalid free function
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 22:00:02 2016 +0100
+
+    Inject references to arf:report in xccdf:check-content-ref
+    
+    We have to replace the check-content-ref@href attribute. Originally
+    it contains refernce to OVAL definitions. Instead, we need to put there
+    ID of arf:report element that conatins OVAl result document with evaluation
+    results for the referenced OVAl check.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 21:57:43 2016 +0100
+
+    Pass arf:report IDs into ds_rds_report_inject_refs
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 21:55:44 2016 +0100
+
+    Pass arf:report IDs to ds_rds_add_xccdf_test_results
+    
+    We will need soon arf:report IDs to use them in
+    xccdf:check-content-ref@href attribute.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 21:33:37 2016 +0100
+
+    Use ARF report ID while creating ARF report
+    
+    Instead of XCCDF Benchmark ID, we will put the real OVAL results ID
+    as ARF report ID. This will allow us to reference the part of
+    ARF report conataining OVAL results. We will use this ID in
+    xccdf:rule-result/check-content-ref@href attribute.
+    We need to figure out which OVAL results corresponds with
+    which OVAL definitions document, so we use the mapping hash tables
+    we created and passed in previous commits.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 21:20:04 2016 +0100
+
+    Pass the mappings to ds_rds_create_source
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 16:48:31 2016 +0100
+
+    Populate results_mapping and arf_report_mapping with data
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Nov 10 14:17:55 2016 +0100
+
+    Add mappings of OVAL filename into XCCDF session
+    
+    This commit adds two new hash tables that will contain mapping from
+    OVAL definitions filename to ARF report ID and OVAL results filename.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Nov 8 10:57:42 2016 -0500
+
+    Merge pull request #578 from OpenSCAP/revert-575-maint-1.2-add-rhel-computenode-cpe
+    
+    Revert "RHEL 6 ComputeNode CPE and RHEL 7 ComputeNode CPE"
+
+Author: Watson Yuuma Sato <wsato@redhat.com>
+Date:   Tue Nov 8 15:41:33 2016 +0100
+
+    Revert "RHEL 6 ComputeNode CPE and RHEL 7 ComputeNode CPE"
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 8 05:18:03 2016 -0500
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Nov 7 12:29:23 2016 -0500
+
+    Merge pull request #577 from rsprudencio/maint-1.0-spb_pick_refactor
+    
+    Small refactor in spb_pick() fix when size == 0, just return
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Mon Nov 7 17:51:30 2016 +0100
+
+    Small refactor in spb_pick() fix when size == 0, just return
+    right away instead of getting inside of copy block.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Nov 7 10:24:45 2016 -0500
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Nov 7 10:24:22 2016 -0500
+
+    Merge pull request #576 from rsprudencio/maint-1.0-sexp_parser_issue
+    
+    Fixed spb_pick() to add 0 sized S-Expression even if our
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Mon Nov 7 14:16:59 2016 +0100
+
+    Fixed spb_pick() to add 0 sized S-Expression even if our
+    position index points to end of the string.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@gmail.com>
+Date:   Mon Nov 7 13:20:46 2016 +0100
+
+    Merge pull request #560 from radzy/20161019-osrelease-singoovi
+    
+    Update is_wrlinux to check /etc/os-release
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Nov 7 05:55:24 2016 -0500
+
+    Merge pull request #575 from yuumasato/maint-1.2-add-rhel-computenode-cpe
+    
+    RHEL 6 ComputeNode CPE and RHEL 7 ComputeNode CPE
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Mon Nov 7 07:44:43 2016 +0100
+
+    RHEL 6 ComputeNode CPE and RHEL 7 ComputeNode CPE
+    
+    Adding definitions to openscap-shipped CPE dictionary.
+    Related to rhbz#1311054.
+
+Author: V Vinay <vvinay@hpe.com>
+Date:   Mon Nov 7 11:07:36 2016 +0530
+
+    Skip assessment_check, scanner and discovered-datetime while parsing the CVE entry
+    
+    Skip assessment_check, scanner and discovered-datetime while parsing the
+    CVE entry
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Nov 4 12:51:18 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Nov 4 12:50:25 2016 -0400
+
+    Remove author and date info from manual.adoc
+    
+    It's very challenging to keep it up to date. Please use git to get the
+    list of contributors and latest changed date.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 2 17:03:06 2016 +0100
+
+    Fix shebangs
+    
+    /usr/bin/bash is not present on every system, eg. RHEL6.
+    Let's replace these with a more universal /bin/bash.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 27 14:38:59 2016 -0400
+
+    Change @style from SCAP_1.1 to SCAP_1.2 when converting XCCDF from 1.1 to 1.2
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Nov 2 13:37:20 2016 +0100
+
+    Merge pull request #572 from OpenSCAP/html_guide_anchors
+    
+    Add [ref] links to HTML guide
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 1 19:59:49 2016 -0400
+
+    Provide [ref] links next to xccdf Rules as well.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Nov 1 19:57:24 2016 -0400
+
+    Provide a [ref] link next to group titles in HTML guide
+    
+    This way users can right click and copy link. This link will go to that
+    XCCDF group. This is a very practical way to reference XCCDF groups.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Nov 1 12:16:48 2016 -0400
+
+    Merge pull request #569 from yuumasato/maint-1.2-fix-leak-tailoring_source
+    
+    Fixing a resource leak reported by coverity scan
+
+Author: T.O. Radzy Radzykewycz <radzy@windriver.com>
+Date:   Wed Oct 19 16:54:38 2016 -0700
+
+    Update is_wrlinux to check /etc/os-release
+    
+    Instead of checking the presence of /etc/wrlinux-release, we open
+    /etc/os-release and check for the CPE_NAME entry.
+    
+    Signed-off-by: T.O. Radzy Radzykewycz <radzy@windriver.com>
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Nov 1 10:28:41 2016 -0400
+
+    Merge pull request #559 from rsprudencio/maint-1.2-offline-sysinfo
+    
+    Temporary fix to remove the need of environment variables
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Tue Nov 1 15:14:38 2016 +0100
+
+    Fixing a resource leak reported by coverity scan
+    
+    Memory allocated by oscap_source_new_from_xmlDoc() to tailoring_source was not freed.
+    The fix relies on the fact that freeing an oscap_source also frees the
+    xmlDoc used in its creation.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Nov 1 09:43:14 2016 -0400
+
+    Merge pull request #561 from jan-cerny/issue475
+    
+    Issue#475: RHBZ#1387248: Fix oscap-docker reporting incompliance
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Oct 24 10:30:07 2016 +0200
+
+    Issue#475: RHBZ#1387248: Fix oscap-docker reporting incompliance
+    
+    Compliance scan of a Docker image/container using oscap-docker reported
+    incorrectly that there had been an error even if scan had been successful
+    but incompliance of the assessed system had been found.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Tue Nov 1 10:09:20 2016 +0100
+
+    Fixed free logic making it more simple in system_info probe.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Mon Oct 31 18:31:56 2016 +0100
+
+    Added support for POSIX Regex in system_info probe.
+    
+    Refactored the code to move regex compilation outside loops.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 27 15:24:30 2016 -0400
+
+    Changed sds schematron-version attribute to the latest, 1.2
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Oct 20 15:25:03 2016 +0200
+
+    RHBZ#1387166: Fix oscap-docker man page inconsistence
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Thu Oct 20 09:55:13 2016 +0200
+
+    Fixed file descriptors leak in offline system_info probe.
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Wed Oct 19 17:07:54 2016 +0200
+
+    Temporary fix to remove the need of environment variables
+    to feed system_info for chroot/vm scans, it currently relies
+    on the use of grub2.
+    
+    Small change in system_info probe logic, it doesn't fail if
+    it was not possible to collect system_info, it reports as
+    "Unknown" OS name/version/arch and hostname.
+
+Author: Zbyněk Moravec <moraveczbynek@gmail.com>
+Date:   Wed Oct 19 15:08:01 2016 +0200
+
+    Merge pull request #555 from mpreisler/sce_separate_stderr
+    
+    Separate stderr from stdout in SCE
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Oct 14 19:44:36 2016 +0200
+
+    Bump version after release
+    
+    Next version from the maint-1.2 branch will be 1.2.12.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Oct 13 16:24:40 2016 +0200
+
+    openscap-1.2.11
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Oct 13 16:15:21 2016 +0200
+
+    Bump soname from 8.8.1 to 8.9.0
+    
+    6 symbols were added, no symbols were removed.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Thu Oct 13 15:27:03 2016 -0400
+
+    Merge pull request #556 from ybznek/maint-1.2
+    
+    Print error message if oscap loads bz2 files and doesn't support them
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Oct 13 20:14:41 2016 +0200
+
+    Print error if oscap doesn't support bz2
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Oct 13 20:04:14 2016 +0200
+
+    benchmark.c: fix indentation (fix GCC hint)
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 13 14:00:25 2016 -0400
+
+    Fixed comment in SCE engine
+    
+    Indentation and mention that we now use 2 separate pipes
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 13 13:59:41 2016 -0400
+
+    Fix error checking when opening the SCE stderr pipe
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 13 13:58:15 2016 -0400
+
+    Add optional stderr element to SCE result schema
+    
+    It's optional so that SCE results generated in older versions of
+    OpenSCAP validate with newer versions of OpenSCAP.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 13 12:09:29 2016 -0400
+
+    Use the separate stderr SCE result in HTML report
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Oct 13 12:04:12 2016 -0400
+
+    Don't interleave stdout and stderr, separate them in SCE
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Oct 13 13:44:27 2016 +0200
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Zbyněk Moravec <moraveczbynek@gmail.com>
+Date:   Mon Oct 10 14:24:37 2016 +0200
+
+    Merge pull request #552 from GautamSatish/update_suse11_cpe
+    
+    Update SUSE 11 CPE
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Oct 10 13:41:58 2016 +0200
+
+    Merge pull request #553 from rsprudencio/maint-1.0-fix-arithmetic
+    
+    Fix a bug in Arithmetic complex function
+
+Author: Raphael Sanchez Prudencio <rsprudencio@redhat.com>
+Date:   Thu Oct 6 18:25:48 2016 +0200
+
+    Fix a bug in Arithmetic complex function, it was not
+    following specification, it should attempt to cast a
+    value to correct type before reporting an error.
+
+Author: Gautam Satish <gautams@hpe.com>
+Date:   Wed Oct 5 21:26:14 2016 -0700
+
+    Update SUSE 11 CPE
+
+Author: Zbyněk Moravec <moraveczbynek@gmail.com>
+Date:   Wed Oct 5 15:54:07 2016 +0200
+
+    Merge pull request #551 from ybznek/maint-1.2-remediation-report
+    
+    xccdf-share.xsl: HTML report - fix empty table
+
+Author: Zbyněk Moravec <moraveczbynek@gmail.com>
+Date:   Wed Oct 5 15:08:46 2016 +0200
+
+    Merge pull request #549 from jan-cerny/tailoring_external_datastream
+    
+    Add support for tailoring of external datastreams
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Oct 5 14:58:06 2016 +0200
+
+    xccdf-share.xsl: HTML report - fix empty table
+    
+    If these attributes are not provided we don't want to print
+    empty table.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Oct 4 15:34:34 2016 +0200
+
+    Add support for tailoring of external datastreams
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Oct 3 13:54:04 2016 -0400
+
+    Merge pull request #547 from ybznek/maint-1.2-tailor2
+    
+    enable oscap oval eval --fetch-remote-resources + cleanup
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Oct 3 13:52:30 2016 -0400
+
+    Merge pull request #548 from ybznek/maint-1.2-remediation-report
+    
+    xccdf report: Add fix attributes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Oct 3 14:56:43 2016 +0200
+
+    xccdf report: Add fix attributes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Oct 3 11:23:51 2016 +0200
+
+    ds_sds_session_set_remote_resources() set default callback instead of NULL
+    
+    Like nullobject design pattern
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Oct 3 11:15:31 2016 +0200
+
+    download_reporting_callback: Print always to stderr
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Oct 3 10:31:44 2016 +0200
+
+    move xccdf_download_cb.h => oscap_download_cb.h
+    
+    Download CB isn't related to XCCDF
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Oct 3 10:25:28 2016 +0200
+
+    Deduplicate reporting_callback
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Oct 3 10:01:55 2016 +0200
+
+    Enable oscap oval eval --fetch-remote-resources
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Thu Sep 29 12:42:01 2016 -0400
+
+    Merge pull request #546 from redhatrises/add_puppet_report
+    
+    Add puppet to report generation
+
+Author: Gabe <redhatrises@gmail.com>
+Date:   Thu Sep 29 09:19:10 2016 -0600
+
+    Add puppet to report generation
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Sep 29 16:53:40 2016 +0200
+
+    Merge pull request #534 from ybznek/maint-1.2-tailor2
+    
+    Add support for external (http) components
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 29 15:13:49 2016 +0200
+
+    sds.c: Add Warning prefix
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 29 15:12:41 2016 +0200
+
+    sds.c: Fix indentation
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 29 14:39:09 2016 +0200
+
+    sds.c: Workaround for multiple components
+    
+    We weren't checking return values of caller functions, so
+    we ignored return value & error state. In previous commits
+    I started to check return values, but it broke some use
+    cases. So rather then ignore all error states, we will ignore
+    only error caused by adding already added component.
+    https://github.com/OpenSCAP/openscap/issues/545
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 29 13:18:27 2016 +0200
+
+    sds.c: fix return value
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 15:27:16 2016 +0200
+
+    oscap ds sds-split: enable --fetch-remote-resources
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 14:16:39 2016 +0200
+
+    man: Add --fetch-remote-resources to info
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 14:16:05 2016 +0200
+
+    bash completion: Add --fetch-remote-resources to info
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 13:38:21 2016 +0200
+
+    sds.c: Always exit oscap if cannot fetch remote resources
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 13:34:03 2016 +0200
+
+    sds.c: Reduce scope of variables
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 13:25:21 2016 +0200
+
+    Fix english
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 13:19:56 2016 +0200
+
+    sds.c: Fix output for workbench
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 26 13:19:05 2016 +0200
+
+    sds.c: Add "\n" after ok/error status
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Sep 21 10:10:46 2016 +0200
+
+    oscap_acquire_url_download: Enable redirect
+    
+    We need it for certification R2910
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Sep 21 09:50:39 2016 +0200
+
+    rename function ds_sds_dump_component -> ds_sds_dump_local_component
+    
+    Currently we have ...dump_remote_component, ...dump_file_component. Renaming should
+    make name more explicit
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 19 15:08:12 2016 +0200
+
+    oscap-info: Add support for --fetch-remote-resources
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 19 14:33:54 2016 +0200
+
+    DS: improve downloading status
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 19 13:16:48 2016 +0200
+
+    Download callback: cleanup
+    
+    Use "null object" design pattern & merge two same types
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 19 09:24:15 2016 +0200
+
+    sds.c: Print warning if --fetch-remote-resources is not allowed
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 20:43:54 2016 +0200
+
+    sds.c: Allow to download external content (http)
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 20:20:51 2016 +0200
+
+    sds.c: Introduce ds_sds_dump_component_by_href
+    
+    Move part of function to this function
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 20:02:11 2016 +0200
+
+    sds.c: Remove "filename" parameter ds_sds_dump_component()
+    
+    Function doesn't need to support loading of files, yet.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 20:00:38 2016 +0200
+
+    sds.c: Refactoring: use ds_sds_dump_file_component
+    
+    Start to use function introduced in previous commit
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 19:58:56 2016 +0200
+
+    sds.c: Refactoring: create compose_target_filename_dirname
+    
+    Move part of function to another function
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 19:52:56 2016 +0200
+
+    sds.c: Refactoring: create ds_sds_dump_file_component
+    
+    Currently not used - similar to ds_sds_dump_component
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 19:42:13 2016 +0200
+
+    sds.c: Refactoring: create ds_sds_get_component_root_by_id
+    
+    move part of function to another function
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 19:36:52 2016 +0200
+
+    sds.c: Refactoring: ds_sds_register_component
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 19:27:17 2016 +0200
+
+    sds.c: Refactoring: create ds_sds_register_xmlDoc
+    
+    Move part of function to another function
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 19:22:13 2016 +0200
+
+    sds.c: Refactoring: create ds_sds_register_sce
+    
+    Move part of function to another function
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 17:23:40 2016 +0200
+
+    sds.c: Refactoring: create ds_sds_register_component
+    
+    Move part of function to separate function
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Sep 26 16:00:29 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Sep 26 14:53:10 2016 -0400
+
+    Merge pull request #536 from jan-cerny/tailoring_fix
+    
+    Support tailoring of a checklist located in a different datastream
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Sep 26 15:44:14 2016 +0200
+
+    Fix memory leaks
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Sep 26 15:23:39 2016 +0200
+
+    add a simple test for tailoring in datastreams
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Mon Sep 26 11:57:38 2016 +0200
+
+    Merge pull request #538 from jan-cerny/issue529
+    
+    Issue #529: Fix a segmentation fault
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Sep 26 10:01:36 2016 +0200
+
+    Merge pull request #540 from yuumasato/maint-1.0-fetch-remote-resource-warning
+    
+    Consider suggestion to use "--fetch-remote-resources" a warning
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Thu Sep 22 17:43:46 2016 +0200
+
+    Consider suggestion to use "--fetch-remote-resources" a warning
+    
+    SCAP Workbench is parsing this message as progress status and
+    showing errors, while actually this message is a warning.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Sep 22 15:04:38 2016 +0200
+
+    Issue #529: Fix a segmentation fault
+    
+    Strings expected in format strings were not supplied.
+    Compiler was OK with that because it is a function with
+    variable count of parameters.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Sep 22 12:42:40 2016 +0200
+
+    Support tailoring of a checklist located in a different datstream
+    
+    This commit fixes processing of tailoring within datastreams.
+    It is now possible to have a datastream collection with multiple datastreams,
+    where XCCDF tailoring and XCCDF checklist are not both in the same datastream.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Sep 21 14:16:55 2016 -0400
+
+    Merge branch 'maint-1.2-doc2' of https://github.com/ybznek/openscap into ybznek-maint-1.2-doc2
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Sep 21 12:41:18 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Sep 21 12:40:54 2016 -0400
+
+    Merge pull request #518 from ybznek/maint-1.0-doc
+    
+    Add missing manual sections
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:23:20 2016 +0200
+
+    manual.adoc: OVAL: add --without-syschar paragraph
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 15:53:30 2016 +0200
+
+    manual.adoc: Fix grammar
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:42:45 2016 +0200
+
+    manual.adoc: Evaluation of content use passive
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:37:14 2016 +0200
+
+    manual.adoc: Evaluation of content: can contains -> can contain
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:36:21 2016 +0200
+
+    manual.adoc: tailoring - use passive
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:32:34 2016 +0200
+
+    manual.adoc: Despite of -> Instead of
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:31:49 2016 +0200
+
+    manual.adoc: change fetch -> download
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:26:35 2016 +0200
+
+    manual.adoc: change is -> are
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:25:53 2016 +0200
+
+    manual.adoc: CCE,CVE identifiers - add explanation
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 09:22:25 2016 +0200
+
+    manual.adoc: OVAL rewrite to passive form
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 1 14:39:46 2016 +0200
+
+    manual.adoc: directives file
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 5 13:26:42 2016 +0200
+
+    manual.adoc: Add tailoring
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Aug 31 13:15:19 2016 +0200
+
+    manual.adoc: Add example of evaluation without profile
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Aug 31 09:39:22 2016 +0200
+
+    manual.adoc: Add patches are up-to-date section
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 5 13:20:28 2016 +0200
+
+    manual.adoc: Add <rule-result> to identifiers
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Sep 21 13:02:27 2016 +0200
+
+    Merge pull request #533 from yuumasato/maint-1.0
+    
+    Fix results of XCCDF rules with @role="unscored".
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Wed Sep 21 10:47:35 2016 +0200
+
+    Fix indentation
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Sep 21 10:45:19 2016 +0200
+
+    Merge pull request #531 from ybznek/maint-1.2-tailor3
+    
+    Loading of external components
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 16:01:08 2016 +0200
+
+    tests: Load external xccdf component
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 16:18:42 2016 +0200
+
+    sds.c: Add support to reference external WHOLE file
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 15:31:23 2016 +0200
+
+    sds.c: Fix error checking
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 16 15:24:06 2016 +0200
+
+    sds.c: Load file from right relative path
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Sep 13 19:06:41 2016 +0200
+
+    sds.c: Fix memory leaks
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Sep 13 17:12:57 2016 +0200
+
+    sds.c: Allow load components using xlink file:
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Mon Sep 19 15:44:00 2016 +0200
+
+    Fix results of XCCDF rules with @role="unscored".
+    
+    When a XCCDF rule has @role="unscored", perform all the checks but mark
+    the result as XCCDF_RESULT_INFORMATIONAL.
+    
+    https://github.com/OpenSCAP/openscap/issues/525
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Sep 19 10:47:43 2016 -0400
+
+    Merge pull request #530 from ybznek/maint-1.2-wi
+    
+    bash_completion: add --without-syschar
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 19 15:15:29 2016 +0200
+
+    bash_completion: add --without-syschar
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Sep 16 10:14:21 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Sep 16 10:13:56 2016 -0400
+
+    Merge pull request #527 from yuumasato/maint-1.0-fix-export-override
+    
+    Fix export of overrided oscap_text
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Fri Sep 16 11:47:38 2016 +0200
+
+    Only export override attribute when necessary
+    
+    Export override attribute of oscap_text only when the element can
+    override parent value and it does override the value.
+    
+    The default value for override is false, there is no need to export it
+    if it`s false.
+
+Author: Watson Sato <wsato@redhat.com>
+Date:   Thu Sep 15 18:19:34 2016 +0200
+
+    Fix export of overrided oscap_text
+    
+    This change allows attributes marked as overriders by
+    oscap_text_set_override() to be exported.
+    
+    Exportation of an overrider attribute is conditioned by override_given.
+    But override_given is only set when an imported attribute has override
+    capability set. So, when an oscap_text was marked as overrider by
+    oscap_text_set_set_override() the attribute was never exported.
+    
+    Related to RHBZ#1320194.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Sep 13 11:20:40 2016 +0200
+
+    Merge pull request #523 from ybznek/without-syschar
+    
+    Added support to not to export system characteristics
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 15:48:50 2016 +0200
+
+    test_without_syschars.sh: Update --without-syschars -> --without-syschar
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 15:44:46 2016 +0200
+
+    utils/oscap.8: Add --without-syschar
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 12 15:41:05 2016 +0200
+
+    change --without-syschars => --without-syschar
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Sep 12 12:43:21 2016 +0200
+
+    Merge pull request #521 from ybznek/maint-1.2-disable-ansible
+    
+    xccdf_policy_remediate.c: Disable run of ansible remediation
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Sun Sep 11 19:59:40 2016 +0200
+
+    Add test for --without-syschars
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Sun Sep 11 19:45:33 2016 +0200
+
+    Add --without-syschars option
+    
+    http://nvlpubs.nist.gov/nistpubs/ir/2016/NIST.IR.7511r4.pdf req. SCAP.R.1900
+    
+    What are system characteristics?
+    http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-126r1.pdf page 27
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Sep 6 20:15:24 2016 +0200
+
+    xccdf_policy_remediate.c: Remove ansible support
+    
+    We cannot run ansible snippet easily, now - due to missing header
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Sep 9 09:52:58 2016 -0400
+
+    Merge pull request #522 from ybznek/maint-1.2-generate-fix
+    
+    ansible generate fix - add header & indentation
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Sep 9 13:24:01 2016 +0200
+
+    xccdf_policy_remediate.c: Prevent unwanted run of ansible
+    
+    This force users to check output & add right host
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Sep 6 14:14:58 2016 -0400
+
+    Show remediation as collapsed by default, add a button to HTML guide and report to expand
+    
+    Remediations can be quite long and this improves the UX of HTML guide
+    and report.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Sep 6 18:09:32 2016 +0200
+
+    xccdf_policy_remediate.c: Add correct ansible indentation
+    
+    When we generate ansible playbook with header, we need to add indentation to
+    ansible tasks
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Sep 6 13:51:15 2016 -0400
+
+    Show the type of remediation script, shell script vs ansible snippet in HTML guide and report
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Sep 6 13:42:40 2016 -0400
+
+    Moved the remediation description labels in report and guide to xccdf-share.xsl
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Sep 6 13:40:34 2016 -0400
+
+    Moved the remediation script label in report and guide to xccdf-share.xsl
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Sep 6 17:40:01 2016 +0200
+
+    xccdf_policy_remediate.c: Add ansible header to fix output
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Sep 6 17:30:01 2016 +0200
+
+    xccdf_policy_remediate.c: Split _write_text_to_fd_and_free
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Sep 5 10:46:03 2016 -0400
+
+    Merge pull request #517 from ybznek/maint-1.2-tailoring-fix
+    
+    xccdf_session.c: Fix free of dirname
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Sep 5 10:32:44 2016 +0200
+
+    xccdf_session.c: Fix free of dirname
+    
+    RHBZ: #1367896
+    According to man page, dirname can return pointer to original
+    path. So we should not call free on returned value
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Mon Sep 5 09:40:38 2016 +0200
+
+    Merge pull request #516 from ybznek/maint-1.0-manual-fix
+    
+    update repository name
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 1 10:42:40 2016 +0200
+
+    update repository name
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Sep 1 10:58:06 2016 +0200
+
+    Merge pull request #515 from ybznek/maint-1.0-manual
+    
+    manual.adoc: Update repository path
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Sep 1 10:42:40 2016 +0200
+
+    update repository name
+
+Author: Ján Lieskovský <jlieskov@redhat.com>
+Date:   Wed Aug 31 11:46:12 2016 +0200
+
+    Merge pull request #514 from ybznek/maint-1.0-doc
+    
+    manual.adoc: Updates/Fixes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Aug 31 00:24:21 2016 +0200
+
+    manual.adoc: Change openscap -> OpenSCAP
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Aug 31 00:19:09 2016 +0200
+
+    manual.adoc: Fix SCE URL
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Aug 31 00:30:18 2016 +0200
+
+    manual.adoc: Fix XLS -> XSL
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Fri Aug 19 18:33:20 2016 +0200
+
+    Merge pull request #511 from radzy/2016-08-16-wrlinux-maint-iejah2ua
+    
+    Initial Wind River Linux support
+
+Author: T.O. Radzy Radzykewycz <radzy@windriver.com>
+Date:   Fri Jul 29 08:14:02 2016 -0700
+
+    Initial Wind River Linux support
+    
+    Signed-off-by: T.O. Radzy Radzykewycz <radzy@windriver.com>
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 14:45:15 2016 -0400
+
+    Use the cached rule-result test-result lookup in both leaf and detail templates in HTML report
+    
+    new: 0m0.700s
+    old: 0m0.848s
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 14:42:49 2016 -0400
+
+    Cache test result rule result lookup when generating HTML report
+    
+    This may only be worth it if the ARF has a limited amount of TestResult elements.
+    In our typical cases it's one TestResult per ARF and very rarely more.
+    
+    new: 0m0.848s
+    old: 0m0.994s
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 14:11:46 2016 -0400
+
+    Added a comment about correctness of the 'references' XSLT map
+    
+    Wanted to fix it but then realized it was correct from the beginning.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 14:06:40 2016 -0400
+
+    Very small optimization in get-all-references in HTML report XSLT
+    
+    <5% but it simplified the queries which makes it simpler for me to
+    optimize further.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 13:58:27 2016 -0400
+
+    Don't lookup profile selects the brute force method
+    
+    Oh man, another 50+% saved...
+    
+    new: 0m0.219s
+    old: 0m0.506s
+    
+    --Martin, the XSLT optimizer!
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 13:41:43 2016 -0400
+
+    Use a separator when mapping the benchmark @id and Value @id to Value elements
+    
+    To be on the safe side...
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Aug 10 13:38:35 2016 -0400
+
+    Do not look up cdf:Value by ID brute-force in HTML reports and guides
+    
+    Instead, make a map that maps benchmark/@id and the value/@id to the
+    element.
+    
+    This saves roughly 50% of the time generating guides...
+    
+    new: 0m0.506s
+    old: 0m0.921s
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Aug 8 17:21:33 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Aug 8 17:20:53 2016 -0400
+
+    Allow NULL to be passed to xccdf_policy_model_set_tailoring
+    
+    This enables us to reset tailoring after it has previously been set to
+    something. Not very useful for the oscap tool but very useful for SCAP
+    Workbench.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Aug 5 15:32:49 2016 -0400
+
+    Updated jQuery to 1.12.4
+    
+    Bugfixes, improved browser compatibility, ...
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Aug 5 15:29:14 2016 -0400
+
+    Updated bootstrap to 3.3.7
+    
+    Bugfixes, improved browser compatibility.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Aug 5 15:13:50 2016 -0400
+
+    Optimized xccdf_1.1_remove_dangling_sub.xsl, now it takes 25% of the time
+    
+    It's the same thing again, avoid looking up through huge nodesets
+    repeatedly.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Aug 4 17:35:54 2016 -0400
+
+    Show which profiles are abstract when doing `oscap info`
+    
+    We suggest `oscap info` when user selects the wrong profile ID. oscap
+    info shows all profiles, including abstract profiles. But abstract
+    profiles disappear after benchmark is resolved. So they can't be
+    selected even though they are shown in `oscap info` This left me very
+    confused when I just encountered it.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Aug 1 14:46:19 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Aug 1 14:44:33 2016 -0400
+
+    W/o optional deps openscap will be compiled without some features
+    
+    You don't have to turn off the features yourself, it will be done
+    automatically. Thanks goes to Rongli Shi for notifying us about this
+    confusion in the README.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Jul 29 14:42:36 2016 -0400
+
+    Use build_opener() in get_cve_input.py, it's simpler and honors proxy settings
+    
+    See https://bugzilla.redhat.com/show_bug.cgi?id=1351952
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Jul 27 17:04:15 2016 -0400
+
+    More optimization in HTML report generation, only lookup rule-results once
+    
+    Not as dramatic of a speed-up as before but 15% is not too shabby.
+    
+    old: real       0m1.212s
+    new: real       0m1.010s
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Jul 27 16:57:43 2016 -0400
+
+    Optimization when generating HTML reports, lookup child rules once
+    
+    *facepalm*
+    
+    old: real       0m2.917s
+    new: real       0m1.212s
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 17:53:14 2016 -0400
+
+    Slighly cut down the nodeset when figuring out the list of all references
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 17:06:41 2016 -0400
+
+    More optimization in xccdf_1.1_to_1.2.xsl
+    
+    We now only do 4 full nodeset lookups and that's it, for everything else
+    we use keys. This saves another 50%. Overall the XSLT is now 100x faster
+    now.
+    
+    This optimization was more for consistency than for performance, the 50%
+    saved is roughly 170ms for SCAP Security Guide benchmarks.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 16:45:50 2016 -0400
+
+    Optimized xccdf_1.1_to_1.2.xsl by a factor of about 50
+    
+    Using xsl:key instead of horrible full nodeset lookups is a good idea...
+    
+    old: real       0m17.295s
+    new: real       0m0.296s
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 16:28:05 2016 -0400
+
+    Optimized xccdf_1.1_to_1.2.xsl @idref translation
+    
+    It's still pretty stupid and does subtree lookups but this shaves off a
+    lot of processing time. This transformation is used for SSG builds of
+    all the products so optimizing it greatly improves SSG build times.
+    
+    old: [0]    99.04   27.813    0.000   3526     @idref[parent::xccdf_11:*][not(parent::xccdf_11:platform)][not(parent::xccdf_11:requires)] [0]
+    new: [0]    98.44   16.831    0.000   3526     @idref[parent::xccdf_11:*][not(parent::xccdf_11:platform)][not(parent::xccdf_11:requires)] [0]
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 14:38:09 2016 -0400
+
+    Optimized cdf:sub in xccdf-share.xsl
+    
+    Fairly basic stuff, let's not do lookups twice, let's not do them when
+    we don't have to.
+    
+    old: [0]    61.03    0.557    0.000     95     cdf:sub[sub-testresult] [0]
+    new: [0]    47.56    0.321    0.000     95     cdf:sub[sub-testresult] [0]
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 14:19:56 2016 -0400
+
+    Refactored the cdf:sub template in xccdf-share
+    
+    In preparation for optimization.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 11:29:32 2016 -0400
+
+    Count number of selected rules in HTML guide using string-length
+    
+    No idea wtf I was thinking counting the number of substrings there...
+    This only saves 5% but still, why not...
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 26 11:20:43 2016 -0400
+
+    Minor optimization in xccdf-guide-impl.xsl, saves about 15%
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Jul 19 13:38:50 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Jul 19 13:34:07 2016 -0400
+
+    Merge pull request #501 from ybznek/maint-1.0
+    
+    Fix format string of debug message
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Jul 19 18:43:32 2016 +0200
+
+    Fix format string of debug message
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Jul 19 11:15:03 2016 -0400
+
+    Merge pull request #498 from ybznek/maint-1.0
+    
+    Refactoring: Remove misleading indexing
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jul 18 13:31:26 2016 +0200
+
+    Remove misleading indexing
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Jul 15 14:20:32 2016 -0400
+
+    Use /bin/bash as the interpreter for sectool scripts
+    
+    There won't be much difference between /usr/bin/env bash and /bin/bash
+    in practical use-cases but it triggers warnings with various automated
+    QA tools.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jul 15 15:04:59 2016 +0200
+
+    Merge pull request #497 from ybznek/maint-1.0-indent
+    
+    Fix some gcc warnings
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jul 15 15:00:48 2016 +0200
+
+    Merge pull request #496 from ybznek/maint-1.0-static
+    
+    oval_probe_session.c: Add missing 'static'
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jul 15 14:56:33 2016 +0200
+
+    Merge pull request #495 from ybznek/maint-1.0
+    
+    tests/process58: some minor patches
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 15 13:58:44 2016 +0200
+
+    cpename.c: Delete CPE_SEP_CHAR
+    
+    This constant is unused and ':' is used in many
+    places, including regexp etc. So usage of the
+    constant will not improve readability
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 15 13:49:51 2016 +0200
+
+    xccdf_policy.c: Fix indentation
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 15 13:43:15 2016 +0200
+
+    oval_probe_session.c: Add missing 'static'
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 15 13:27:08 2016 +0200
+
+    tests/process58: Increase wait time for processess
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 15 13:21:59 2016 +0200
+
+    tests/process58: improve performance of test
+    
+    We wait for processes later, so they could be loaded
+    during start of other processes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 15 13:09:03 2016 +0200
+
+    tests/process58: fix some shellcheck warnings
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Jul 14 12:12:35 2016 +0200
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+     Conflicts:
+            src/OVAL/probes/probe/icache.c
+            tests/probes/file/Makefile.am
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Jul 13 20:22:11 2016 -0400
+
+    Merge pull request #494 from ybznek/maint-1.0
+    
+    icache.c: refactoring
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 19:50:30 2016 +0200
+
+    probes/icache.c: Don't pass to function useless parameter
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 19:36:42 2016 +0200
+
+    probes/icache.c: introduce icache_add_to_tree
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 19:10:06 2016 +0200
+
+    probes/icache.c: Refactor icache_lookup
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 18:52:59 2016 +0200
+
+    probes/icache.c: introduce icache_lookup
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Wed Jul 13 19:10:59 2016 +0200
+
+    Merge pull request #492 from jan-cerny/icache_refactoring
+    
+    Unlock the mutex after signaling
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jul 13 19:09:00 2016 +0200
+
+    Merge pull request #491 from ybznek/maint-1.0
+    
+    call signal in mutex
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jul 13 18:27:01 2016 +0200
+
+    Unlock the mutex after signaling
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 18:18:26 2016 +0200
+
+    probes/icache.c: Refactoring
+    
+    don't fix indentation, I expect more changes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 17:59:25 2016 +0200
+
+    probes/icache.c: Refactoring
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jul 13 18:00:57 2016 +0200
+
+    probes/icache.c: Call pthread_cond_signal in locked mutex
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Wed Jul 13 15:11:07 2016 +0200
+
+    Merge pull request #489 from jan-cerny/null_check
+    
+    Add a NULL pointer check
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jul 13 13:51:56 2016 +0200
+
+    Add a NULL pointer check
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jul 13 12:42:39 2016 +0200
+
+    Merge pull request #468 from ybznek/maint-1.0-fileprobe-test
+    
+    test/file: Add test to strange filenames (missing fix)
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 29 14:36:08 2016 +0200
+
+    test/file: Add test to strange filenames
+    
+    Should check that we are correctly escape not printable characters
+    and returns error when we cannot match filename by regex
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jul 12 13:45:11 2016 +0200
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+     Conflicts:
+            src/OVAL/probes/oval_fts.c
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Tue Jul 12 13:27:14 2016 +0200
+
+    Merge pull request #486 from jan-cerny/enhance_valgrind_test
+    
+    Adjust the valgrind test to detect all kinds of memory errors
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jul 12 10:46:02 2016 +0200
+
+    Adjust the valgrind test to detect all kinds of memory errors
+    
+    This commit enables us to detect also other memory errors,
+    not only the memory leaks, but also invalid reads etc.
+    We will use --error-code to detect that valgrind failed.
+    This option is designed for usage in automated test suites (see man).
+    Parsing the log is not necessary to detect the fail.
+    Also valgrind has to generate a special logfile for each child process
+    to avoid undefined results (see man).
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Jul 11 11:44:34 2016 -0400
+
+    Merge pull request #485 from ybznek/maint-1.0-fts
+    
+    probes/oval_fts: Return error if regex issue occurs
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jul 11 15:06:56 2016 +0200
+
+    Merge pull request #484 from ybznek/maint-1.0
+    
+    probes/sysctl.c: Fix typo
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jul 11 14:55:52 2016 +0200
+
+    probes/oval_fts: Return error if regex issue occurs
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jul 11 13:53:37 2016 +0200
+
+    probes/sysctl.c: Fix typo
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Mon Jul 11 12:27:02 2016 +0200
+
+    Merge pull request #483 from jan-cerny/complete_readme
+    
+    Add a missing build dependency to README
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jul 11 10:40:02 2016 +0200
+
+    Add a missing build dependency to README
+    
+    The header file dbus.h provided by the dbus-devel package is required
+    to build systemd probes, we should list the package in our build
+    dependencies list.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Thu Jul 7 11:25:40 2016 -0400
+
+    Merge pull request #482 from ybznek/maint-1.0-fix-double-escape
+    
+    Fix double escape + test fix
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Jul 7 16:01:22 2016 +0200
+
+    oval_sysEnt.c: fix double escaping
+    
+    xmlEncodeEntitiesReentrant() + xmlNewTextChild() caused
+    that characters like '<','>' were escaped twice
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Jul 7 15:59:45 2016 +0200
+
+    test/remediation results: Delete test_file before test
+    
+    If test failed, next time 'test_file' was already created with
+    required right and fix wasn't applied
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Jul 7 15:57:41 2016 +0200
+
+    test/remediation results: Check double escaping
+    
+    Test now should test, that we don't escape <,> twice
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Jul 7 15:56:07 2016 +0200
+
+    Fix double escaping in remediation results
+    
+    xmlEncodeEntitiesReentrant() + xmlNewTextChild() caused
+    that characters like '<','>' were escaped twice
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Jul 5 11:00:23 2016 -0400
+
+    Merge pull request #473 from ybznek/maint-1.0-oval-r
+    
+    oval_sysEnt.c: fix invalid characters in oval results
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Jul 5 10:57:52 2016 -0400
+
+    Merge pull request #481 from ybznek/maint-1.0-vg-fix-probe-session
+    
+    Fix usage of probe_session after free
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Jul 4 16:38:27 2016 -0400
+
+    Merge pull request #480 from ybznek/maint-1.0-vg-fix
+    
+    rds: Move free after usage
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jul 4 16:30:03 2016 +0200
+
+    Fix usage of probe_session after free
+    
+    oval_agent_reset_session() was creating new probe_session,
+    but the probe_session were rerefenced rom ag_sess->res_model, too.
+    So when oscap used probe_session from res_model, it got old free'ed
+    version.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jul 4 13:34:26 2016 +0200
+
+    rds: Move free after usage
+    
+    We were using asset_id after its free
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jul 1 11:54:07 2016 +0200
+
+    oval_sysEnt.c: fix invalid characters in oval results
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Jun 30 09:53:03 2016 +0200
+
+    Bump version after release
+    
+    Next version from the maint-1.2 branch will be 1.2.11.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 15:53:42 2016 +0200
+
+    openscap-1.2.10
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 15:52:36 2016 +0200
+
+    Bump soname from 8.8.0 to 8.8.1
+    
+    No symbols have been added or removed
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 14:23:16 2016 +0200
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+     Conflicts:
+            src/OVAL/oval_probe.c
+            tests/probes/process58/all.sh
+            tests/test_common.sh.in
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 14:11:09 2016 +0200
+
+    Merge pull request #466 from ybznek/maint-1.0
+    
+    tests/cpe: update for fedora24
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 29 11:01:09 2016 +0200
+
+    tests/cpe: update for fedora24
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 13:09:50 2016 +0200
+
+    Merge pull request #465 from ybznek/maint-1.2-xslt
+    
+    Fix dotted remediation scripts
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 29 10:20:38 2016 +0200
+
+    guide/xslt: Fix dotted remediation scripts
+    
+    https://github.com/OpenSCAP/openscap/issues/460
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 10:15:17 2016 +0200
+
+    Merge pull request #462 from ybznek/maint-1.0
+    
+    tests/process58: Use specified xpath
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 10:13:24 2016 +0200
+
+    Merge pull request #463 from ybznek/maint-1.2-systemd
+    
+    Fix systemd test on fedora24
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 29 08:49:17 2016 +0200
+
+    Merge pull request #464 from ybznek/maint-1.0-xpath-wrapper
+    
+    xpath wrapper
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Jun 28 23:04:24 2016 +0200
+
+    tests: Add xpath wrapper for newer version
+    
+    Newer version of xpath has different interface
+    https://github.com/OpenSCAP/openscap/issues/461
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Jun 28 21:26:12 2016 +0200
+
+    test/systemdunitproperty: Separete to conditional part
+    
+    "-.mount Wants" isn't presented on Fedora24, so part of test
+    was separated and now it should be started only on supported
+    system
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Jun 28 19:55:09 2016 +0200
+
+    tests/process58: Use specified xpath
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Mon Jun 27 15:18:26 2016 -0400
+
+    Fixed a few one-byte buffer overflow bugs in intelisteningservers.c
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Mon Jun 27 18:43:54 2016 +0200
+
+    Merge pull request #459 from jan-cerny/issue281
+    
+    Issue #281: Fix invalid characters in remediation results
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jun 27 15:22:25 2016 +0200
+
+    Add a simple test for issue #281
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jun 27 13:23:08 2016 +0200
+
+    Issue #281: Fix invalid characters in remediation results
+    
+    We include stdout of a remediation script to the XCCDF results.
+    But the output of the remediation script can contain characters
+    that are forbidden in XML documents, eg. most of the non-printable
+    characters. We need to escape or remove them from the string
+    before we include it to the XML document. Libxml provides a
+    function to get rid of those characters.
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Fri Jun 24 15:59:25 2016 +0200
+
+    Merge pull request #457 from jan-cerny/issue372
+    
+    Issue #372: Add xccdf:TestResult@test-system attribute
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jun 24 13:47:23 2016 +0200
+
+    Add a simple test for xccdf:TestResult@test-system
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jun 24 12:26:15 2016 +0200
+
+    Merge pull request #454 from ybznek/maint-1.2-file-probe-test
+    
+    probes/file: Add debug output & modify test
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Fri Jun 24 12:08:38 2016 +0200
+
+    Merge pull request #456 from jan-cerny/fix_a_typo
+    
+    Fix a typo
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Fri Jun 24 12:08:00 2016 +0200
+
+    Merge pull request #452 from jan-cerny/maint-1.2-fix-rhel5
+    
+    Issue #393: Fix rpmverifyfile compilation on RHEL5
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jun 24 10:30:45 2016 +0200
+
+    Issue #372: Add xccdf:TestResult@test-system attribute
+    
+    The xccdf:TestResult element should contain a test-system
+    attribute which is defined in specification as follows:
+    Name of the benchmark consumer program that generated this
+    <xccdf:TestResult> element; SHOULD be either a CPE name or a
+    CPE applicability language expression.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jun 24 09:48:12 2016 +0200
+
+    Fix a typo
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Jun 24 09:42:17 2016 +0200
+
+    Fix a typo
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Jun 23 14:41:07 2016 +0200
+
+    probes/file: Add debug output & modify test
+    
+    We have often randomly failed file probe test, it should
+    help us to find an issue
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Jun 23 13:31:12 2016 +0200
+
+    Add a comment
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Thu Jun 23 13:14:50 2016 +0200
+
+    Merge pull request #451 from jan-cerny/small_typo_fix
+    
+    Fix a typo
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Thu Jun 23 11:05:17 2016 +0200
+
+    Merge pull request #450 from jan-cerny/remove_callback
+    
+    Remove callback on RPM < 4.6
+
+Author: Jan Cerny <jcerny@redhat.com>
+Date:   Thu Jun 23 09:50:15 2016 +0200
+
+    Issue #393: Fix rpmverifyfile compilation on RHEL5
+    
+    One missing include and some fallback definition of macros
+    will fix the issue.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Jun 23 09:05:24 2016 +0200
+
+    Fix a typo
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 22 15:15:58 2016 +0200
+
+    Remove callback on RPM < 4.6
+    
+    Recently we have merged a fix to compile the rpm probes
+    on maint-1.0 on systems with older versions of rpmlib.
+    However, the reporting function  is not present there,
+    so it does not make any sense to set the logging callback,
+    because it has no effect. This commit removes the callback
+    on those systems.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Jun 22 11:04:06 2016 -0400
+
+    Merge pull request #448 from jan-cerny/issue401-maint-1.0
+    
+    Issue #401: OVAL tests can reference only objects of same type
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 22 14:11:44 2016 +0200
+
+    Merge pull request #449 from ybznek/maint-1.2-vg
+    
+    Valgrind_test: Add free-fill, malloc-fill
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 22 13:58:04 2016 +0200
+
+    Valgrind_test: Add free-fill, malloc-fill
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Jun 22 13:47:18 2016 +0200
+
+    Merge pull request #440 from ybznek/maint-1.2-offline-scan-rpmdb
+    
+    Fix offline scan of rpmverifypackage
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jun 21 16:16:24 2016 +0200
+
+    Issue #401: OVAL tests can reference only objects of same type
+    
+    Tests referencing objects of different type should be
+    rejected by OpenSCAP. For example, a textfilecontent54_object
+    can be referenced only from textfilecontent54_test, but NOT from
+    sysctl_test. Such referencing is wrong according to
+    schematron validation.
+    This commit adds a new runtime check to verify that a valid
+    content is processed.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jun 21 16:03:21 2016 +0200
+
+    Fix invalid OVAL content in test suite
+    
+    This commit fixes the following warnings of schematron validation:
+    oval:x:tst:8 - the object child element of a textfilecontent54_test must reference a textfilecontent54_object
+    oval:x:obj:4 - operation attribute for the pattern entity of a textfilecontent54_object should be 'pattern match'
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 22 10:12:29 2016 +0200
+
+    probes/rpmverifypackage: fix comment
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 22 04:48:22 2016 +0200
+
+    probes/rpmverifypackage: move #include <config.h> to c file
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Jun 22 00:46:58 2016 +0200
+
+    probes/rpmverifypackage: Don't use RPMTRANS_FLAG_NOPLUGINS
+    
+    ./configure on rhel7 is not able to detect right rpm version, so
+    we will fallback solution everytime
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jun 17 14:56:16 2016 +0200
+
+    probes/rpmverifypackage: Use own offline mode & probe_chroot
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jun 20 12:44:25 2016 +0200
+
+    rpmLibsPreload: Make preloading faster
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jun 17 14:27:19 2016 +0200
+
+    probes: introduce probe_chroot*
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jun 17 13:40:58 2016 +0200
+
+    Introduce OFFLINE_MODE_OWN
+    
+    Currently we support two offline modes - chroot, rpmdb
+    This offline mode let decide probe how to implement
+    offline mode.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jun 21 16:30:10 2016 +0200
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+     Conflicts:
+            ac_probes/configure.ac.tpl
+            configure.ac
+            src/OVAL/probes/unix/linux/rpmverify.c
+            src/OVAL/probes/unix/linux/rpmverifyfile.c
+            src/OVAL/probes/unix/linux/rpmverifypackage.c
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Jun 21 09:36:37 2016 -0400
+
+    Merge pull request #443 from jan-cerny/issue408
+    
+    Issue #408: Fix compilation on older systems
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Jun 21 09:15:17 2016 -0400
+
+    Merge pull request #442 from jan-cerny/autoconf_fix
+    
+    Fix autoconf issues
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jun 21 10:52:31 2016 +0200
+
+    Issue #408: Fix compilation on older systems
+    
+    Function rpmLogSetCallback has changed its prototype in RPM 4.6 API.
+    Before it had only one parameter, now it has two parameters.
+    Older version (RPM 4.4.x) is shipped in RHEL5, therefore we must use
+    conditional compilation to get the rpm probes compiled on RHEL5.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jun 21 14:06:30 2016 +0200
+
+    Fix autoconf issues
+    
+    Changes made recently in src/OVAL/probes/Makefile.am caused that
+    ./confgen.sh removed check macros for header files that are needed
+    for rpm probes from configure.ac.
+    This commit fixes the syntax of respective Makefile.am and also
+    includes freshly generated configure.ac.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Jun 20 10:32:38 2016 -0400
+
+    Merge pull request #439 from ybznek/maint-1.0-offline-attr
+    
+    probes/fileextendedattribute.c: Fix offline-mode option position
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Sun Jun 19 23:36:46 2016 +0200
+
+    probes/fileextendedattribute.c: Fix offline-mode option position
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Jun 15 10:43:33 2016 -0400
+
+    Merge pull request #433 from ybznek/maint-1.0-extended-attribute
+    
+    probe extended attribute fix
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Jun 15 10:42:34 2016 -0400
+
+    Merge pull request #432 from ybznek/maint-1.0-off
+    
+    Offline scan option position
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jun 13 15:03:46 2016 +0200
+
+    probes/fileextendedattribute.c: refactoring - remove goto
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jun 13 16:43:38 2016 +0200
+
+    probes/fileextendedattribute.c: Fix possible buffer overflow
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jun 13 15:50:37 2016 +0200
+
+    probes/fileextendedattribute.c: Fix missing '\0'
+    
+    From man page of lgetxattr() - there is no information, that
+    returned string should be with trailing \0
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Jun 13 15:28:59 2016 +0200
+
+    probes/fileextendedattribute.c: Fix neverending loop
+    When index stays on '\0', it cannot be increased any more
+    
+    Fixed loop condition, because after newly added '++i' index can
+    point after our buffer
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Sun Jun 12 23:17:21 2016 +0200
+
+    probes/filehash: Fix offline mode support
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Sun Jun 12 22:25:47 2016 +0200
+
+    probes/filehash58: Fix offline support
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Sat Jun 11 13:40:11 2016 -0400
+
+    Merge pull request #427 from ybznek/maint-1.2
+    
+    oscap-docker: *-cve scan of non-rhel fix
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jun 10 16:48:40 2016 +0200
+
+    oscap-docker: remove deprecated comments
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jun 10 12:31:45 2016 +0200
+
+    oscap-docker: Print error message when target is not RHEL
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Jun 10 12:22:59 2016 +0200
+
+    oscap-docker: Unmount container when cve-scan fail
+
+Author: Jason Newton <nevion@gmail.com>
+Date:   Wed May 25 00:07:42 2016 -0400
+
+    add opensuse 42.1
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue May 31 13:05:56 2016 -0400
+
+    oscap-docker fixed to be source compatible with py2 and py3
+    
+    set_defaults is problematic on subparsers in argparse, it changed
+    behavior in python2 and python3
+    upstream discussion: http://bugs.python.org/issue9351#msg244786
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue May 24 13:51:46 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Daniel Kopecek <dkopecek@redhat.com>
+Date:   Tue May 24 11:48:54 2016 +0200
+
+    rpminfo: fixed handling of probe_item_collect return value
+    
+    The probe_item_collect function uses its return value to signal
+    several things. The previous usage was wrong by assuming that it
+    could be coerced to a boolean value and interpreting 1/true as an
+    error state.
+    
+    The function returns an integer value. Negative values can be
+    interpreted as fatal errors, 0 as success, 1 as an indication of
+    the collected item being filtered out from the result (which is
+    normal behaviour when using filters) and the value 2 as an indication
+    of not including the item because of memory shortage (at which point
+    the probe might decide wheter to do something to release memory to be
+    able to continue or short-circuit the collection process).
+    
+    Related: https://www.redhat.com/archives/open-scap-list/2016-May/msg00036.html
+    
+    Addresses:
+    ```
+    OpenSCAP Error: Probe at sd=1 (rpminfo) reported an error: Invalid type, value or format [oval_probe_ext.c:393]
+    Unable to receive a message from probe [oval_probe_ext.c:579]
+    Invalid oval result type: -1. [oval_resultTest.c:179]
+    ```
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Thu May 19 09:21:16 2016 -0400
+
+    Merge pull request #414 from jan-cerny/issue394
+    
+    Fix Issue #394 (SCE results aren't embedded in XCCDF reports) + test
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Thu May 19 13:34:05 2016 +0200
+
+    Merge pull request #416 from jan-cerny/issue_345
+    
+    Issue #345: Fix error message when <generator> is missing
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Thu May 19 13:12:00 2016 +0200
+
+    Merge pull request #415 from jan-cerny/issue_370
+    
+    Issue #370: Fix a segmentation fault
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu May 19 10:11:56 2016 +0200
+
+    Issue #345: Fix error message when <generator> is missing
+    
+    When oscap reports that the document is invalid, it reports
+    against which schema it is invalid. However if the generator
+    element is missing the schema version is unknown.
+    This commit handles a situation when schema version is missing.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu May 19 09:08:43 2016 +0200
+
+    Fix shebangs
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed May 18 10:11:54 2016 -0400
+
+    Merge pull request #412 from jan-cerny/add_dep
+    
+    Add GConf2-devel to build dependencies list
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed May 18 14:55:41 2016 +0200
+
+    Issue #370: Fix a segmentation fault
+    
+    Addressing:
+    
+    oscap_source_free (source=0x13313d90) at oscap_source.c:129
+    0x00007ffff7b8ac5e in xccdf_session_free (session=0x61cb30) at xccdf_session.c:249
+    0x000000000040ba1f in app_evaluate_xccdf (action=<optimized out>) at oscap-xccdf.c:548
+    0x0000000000407f8e in oscap_module_call (action=0x7fffffffd7b0) at oscap-tool.c:261
+    oscap_module_process (module=0x6154c0 <XCCDF_EVAL>, module@entry=0x614a40 <OSCAP_ROOT_MODULE>,
+    argc=argc@entry=6, argv=argv@entry=0x7fffffffda48) at oscap-tool.c:346
+    0x000000000040702f in main (argc=6, argv=0x7fffffffda48) at oscap.c:80
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed May 18 13:33:52 2016 +0200
+
+    Test for SCE results in HTML report
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed May 18 11:33:52 2016 +0200
+
+    Issue#394: Add missing default template for SCE results
+    
+    The oscap xccdf generate report module is able to embed SCE results
+    into the HTML report. To do that, a template for results file name
+    must be specified using the "--sce-template" option.
+    However, users expect that if they omit "--sce-template" option,
+    a default file name template will be used.
+    It works like that for OVAL results, so it should work the same way
+    also for SCE results.
+    To fix this issue, this commit adds a default file name template
+    for SCE into the xccdf module.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed May 18 11:27:18 2016 +0200
+
+    Describe "--sce-template" option in man page
+    
+    The "--sce-template" option is available in oscap xccdf generate report
+    module for a long time (since f88d6cee276ef56464e591629e484041864e0f68),
+    but it was not documented in the manual page.
+    The behavior of this option is very similar to "--oval-template",
+    expect this one is for SCE results.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue May 17 16:19:44 2016 -0400
+
+    Fix compilation issues
+    
+    Martin should pay more attention to his commits in the evenings...
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue May 17 14:15:52 2016 -0400
+
+    Support --benchmark-id when running `oscap generate guide`
+    
+    This allows us to select a benchmark with source datastreams having more
+    than one XCCDF benchmark in them.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Thu May 12 11:19:51 2016 +0200
+
+    Merge pull request #413 from jan-cerny/fix_double_free
+    
+    Fix a double free
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu May 12 09:50:19 2016 +0200
+
+    Fix a double free
+    
+    Addressing:
+    Invalid free() / delete / delete[] / realloc()
+       at 0x4C29CF0: free (vg_replace_malloc.c:530)
+       by 0x4EC6DD5: xccdf_benchmark_import (benchmark.c:70)
+       by 0x40CD38: app_info (oscap-info.c:151)
+       by 0x4079BD: oscap_module_call (oscap-tool.c:261)
+       by 0x4079BD: oscap_module_process (oscap-tool.c:346)
+       by 0x4069BE: main (oscap.c:79)
+     Address 0xc84a6a0 is 0 bytes inside a block of size 312 free'd
+       at 0x4C29CF0: free (vg_replace_malloc.c:530)
+       by 0x4EC6C97: xccdf_benchmark_parse (benchmark.c:145)
+       by 0x4EC6D54: xccdf_benchmark_import (benchmark.c:65)
+       by 0x40CD38: app_info (oscap-info.c:151)
+       by 0x4079BD: oscap_module_call (oscap-tool.c:261)
+       by 0x4079BD: oscap_module_process (oscap-tool.c:346)
+       by 0x4069BE: main (oscap.c:79)
+     Block was alloc'd at
+       at 0x4C2A988: calloc (vg_replace_malloc.c:711)
+       by 0x4E7E1C8: __oscap_calloc (alloc.c:68)
+       by 0x4EC7B2D: xccdf_item_new (item.c:120)
+       by 0x4EC5461: xccdf_benchmark_new (benchmark.c:96)
+       by 0x4EC6D46: xccdf_benchmark_import (benchmark.c:64)
+       by 0x40CD38: app_info (oscap-info.c:151)
+       by 0x4079BD: oscap_module_call (oscap-tool.c:261)
+       by 0x4079BD: oscap_module_process (oscap-tool.c:346)
+       by 0x4069BE: main (oscap.c:79)
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed May 11 14:21:21 2016 +0200
+
+    Add GConf2-devel to build dependencies list
+    
+    This package is needed to build gconf probe.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Tue May 10 16:23:23 2016 +0200
+
+    Merge pull request #411 from dkopecek/dkopecek-patch-1
+    
+    Update README.md
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue May 10 09:35:29 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue May 10 09:34:58 2016 -0400
+
+    Added libblkid-devel to the list of suggested dependencies
+
+Author: Daniel Kopeček <dnk1618@gmail.com>
+Date:   Tue May 10 13:47:50 2016 +0200
+
+    Update README.md
+    
+    Added libblkid-devel to build dependencies list.
+    
+    Related: https://www.redhat.com/archives/open-scap-list/2016-May/msg00016.html
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri May 6 14:27:46 2016 -0400
+
+    Revert "enable subdir-objects in automake"
+    
+    subdir-objects breaks the build.
+    This reverts commit a138dcc3adde1c1fbdeae6b5d0a509bda9d8c5ec.
+
+Author: Gabe <redhatrises@gmail.com>
+Date:   Wed May 4 14:24:20 2016 -0600
+
+    enable subdir-objects in automake
+    
+    - Silences warnings and deprecation notice about subdir-objects
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon May 2 20:37:19 2016 -0400
+
+    Merge pull request #405 from jan-cerny/fix_rhbz1250072
+    
+    RHBZ#1250072: Fix regression in loading DS session
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon May 2 17:45:53 2016 +0200
+
+    RHBZ#1250072: Fix regression in loading DS session
+    
+    Loading session for a DS file multiple times with different XCCDF IDs
+    didn't work. When a session for a data stream is created using Python API
+    and then it is loaded twice with different XCCDF IDs being set,
+    the session doesn't reflect the change of the XCCDF ID.
+    This commit fixes the regression by resetting the DS session
+    when a new XCCDF session is loaded. Therefore the IDs are resetted.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Apr 22 15:34:25 2016 +0200
+
+    Bump version after release
+    
+    Next version from the maint-1.2 branch will be 1.2.10.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Apr 22 10:05:59 2016 +0200
+
+    openscap-1.2.9
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Apr 21 15:33:10 2016 +0200
+
+    Bump soname from 8.7.1 to 8.8.0
+    
+    1 symbol was added, no symbols were removed
+
+Author: Ján Lieskovský <jlieskov@redhat.com>
+Date:   Fri Apr 22 14:15:56 2016 +0200
+
+    Merge pull request #398 from jan-cerny/issue364
+    
+    Issue #364: Fix OCIL in data streams
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Apr 22 11:56:11 2016 +0200
+
+    Issue #364: Fix OCIL in data streams
+    
+    Oscap ds sds-compose does not recognize OCIL file as SCAP-1.2
+    check system and places it into <ds:extended-components>
+    element (intended for non-SCAP content) rather into
+    <ds:checks> element (intended for SCAP-1.2 check systems)
+    That caused build problems in SSG - error message displayed
+    and invalid datastream created.
+    This commit adds basic support for including OCILs in data streams.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Apr 20 14:48:31 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Apr 20 14:43:07 2016 -0400
+
+    Merge pull request #389 from ybznek/maint-1.0-preload-2
+    
+    probes dynamic library preloading
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Apr 20 14:42:57 2016 -0400
+
+    Merge pull request #396 from ybznek/maint-1.0-manual-coverage
+    
+    Add code coverage info into manual
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Apr 20 15:52:15 2016 +0200
+
+    docs/manual: Add coverage generation info
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Apr 20 13:40:55 2016 +0200
+
+    probes/rpm: Fix erro cb return value
+    
+    We have to use RPMLOG_DEFAULT, because RPMLOG_EXIT
+    cause exit of whole probe.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Apr 12 17:07:00 2016 +0200
+
+    probes/rpm: Add probe_preload function
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Apr 13 10:58:01 2016 +0200
+
+    probes/rpm-helper: Add rpmLibsPreload
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Apr 12 16:55:21 2016 +0200
+
+    probes: Use probe_preload before chroot
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Apr 12 16:55:05 2016 +0200
+
+    probes: Introduce probe_preload
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Apr 12 17:02:25 2016 +0200
+
+    probes: Preload libraries requiered for pthread_cancel
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Apr 13 12:04:14 2016 -0400
+
+    Merge pull request #388 from ybznek/maint-1.0-sysctl-local
+    
+    sysctl - test
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Apr 12 17:25:08 2016 +0200
+
+    probes/rpm-helper: fix #endif position
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Wed Apr 13 10:33:22 2016 +0200
+
+    Merge pull request #382 from jan-cerny/user_manual_fix
+    
+    Remove information about spec files from user manual
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Sun Apr 10 23:49:40 2016 +0200
+
+    tests/sysctl: Add test_sysctl_probe_all
+    
+    Compare all collected names with names of sysctl
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Apr 11 18:01:44 2016 +0200
+
+    Merge pull request #387 from ybznek/maint-1.0-sysctl-local
+    
+    probes/sysctl: Enable scan 'files' through different devices
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Apr 11 14:27:28 2016 +0200
+
+    Merge pull request #385 from ybznek/rpm-handler
+    
+    rpm error handler
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Apr 11 12:57:40 2016 +0200
+
+    probes/sysctl: Enable scan 'files' through different devices
+    
+    /proc/sys/fs/binfmt_misc is on different device than rest of /proc/sys
+    (stat /proc/sys/fs/binfmt_misc). This commit enable to scan it too
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Apr 11 10:42:28 2016 +0200
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Apr 11 09:44:41 2016 +0200
+
+    probes/rpm: Use rpmErrorCb to handle rpm errors
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Apr 11 09:43:22 2016 +0200
+
+    probes/rpm: Introduce rpmErrorCb
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sat Apr 9 14:36:14 2016 +0200
+
+    Merge pull request #380 from NonerKao/maint-1.2
+    
+    Reuse existing function during the check
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Apr 8 11:38:48 2016 +0200
+
+    Merge pull request #381 from ybznek/maint-1.0-rpm-mods
+    
+    RPM probes - refactoring only
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Apr 7 11:27:40 2016 +0200
+
+    probes/rpm: merge struct to rpm-helper
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Apr 7 11:14:51 2016 +0200
+
+    probes/rpm: refactoring - change order of #include
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Apr 7 10:53:36 2016 +0200
+
+    probes/rpm: rpm_mutex_(un)lock
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Apr 7 10:47:19 2016 +0200
+
+    probes/rpm: merge common rpm-deps
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Apr 7 10:38:32 2016 +0200
+
+    probes/rpm: Move common macros to rpm-helper
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Apr 7 10:27:22 2016 +0200
+
+    probes/rpm: Introduce rpm-helper
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Apr 7 17:01:11 2016 +0200
+
+    Remove information about spec files from user manual
+    
+    The spec files are not present in maint-1.2 anymore.
+    They were removed in commits
+    3fe208f3caf1f3a46cd2ee2ea7baa88154600674
+    41fe1106a680885cd684313d306c12eb54d4353d
+
+Author: Quey-Liang Kao <s101062801@m101.nthu.edu.tw>
+Date:   Thu Apr 7 00:36:46 2016 +0800
+
+    Improve readability for assert_exists calls
+    
+    Fix: remove the temp files after assert_exists calls
+
+Author: Quey-Liang Kao <s101062801@m101.nthu.edu.tw>
+Date:   Wed Apr 6 22:02:22 2016 +0800
+
+    Reuse existing function during the check
+    
+    The two modified script files explicitly parse the formatted file
+    by xpath command, which act the same as the assert_exists function
+    in tests/test_common.sh.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Apr 5 12:05:24 2016 -0400
+
+    Merge pull request #378 from jan-cerny/fix_compiler_warning
+    
+    Fix compiler warning: unused variable
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Apr 5 17:46:06 2016 +0200
+
+    Fix compiler warning: unused variable
+    
+    Addressing:
+    unix/runlevel.c: In function ‘get_runlevel_redhat’:
+    unix/runlevel.c:227:13: warning: unused variable ‘runlevel_list’ [-Wunused-variable]
+      const char runlevel_list[] = {'0', '1', '2', '3', '4', '5', '6'};
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Apr 5 17:35:01 2016 +0200
+
+    Merge pull request #369 from GautamSatish/add_suse_runlevel
+    
+    Adding implementation for runlevel probe on SUSE
+
+Author: Gautam Satish <gautams@hpe.com>
+Date:   Thu Mar 31 00:08:43 2016 -0400
+
+    Adding implementation for runlevel probe on SUSE
+    
+    Updated the runlevel probe with some refactoring.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Apr 4 11:29:20 2016 -0400
+
+    Merge pull request #374 from jan-cerny/deprecate_oval_probe_query_definition
+    
+    Deprecate function oval_probe_query_definition
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Apr 4 11:28:54 2016 -0400
+
+    Merge pull request #375 from jan-cerny/move_messages_to_results_model
+    
+    Move messages to results model
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Apr 4 11:27:31 2016 -0400
+
+    Merge pull request #334 from jan-cerny/indent
+    
+    Indent messages in verbose log
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Apr 4 11:22:03 2016 -0400
+
+    Merge pull request #373 from jan-cerny/move_message
+    
+    Move a message from unused code
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Apr 4 17:07:51 2016 +0200
+
+    Merge pull request #377 from OpenSCAP/revert-376-maint-1.0-merge-oval-cpe
+    
+    Revert "openscap-cpe-*.xml: update from maint-1.2"
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Apr 4 09:52:55 2016 -0400
+
+    Revert "openscap-cpe-*.xml: update from maint-1.2"
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Apr 4 13:45:22 2016 +0200
+
+    Merge pull request #376 from ybznek/maint-1.0-merge-oval-cpe
+    
+    openscap-cpe-*.xml: update from maint-1.2
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Apr 4 10:15:53 2016 +0200
+
+    openscap-cpe-*.xml: update from maint-1.2
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Apr 3 15:36:09 2016 +0200
+
+    Indent messages in verbose log
+    
+    This commit indents messages inside test or definition
+    to better distiguish between individual tests or definitions
+    and improve orientientation in log for user.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 28 19:21:53 2016 +0100
+
+    Add possibility for indent of messages in verbose log
+    
+    This commit adds a macro that can either increase or
+    decrease indent of messages in verbose log.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Apr 3 11:02:42 2016 +0200
+
+    Move message about test evaluating
+    
+    After refactoring done in #360, we can move this message
+    to results model without affecting functionality.
+    The new place is more logical, because the two corresponding
+    messages are now near to each other in source code.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Apr 3 10:56:21 2016 +0200
+
+    Move message about definition evaluating
+    
+    After refactoring done in #360, we can move this message
+    to results model without affecting functionality.
+    The new place is more logical, because the two corresponding
+    messages are now near to each other in source code.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Apr 3 09:47:27 2016 +0200
+
+    Deprecate function oval_probe_query_definition
+    
+    We have moved querying definitions into results model and
+    removed call of oval_probe_query_definition in
+    b8e8860fa362b37201f3f46cb6f3dc1da6863246 .
+    The only case where this function is called now (oval_probe.c:433)
+    is a recursive call.
+    We can deprecate the function and remove it in next major release,
+    because it is a dead code.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Apr 3 09:10:06 2016 +0200
+
+    Move a message from unused code
+    
+    Since we have merged PR #360, we miss a message reporting extended
+    definition in our verbose mode. This commit moves a message from
+    function which is not used now to the right place.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Fri Apr 1 12:17:31 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Jacob Varughese <jacob.varughese@oracle.com>
+Date:   Wed Mar 16 12:27:46 2016 -0700
+
+    Fixed for solaris to use fts_
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Mar 30 11:16:47 2016 -0400
+
+    Merge pull request #363 from ybznek/maint-1.2-mount-dir
+    
+    oscap-docker: Mount in safe temporary container
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 30 16:22:39 2016 +0200
+
+    Merge pull request #361 from ybznek/maint-1.0-rpm-not-applicable
+    
+    RPM probes: return "Not applicable" without valid db
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 30 15:38:12 2016 +0200
+
+    Merge pull request #362 from ybznek/maint-1.0-cpe-oval
+    
+    Fix openscap-cpe-oval.xml: Remove check to unix family
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Mar 30 14:56:23 2016 +0200
+
+    probes/rpm: fix whitespaces
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Mar 29 17:51:16 2016 +0200
+
+    oscap-docker: refactoring
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Mar 30 05:11:37 2016 +0200
+
+    openscap-cpe-oval: Remove unused test to unix family
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Mar 30 05:09:36 2016 +0200
+
+    openscap-cpe-oval: Don't check unix family
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Tue Mar 29 11:08:33 2016 +0200
+
+    Merge pull request #360 from jan-cerny/merge_probing_to_results
+    
+    Query test and evaluate its results in one step
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sat Mar 26 19:05:36 2016 +0100
+
+    Merge pull request #365 from jan-cerny/verbose_on_stderr
+    
+    If verbose log file is not specified, write messages on stderr
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 26 16:29:30 2016 +0100
+
+    Fix verbose mode in XCCDF module
+    
+    If we will write verbose messages on stderr, we should not
+    split printing result of XCCDF rule into two functions.
+    Otherwise the messages would be mixed between "Result" and result.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 26 16:29:18 2016 +0100
+
+    Update user manual - changes in verbose mode
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 26 16:26:53 2016 +0100
+
+    Allow stderr in probes
+    
+    If verbose mode is turned on and no file is specified for the log,
+    stderr should be used. We need to allow this also for messages from probes.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 26 16:26:20 2016 +0100
+
+    Do not require --verbose-log-file option
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 26 16:24:52 2016 +0100
+
+    Write messages on stderr if log file is not specified
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 24 12:24:28 2016 +0100
+
+    oscap-docker: Mount in safe temporary container
+    
+    https://github.com/OpenSCAP/openscap/issues/329
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 24 09:18:40 2016 +0100
+
+    probe/rpm*: Return "Not applicable" without valid db
+    
+    https://github.com/OpenSCAP/openscap/issues/348
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 16:43:23 2016 +0100
+
+    Evaluate criteria only if criteria node is present
+    
+    If there is a definition without criteria chlid element,
+    the result should be "not evaluated".
+    This case used to be cached in oval_probe_query_definition.
+    After we moved querying into results evalaution,
+    we need to check it here.
+    Otherwise it breaks test tests/API/OVAL/unittests/test_deprecated_def.sh.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 14:34:56 2016 +0100
+
+    Do not call oval_probe_query_definition
+    
+    Since we merged probing for tests into test evaluation in previous commits,
+    calling oval_probe_query_definition can be removed now as superfluous action.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 14:28:35 2016 +0100
+
+    Query test and evaluate its results in one step
+    
+    If a probe session is started, we can query the test and collect the objects
+    just when the result of a test is going to be evaluated.
+    After applying this commit we will not need to browse
+    the criteria tree twice as we do now.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 14:25:11 2016 +0100
+
+    Create results model with probe session
+    
+    Other occurences of oval_result_model_new are not required to be replaced,
+    because in other cases it doesn't need to probe the system.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 13:46:54 2016 +0100
+
+    Add a getter of probe_session for results model
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 13:44:33 2016 +0100
+
+    Add probe_session into results model
+    
+    The probe_session will be added by a special constructor
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 12:58:34 2016 +0100
+
+    Expose function oval_probe_query_test
+    
+    This commit removes static modifier from function oval_probe_query_tests
+    and adds protytype of this function to a private header file.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 23 09:51:53 2016 +0100
+
+    Change oval_probe_query_criterion to oval_probe_query_test
+    
+    This function takes oval_criteria_node *cnode as its second paramater.
+    But it assumes that cnode is a criterion and it only uses this paramater
+    to get the oval_test referenced by the criterion.
+    The function is static and it is called only in one place,
+    where we are already sure that cnode is a criterion.
+    So we can move some part of code to the caller in a way
+    that we can change the type of second parameter to oval_test.
+    This change is done because we would like to reuse the code
+    in results_model.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Mar 22 15:58:20 2016 -0400
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Mar 22 15:53:18 2016 -0400
+
+    Correctly parse and write-out version/@time and version/@update in XCCDF Benchmark
+    
+    Previously we were parsing this correctly but not writing it out when
+    serializing. I have changed tests accordingly.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 19 17:34:03 2016 +0100
+
+    Refactor: Extract function oval_probe_query_var_ref
+    
+    This commit extracts a part of code which handles references to variables
+    and moves the code to a new separate static function.
+    The purose of this commit is to make the function oval_probe_query_criterion
+    more understandable.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 19 16:53:55 2016 +0100
+
+    Evaluate extended definition directly
+    
+    We can use oval_probe_query_definition here
+    because it will wuery its criteria the same way.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 19 16:14:19 2016 +0100
+
+    Refactor: extract function oval_probe_query_extend_definition
+    
+    This commit only moves a block of code to a new separate static function.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Mar 19 16:06:06 2016 +0100
+
+    Refactor: Extract function oval_probe_query_criterion
+    
+    This commit only moves a block of code to a new separate static function.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Mon Mar 21 10:27:42 2016 +0100
+
+    Add a test_sce_in_ds.sh back
+    
+    This test was skipped since 920d633e9b4c7fc006e6c8aa80fdd388240dac3f
+    after it was added in 609ccc7cf64f63901d174c1f7295f33739065874.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Mar 21 08:47:15 2016 +0100
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+     Conflicts:
+            tests/sce/Makefile.am
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Mar 21 08:41:38 2016 +0100
+
+    Merge pull request #349 from ybznek/maint-1.2-sds-sce-fix
+    
+    SDS SCE fix
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Mar 18 09:57:24 2016 -0400
+
+    Merge pull request #357 from jan-cerny/issue_342
+    
+    Fix grouping in HTML report
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Mar 16 16:41:30 2016 -0400
+
+    Merge pull request #358 from ybznek/maint-1.0-fix-tests
+    
+    tests/sce-in-ds: Add to Makefile.am
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Wed Mar 16 10:09:44 2016 +0100
+
+    Do not expose oval_result_criteria_node_negate in public API
+    
+    Move the function to oval_results_impl.h
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Feb 22 17:00:17 2016 +0100
+
+    Make public a function negating criteria
+    
+    In future we will need it in other modules.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Feb 22 20:33:27 2016 +0100
+
+    Refactor: Extract function oval_result_system_prepare_definition
+    
+    We will need a part of this code in oval_probe_query_definition.
+    It wouldn't be good to just copy and paste, instead we can
+    extract the code to a separate function.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Mar 15 22:25:41 2016 +0100
+
+    tests/sce-in-ds: Add to Makefile.am
+    
+    Append forgotten test
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Tue Mar 15 22:07:39 2016 -0400
+
+    Merge pull request #359 from ybznek/maint-1.2-sce-errors
+    
+    tests/sce_parse_errors: Add test to Makefile.am
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Mar 15 22:33:20 2016 +0100
+
+    tests/sce_parse_errors: Add test to Makefile.am
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Mar 14 15:13:49 2016 +0100
+
+    xccdf_policy: refine detection of realpath
+    
+    We need to detect only relative path to subdir, not to
+    parent dir
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Mar 11 10:09:47 2016 +0100
+
+    sds.c: Refactoring - add consts
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 10 13:43:16 2016 +0100
+
+    sds.c: Refactoring
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 10 13:40:08 2016 +0100
+
+    sds.c: Fix licence whitespace
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 10 13:09:50 2016 +0100
+
+    sds: refactoring
+    
+    Create SCE path only when is needed - Don't
+    create temp directory in all cases
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 10 13:04:01 2016 +0100
+
+    sds: refactoring
+    
+    Doesn't make sense by itself. Should be part
+    of group of commits to avoid of create temp
+    directory if is not needed
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 10 12:29:28 2016 +0100
+
+    xccdf_policy: Fix windows support
+    
+    Windows absolute path doesn't start with '/'
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Thu Mar 10 11:10:41 2016 +0100
+
+    fix DS with SCE
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Mar 15 13:37:53 2016 +0100
+
+    Regenerate xccdf-resources.xsl
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Mar 15 13:34:48 2016 +0100
+
+    Support CIS recommendations in HTML report
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Mar 14 16:10:09 2016 +0100
+
+    Do not rely on exact URLs to create groups
+    
+    When a new revision of a security guidance is released it breaks
+    the groupping. This situation already happened for PCI DSS.
+    This commit tries to fix it by matching only a common prefix,
+    not the exact match of the whole URL.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Mar 14 16:05:51 2016 +0100
+
+    Issue #342: Fix sorting of groups in HTML report
+    
+    This commit introduces a more generic sorting algorithm to sort
+    groups in HTML report.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Mar 9 17:39:37 2016 +0100
+
+    sds-session: Add debug output
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Mon Mar 14 14:43:38 2016 +0100
+
+    Merge pull request #356 from ybznek/maint-1.2-test-minor-fix
+    
+    test: XCCDF/test_platform_element fix var
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Mar 14 14:27:19 2016 +0100
+
+    Use names of known types in JSON instead of the URLs
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Mar 14 14:25:59 2016 +0100
+
+    Refactor XSLT code to a new template
+    
+    This way we can reuse the code.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Mar 14 13:28:00 2016 +0100
+
+    test: XCCDF/test_platform_element fix print
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Mar 14 13:09:09 2016 +0100
+
+    test: XCCDF/test_platform_element fix var
+    
+    Fix : integer expression expected
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sun Mar 13 12:46:12 2016 +0100
+
+    Tests: Remove testing file after the test finishes.
+    
+    We do not need to .gitignore them.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sun Mar 13 12:38:27 2016 +0100
+
+    Tests: Fix validation
+    
+    The 13 & 16 numbers were copy pasted from another directory. The correct
+    numbers are 8 & 8.
+    
+    This test has been failing since day 0. We haven't seen this test failing,
+    because there was not `set -e`.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sun Mar 13 12:19:14 2016 +0100
+
+    Simplify control flow.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sun Mar 13 12:17:28 2016 +0100
+
+    Tests: Be strict and exit on failure.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sun Mar 13 11:46:53 2016 +0100
+
+    Remove oval details file once you are done.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sat Mar 12 20:57:22 2016 +0100
+
+    Ignore binaries build for testing
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sat Mar 12 20:36:02 2016 +0100
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+    Conflicts:
+            tests/sce/Makefile.am
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Sat Mar 12 20:17:30 2016 +0100
+
+    Merge pull request #347 from ybznek/maint-1.0-sce-test
+    
+    tests/sce: Add test for SCE in DS
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Mar 11 16:03:38 2016 -0500
+
+    Merge pull request #354 from ybznek/maint-1.2-sce-errors
+    
+    Stop printing of XML errors during SCE loading
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Mar 11 16:01:45 2016 -0500
+
+    Merge pull request #355 from ybznek/maint-1.2-test-minor-fix
+    
+    test: XCCDF/test_platform_element fix var
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Mar 11 14:37:54 2016 -0500
+
+    Merge pull request #353 from ybznek/maint-1.2-rpm-probe-another-fix
+    
+    rpm* another probes fix
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Mar 11 20:30:18 2016 +0100
+
+    test: XCCDF/test_platform_element fix var
+    
+    When oscap finish successfully, $ret is not set and
+    we will get 'line 15: [: -eq: unary operator expected'
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Mar 11 17:09:18 2016 +0100
+
+    tests/sce: Add test to check XML errors
+    
+    We tries to load every file as XML and if we get .sh file
+    we should not to print error messages on stderr
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Mar 11 11:44:22 2016 +0100
+
+    oscap_source: Don't print parsing XML errors
+    
+    Don't print parsing xml error when we read script
+    I can be easier to check executability before XML parsing,
+    but SCE is only extension and we don't want open file
+    once more everytime.
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Mar 11 19:46:19 2016 +0100
+
+    Issue #348: Fix rpmverifypackage probe
+    
+    Similar to 91a5dd92512585b0c6b0fa2fcd2f8ef700fd9b6f
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Mar 11 19:38:30 2016 +0100
+
+    Issue #348: Fix rpmverify probe
+    
+    Similar to 1bf9b8bbb8bee732ea3e870d5510dcbf52f96705
+
+Author: Zbyněk Moravec <ybznek@users.noreply.github.com>
+Date:   Fri Mar 11 19:34:10 2016 +0100
+
+    Merge pull request #350 from jan-cerny/fix_rpmverifyfile_probe
+    
+    Issue #348: Fix offline mode in rpmverifyfile probe
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Mar 11 10:40:46 2016 -0500
+
+    Merge pull request #351 from jan-cerny/fix_file_probe
+    
+    Fix offline mode in file probe
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Mar 11 14:08:09 2016 +0100
+
+    Fix offline mode in file probe
+    
+    I have found a logical error in file probe.
+    The offline mode in file probe is enabled on only when a mutex cannot be initialized,
+    which is not very likely and also it is definitely not what we want.
+    This commit enables the offline mode in file probe.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Mar 11 11:42:51 2016 +0100
+
+    Issue #348: Fix rpminfo probe
+    
+    Similar to 91a5dd92512585b0c6b0fa2fcd2f8ef700fd9b6f
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Mar 11 10:49:02 2016 +0100
+
+    Issue #348: Fix offline mode in rpmverifyfile probe
+    
+    If we chroot into filesystem where is not a RPM database,
+    we should not fail to init the probe.
+
+Author: Zbynek Moravec <xmorav27@stud.fit.vutbr.cz>
+Date:   Fri Mar 11 09:37:36 2016 +0100
+
+    tests/sce: refactoring
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Feb 24 11:57:35 2016 +0100
+
+    tests/sce: Add test for SCE in DS
+    
+    https://github.com/OpenSCAP/openscap/issues/295
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Mar 9 13:23:27 2016 -0500
+
+    Merge pull request #327 from ybznek/maint-1.2-offline-scan-support
+    
+    Enable offline scan of some probes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Feb 16 09:49:38 2016 +0100
+
+    probe/shadow: ofline scan
+    
+    Offline scan of the probe currently isn't possible
+    without some hacking. More info:
+    https://github.com/OpenSCAP/openscap/issues/344
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Feb 12 12:54:45 2016 +0100
+
+    probe/password: offline scan
+    
+    Offline scan of the probe currently isn't possible
+    without some hacking. More info:
+    https://github.com/OpenSCAP/openscap/issues/344
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Feb 12 12:51:59 2016 +0100
+
+    probe/partition: offline scan
+    Current way of offline scan doesn't support this
+    probe to be offline. More info here:
+    https://github.com/OpenSCAP/openscap/issues/343
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Tue Mar 8 14:40:05 2016 -0500
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Mar 7 14:55:11 2016 +0100
+
+    Seap: Fix double free
+    
+    The free caused "double free or corruption (fasttop)" when I was using
+    probe from commandline. Free is already in SEXP_list_free
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Fri Mar 4 10:42:38 2016 -0500
+
+    Merge pull request #337 from jan-cerny/fix_old_glibc
+    
+    Fix compiler errors on older systems
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Mar 4 13:08:07 2016 +0100
+
+    Fix compilation on RHEL5
+    
+    The ARGV_const_t is not defined in RHEL5 rpm library.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Mar 3 15:59:46 2016 +0100
+
+    Ignore gnulib files that we do not include yet
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Mar 3 14:35:00 2016 +0100
+
+    Fix compiler errors on older systems
+    
+    Functions pthread_getname_np and pthread_setname_np were introduced
+    in glibc 2.12. With older versions of glibc used on RHEL5 or SLES11
+    OpenSCAP failed to compile. This commit adds an autoconf rule
+    to detect the presence of these functions.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Thu Mar 3 14:27:51 2016 +0100
+
+    Merge pull request #336 from jan-cerny/issue_317
+    
+    Issue #317: Fix oscap-docker traceback
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Mar 3 14:09:15 2016 +0100
+
+    Other files worth hiding
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Mar 3 14:03:09 2016 +0100
+
+    Hide even less typical files that starts with 'tests_'
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Mar 3 14:00:39 2016 +0100
+
+    Use test_*.log glob to ignore files
+    
+    We have been adding new test directories while forgeting .gitigore
+    recently. That is because it was inpractical.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Mar 3 12:42:54 2016 +0100
+
+    Ignore config/test-driver it should never be commited
+    
+    See 0802fb2326f6f189f8d31ad9cb84c9c4e8fd340f
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Mar 3 11:36:22 2016 +0100
+
+    Issue #317: Fix oscap-docker traceback
+    
+    Oscap-docker gave a traceback when providing a wrong image ID
+    or wrong container ID.
+    This commit fixes the traceback by catching the exception
+    and writes an error message on stderr.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Tue Mar 1 16:09:48 2016 +0100
+
+    Merge pull request #332 from mpreisler/oscap_chroot
+    
+    Added the oscap-chroot tool - scan filesystems on arbitrary paths
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Sun Feb 28 17:28:02 2016 -0500
+
+    Merge pull request #335 from jan-cerny/cleanup_devel
+    
+    Change messages category to DEVEL
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 28 20:36:29 2016 +0100
+
+    Change messages category to DEVEL
+    
+    While browsing verbose log produced on Fedora SSG,
+    I have discovered several messages which disturb in INFO level.
+    They should be in DEVEL category instead.
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Feb 25 15:40:19 2016 -0500
+
+    Fixes in oscap-chroot manpage, replaced oscap-vm with oscap-chroot
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Feb 25 15:37:57 2016 -0500
+
+    Added the oscap-chroot tool - scan filesystems on arbitrary paths
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 25 15:13:16 2016 +0100
+
+    Merge branch 'maint-1.0' into maint-1.2
+    
+    Before 1.2.9
+    
+    Conflicts:
+            cpe/openscap-cpe-dict.xml
+            cpe/openscap-cpe-oval.xml
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 25 14:57:23 2016 +0100
+
+    Fedora 25 CPE
+    
+    Fedora 24 has been branched.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 25 14:23:18 2016 +0100
+
+    Refactor: replace implementation by function call.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 25 13:47:26 2016 +0100
+
+    Build policies that are useful.
+    
+    This supports:
+     * Anaconda installer showing only useful profiles (rhbz#1256879)
+     * Satellite 6 showing only useful profiles (rhbz#1302230)
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 25 11:40:15 2016 +0100
+
+    Move xccdf_policy_model_create_policy_by_id to policy_model module.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 25 11:06:05 2016 +0100
+
+    Refactor: Extract function: _xccdf_policy_model_create_policy_by_id
+    
+    Let's put it into a separate file. I have been playing with the idea of
+    creating xccdf_policy_model module for ages. I never wanted to copy code
+    from one file to another, however we can start levitating slowly by
+    changes towards separate file for each.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Wed Feb 24 23:55:48 2016 +0100
+
+    Remove OSCAP_DEPRECATED from .c file
+    
+    It does not work as intended. It only works in the header file.
+    it makes following function deprecated as well.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Wed Feb 24 23:53:45 2016 +0100
+
+    Refactor: Extract function: _xccdf_policy_model_create_policy_by_id
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Wed Feb 24 21:55:45 2016 +0100
+
+    Update copyright notice.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Wed Feb 24 11:11:10 2016 -0500
+
+    Merge pull request #331 from ybznek/maint-1.2-offline-scan-tested-probes
+    
+    Maint 1.2 offline scan tested probes
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Feb 16 09:49:21 2016 +0100
+
+    probe/rpmverifypackage: enable ofline scan
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Feb 12 14:28:31 2016 +0100
+
+    probe/symlink: enable ofline scan
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Feb 12 13:44:46 2016 +0100
+
+    probes/rpmverify: enable offline scan
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Fri Feb 12 12:53:42 2016 +0100
+
+    probe/rpmverifyfile: enable offline scan
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Wed Feb 24 13:05:21 2016 +0100
+
+    Whitespace fix, remove tabulator.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Tue Feb 16 10:51:26 2016 +0100
+
+    Merge pull request #325 from jan-cerny/open_file_message
+    
+    Improve a message about opening file
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Mon Feb 15 16:40:07 2016 +0100
+
+    Merge pull request #314 from jan-cerny/test_results
+    
+    Provide basic information about evaluating test results in verbose log
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Mon Feb 15 16:00:24 2016 +0100
+
+    Merge pull request #326 from jan-cerny/fix_man
+    
+    Fix manual page for oscap-docker
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Mon Feb 15 15:57:38 2016 +0100
+
+    Merge pull request #324 from jan-cerny/type_of_test
+    
+    Show type of test and test comment in verbose log
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Mon Feb 15 15:54:31 2016 +0100
+
+    Merge pull request #316 from jan-cerny/issue303
+    
+    Issue #303: Fix oscap-docker traceback
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Feb 15 10:37:31 2016 +0100
+
+    Fix manual page for oscap-docker
+    
+    The tool is called oscap-docker, not docker-oscap.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 14 20:42:56 2016 +0100
+
+    Improve a message about opening file
+    
+    This should show a more understandable message
+    when a probe opens some file (eg. configuration file)
+    to collect data.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 14 20:03:16 2016 +0100
+
+    Show type of test and test comment in verbose log
+    
+    Currently we show only test id in log message.
+    However, if we show only id, user will need look
+    to the OVAL file to figure out which test is which.
+    We can easily improve it by adding object type and its comment
+    into the message.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 14 15:11:31 2016 +0100
+
+    Describe check_existence parameter in verbose log
+    
+    Every test in OVAL has a check_existence attribute, which
+    describe how many objects must exist on the system to evaluate
+    as true. This affects result of OVAL test.
+    This commit adds messages for each possible value of the
+    check_existence attribute.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Feb 13 15:17:35 2016 +0100
+
+    Inform about flags of items
+    
+    Collected objects in OVAL can have different flags.
+    Those flags affect result of OVAL test.
+    This commit adds some messages to verbose log that
+    will report the flag and its meaning.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Feb 13 13:25:33 2016 +0100
+
+    Drop one of the messages about item-state comparison
+    
+    This commit also ensures that the remaining message
+    will not be displayed when a test does not contain any state.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Feb 13 13:23:58 2016 +0100
+
+    Add a comment
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Feb 13 13:05:19 2016 +0100
+
+    Do not expose oval_check_get_description() in public API
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Feb 13 11:28:41 2016 +0100
+
+    Return NULL if a test contains no states
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Feb 13 10:55:14 2016 +0100
+
+    Do not expose oval_test_get_state_names() in public API
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 17:59:53 2016 +0100
+
+    Inform about result of item-state comparison
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 14:09:29 2016 +0100
+
+    Improve format of a message
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 14:08:57 2016 +0100
+
+    Inform user about item-state comparison in verbose log
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 14:07:20 2016 +0100
+
+    Show some information about result evaluation
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 19:59:34 2016 +0100
+
+    Create another function to convert oval_check_t to string
+    
+    There already exists oval_check_get_text() function.
+    However, the returned string cannot be easily used in a meaningful
+    English sentence, because some of values contains a verb but some
+    of them does not.
+    This new function will be used in verbose debugging messages.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 12:10:45 2016 +0100
+
+    Add function generating string with list of states
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Fri Feb 12 15:11:43 2016 +0100
+
+    Merge pull request #323 from jan-cerny/extend_definition
+    
+    Add message about extend definition
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Fri Feb 12 15:10:07 2016 +0100
+
+    Merge pull request #322 from jan-cerny/tests
+    
+    Inform user in verbose log that a test will be evaluated
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Fri Feb 12 15:09:03 2016 +0100
+
+    Merge pull request #321 from jan-cerny/definition_result
+    
+    Show definition result in verbose log
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Fri Feb 12 15:07:58 2016 +0100
+
+    Merge pull request #320 from jan-cerny/item_vs_state
+    
+    Add an info message
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Feb 12 14:14:45 2016 +0100
+
+    Add message about extend definition
+    
+    In OVAL the definitions usually contain one or more tests,
+    but they can also be extended by referencing to other definitions.
+    The refrenced definitions are required to be evaluated to get
+    final result of the definition under the evaluation.
+    This construct is sometimes used in SSG.
+    Currently we don't show the information about extending definition
+    in verbose log. The log is very confusing for a reader if a
+    extended definition is evaluated.
+    This commit adds an info message when extend_definition is used.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Feb 12 14:07:05 2016 +0100
+
+    Inform user of verbose log that a test will be evaluated
+    
+    We currently inform user that a definition will be evaluated,
+    but definition contains one or more tests, and we currently
+    don't show it in log, which complicates the understanding
+    of whole story.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Fri Feb 12 10:39:59 2016 +0100
+
+    Show definition result in verbose log
+    
+    Verbose log is missing the most basic information - final result
+    of a definition.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Feb 11 15:59:40 2016 +0100
+
+    Add an info message
+    
+    This message informs that some item of a collected object has matched a state.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Feb 11 11:22:44 2016 +0100
+
+    Merge pull request #319 from isimluk/maint-1.0
+    
+    Desperate grave digger
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Feb 11 10:27:49 2016 +0100
+
+    Voodoo: Tell us where is zombie
+    
+    We think she left dead, but the priest (ps) conceals where it is.
+    
+    This is not a black magic really. We think the zombie process should be
+    listed in cemetery, but sometimes it is missing. Good thing is to put
+    more details into the log. Next time we need to record the moon phase.
+    
+    See github issue #315 for more details.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Feb 11 09:55:08 2016 +0100
+
+    Issue #303: Fix oscap-docker traceback
+    
+    The oscap-docker utility failed with a traceback with Python 3
+    whe invoked with no argument.
+    It will print the help instead.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Wed Feb 10 21:48:50 2016 +0100
+
+    Merge pull request #313 from jan-cerny/reply_message
+    
+    Change category of two messages to DEVEL
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Feb 9 19:06:59 2016 +0100
+
+    Change category of two messages to DEVEL
+    
+    These messages informs about some details in communication protocol
+    between library and probes. They are not interesting from point of
+    view of OVAL content.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Feb 8 09:20:05 2016 +0100
+
+    Merge pull request #308 from ybznek/maint-1.2-oscap-docker-http-fix
+    
+    oscap docker http header fix
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Mon Feb 8 09:10:46 2016 +0100
+
+    oscap-docker: Fix oversight
+    
+    True was only for my debugging. Shoult not be commited.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Mon Feb 8 00:13:46 2016 +0100
+
+    Merge pull request #311 from jan-cerny/fix_suppression_file
+    
+    Adjust the valgrind suppression file
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 7 21:48:49 2016 +0100
+
+    Adjust the valgrind suppression file
+    
+    After merging c97417a328687ebf49f4da0ac54d6104d15297c7, we must suppress
+    the memory leak in curl_global_init directly, not via curl_easy_init.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sun Feb 7 17:32:05 2016 +0100
+
+    Merge pull request #309 from moolitayer/readme_fix
+    
+    [doc] remove duplicate line from readme
+
+Author: Mooli Tayer <mtayer@redhat.com>
+Date:   Sun Feb 7 15:24:15 2016 +0200
+
+    [doc] remove duplicate line from readme
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Wed Feb 3 16:48:15 2016 +0100
+
+    oscap-docker: Fix last-modified error condition
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Feb 2 16:37:28 2016 +0100
+
+    oscap-docker: Fix HTTP last-modified issue
+    
+    Fix problem where server sends Last-modified and oscap-docker
+    wants to read header with key last-modified
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Feb 2 14:20:33 2016 +0100
+
+    Oscap-docker fix no last-modified header message
+
+Author: Zbynek Moravec <zmoravec@redhat.com>
+Date:   Tue Feb 2 14:20:04 2016 +0100
+
+    Oscap-docker refactoring
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Jan 28 13:58:56 2016 +0100
+
+    Update issue tracker url in our man pages.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Jan 28 13:56:27 2016 +0100
+
+    Update issue tracker url in our man page.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Jan 28 13:53:35 2016 +0100
+
+    Update scap-workbench url in the user manual
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Thu Jan 28 13:43:44 2016 +0100
+
+    rhbz#1299969: The /bin/oscap does not exists everywhere
+    
+    while the /usr/bin/oscap does.
+
+Author: Martin Preisler <martin@preisler.me>
+Date:   Thu Jan 28 13:18:35 2016 +0100
+
+    Merge pull request #301 from dahaic/oscap-vm
+    
+    oscap-vm cosmetic changes
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Sun Jan 17 23:13:23 2016 +0100
+
+    Remove the code that has been commented out.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Sun Jan 17 22:11:49 2016 +0100
+
+    Make the SCE test a little bit stricter
+    
+    And remove some unnecessary characters along the way.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Sun Jan 17 22:00:44 2016 +0100
+
+    Refactor: Rename variable to reflect the purpose better
+    
+    Currently, the oscap_source is used for non-SCE files, therefore, the
+    full path is now used only for SCE files.
+
+Author: Šimon Lukašík <slukasik@redhat.com>
+Date:   Sat Jan 16 17:24:31 2016 +0100
+
+    tests: arf processing: Assert for bits in oscap info
+
+Author: Marek Haicman <dahaic@gmail.com>
+Date:   Wed Jan 27 22:27:49 2016 +0100
+
+    Updated oscap-vm to fallback to fusermount only if guestunmount is not present on the system
+
+Author: Marek Haicman <dahaic@gmail.com>
+Date:   Tue Jan 26 23:02:30 2016 +0100
+
+    Update oscap-vm to require only fuse for unmounting (to enable older versions of libguestfs)
+
+Author: Marek Haicman <dahaic@gmail.com>
+Date:   Tue Jan 26 21:15:27 2016 +0100
+
+    Update oscap-vm to print --help even if dependencies are not met
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Tue Jan 26 09:51:22 2016 +0100
+
+    Merge pull request #293 from jan-cerny/fix_debug
+    
+    Fix scope of a global variable
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Tue Jan 26 09:35:20 2016 +0100
+
+    Merge pull request #299 from jan-cerny/maint-1.0
+    
+    Fix SCE tests
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jan 25 12:49:04 2016 +0100
+
+    Fix SCE tests
+    
+    This commit adds missing files to the EXTRA_DIST section of makefile.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Sat Jan 23 09:09:42 2016 +0100
+
+    Merge pull request #298 from mpreisler/envp_fix_maint12
+    
+    Use canonical PATH when executing remediations
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Jan 21 14:44:50 2016 +0100
+
+    Use canonical PATH when executing remediations
+    
+    This makes content author's life a little bit easier. The change doesn't
+    break any existing remediations but new remediations relying on these
+    PATHs won't work with old openscap!
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Thu Jan 21 11:55:00 2016 +0100
+
+    Merge branch 'maint-1.0' into maint-1.2
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Thu Jan 21 09:06:56 2016 +0100
+
+    Merge pull request #297 from mpreisler/remediation_envp
+    
+    Use { NULL } instead of NULL as envp when executing remediations
+
+Author: Martin Preisler <mpreisle@redhat.com>
+Date:   Wed Jan 20 16:31:05 2016 +0100
+
+    Use { NULL } instead of NULL as envp when executing remediations
+    
+    Using just NULL is discouraged and nonportable, see `man 2 execve`.
+    This commit doesn't change behavior, just improves portability.
+
+Author: Šimon Lukašík <isimluk@fedoraproject.org>
+Date:   Wed Jan 20 14:17:45 2016 +0100
+
+    Merge pull request #294 from jan-cerny/change_category
+    
+    Change messages category to DEVEL
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jan 19 17:23:29 2016 +0100
+
+    Change messages category to DEVEL
+    
+    These messages has not value from the OVAL evaluation point of view.
+    They may be interesting for OpenSCAP developers, so they should
+    have DEVEL category.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Tue Jan 19 15:56:25 2016 +0100
+
+    Fix scope of a global variable
+    
+    Static modifier made the pointer to log file unreachable
+    from other modules. It caused that some debug messages from some
+    functions (eg. SEXP_list_sort()) could not be printed into log.
+    This commit fixes the bug by removing the 'static' modifier.
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jan 18 17:33:20 2016 +0100
+
+    Bump version after release
+    
+    Next release from the maint-1.2 branch will be 1.2.9
+
+Author: Jan Černý <jcerny@redhat.com>
+Date:   Mon Jan 18 16:42:59 2016 +0100
+
+    OpenSCAP 1.2.8
+
 Author: Jan Černý <jcerny@redhat.com>
 Date:   Mon Jan 18 15:24:10 2016 +0100
 
@@ -11,11 +4476,11 @@ Date:   Mon Jan 18 10:45:45 2016 +0100
     Merge branch 'maint-1.0' into maint-1.2
     
      Conflicts:
-    	src/OVAL/oval_component.c
-    	src/XCCDF_POLICY/xccdf_policy.c
-    	src/common/oscap_acquire.c
-    	tests/API/OVAL/unittests/Makefile.am
-    	tests/API/XCCDF/unittests/Makefile.am
+            src/OVAL/oval_component.c
+            src/XCCDF_POLICY/xccdf_policy.c
+            src/common/oscap_acquire.c
+            tests/API/OVAL/unittests/Makefile.am
+            tests/API/XCCDF/unittests/Makefile.am
 
 Author: Šimon Lukašík <isimluk@fedoraproject.org>
 Date:   Mon Jan 18 09:35:44 2016 +0100
@@ -248,25 +4713,25 @@ Date:   Sun Jan 10 17:14:18 2016 +0100
     Merge branch 'maint-1.0' into maint-1.2
     
      Conflicts:
-    	src/OVAL/oval_defModel.c
-    	src/OVAL/oval_probe.c
-    	src/OVAL/oval_probe_ext.c
-    	src/OVAL/oval_probe_session.c
-    	src/OVAL/oval_sexp.c
-    	src/OVAL/probes/SEAP/generic/strbuf.c
-    	src/OVAL/probes/SEAP/seap-command.c
-    	src/OVAL/probes/SEAP/seap-message.c
-    	src/OVAL/probes/SEAP/seap-packet.c
-    	src/OVAL/probes/oval_fts.c
-    	src/OVAL/probes/probe/entcmp.c
-    	src/OVAL/probes/probe/icache.c
-    	src/OVAL/probes/probe/input_handler.c
-    	src/OVAL/probes/probe/worker.c
-    	src/OVAL/probes/unix/linux/partition.c
-    	src/XCCDF_POLICY/xccdf_policy.c
-    	src/common/debug.c
-    	src/common/elements.c
-    	src/common/oscapxml.c
+            src/OVAL/oval_defModel.c
+            src/OVAL/oval_probe.c
+            src/OVAL/oval_probe_ext.c
+            src/OVAL/oval_probe_session.c
+            src/OVAL/oval_sexp.c
+            src/OVAL/probes/SEAP/generic/strbuf.c
+            src/OVAL/probes/SEAP/seap-command.c
+            src/OVAL/probes/SEAP/seap-message.c
+            src/OVAL/probes/SEAP/seap-packet.c
+            src/OVAL/probes/oval_fts.c
+            src/OVAL/probes/probe/entcmp.c
+            src/OVAL/probes/probe/icache.c
+            src/OVAL/probes/probe/input_handler.c
+            src/OVAL/probes/probe/worker.c
+            src/OVAL/probes/unix/linux/partition.c
+            src/XCCDF_POLICY/xccdf_policy.c
+            src/common/debug.c
+            src/common/elements.c
+            src/common/oscapxml.c
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Sat Jan 9 20:29:49 2016 +0100
@@ -1440,8 +5905,8 @@ Date:   Mon Nov 9 10:15:06 2015 +0100
     Promoting recent fixes to maint-1.2.
     
     Conflicts:
-    	cpe/openscap-cpe-oval.xml
-    	tests/Makefile.am
+            cpe/openscap-cpe-oval.xml
+            tests/Makefile.am
 
 Author: Šimon Lukašík <isimluk@fedoraproject.org>
 Date:   Mon Nov 9 09:27:45 2015 +0100
@@ -3463,18 +7928,18 @@ Date:   Tue Aug 4 16:37:29 2015 +0200
     for further work.
     
     Conflicts:
-    	ac_probes/configure.ac.tpl
-    	configure.ac
-    	src/XCCDF_POLICY/xccdf_policy_priv.h
-    	src/XCCDF_POLICY/xccdf_policy.c
-    	src/common/Makefile.am
-    	src/common/oscap_string.c
-    	src/common/oscap_string.h
-    	tests/API/XCCDF/unittests/Makefile.am
-    	tests/Makefile.am
-    	tests/oscap_string/Makefile.am
-    	tests/oscap_string/test_oscap_string.c
-    	tests/oscap_string/test_oscap_string.sh
+            ac_probes/configure.ac.tpl
+            configure.ac
+            src/XCCDF_POLICY/xccdf_policy_priv.h
+            src/XCCDF_POLICY/xccdf_policy.c
+            src/common/Makefile.am
+            src/common/oscap_string.c
+            src/common/oscap_string.h
+            tests/API/XCCDF/unittests/Makefile.am
+            tests/Makefile.am
+            tests/oscap_string/Makefile.am
+            tests/oscap_string/test_oscap_string.c
+            tests/oscap_string/test_oscap_string.sh
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Tue Aug 4 12:47:14 2015 +0200
@@ -3485,7 +7950,7 @@ Date:   Tue Aug 4 12:47:14 2015 +0200
     for a further work.
     
     Conflicts:
-    	tests/Makefile.am
+            tests/Makefile.am
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Tue Aug 4 12:45:11 2015 +0200
@@ -3567,9 +8032,9 @@ Date:   Wed May 13 17:47:57 2015 +0200
     (cherry picked from commit 7907e1c69ec3db99b7d0d557f671916cec1f6350)
     
     Conflicts:
-    	ac_probes/configure.ac.tpl
-    	configure.ac
-    	tests/Makefile.am
+            ac_probes/configure.ac.tpl
+            configure.ac
+            tests/Makefile.am
 
 Author: Jan Černý <jcerny@redhat.com>
 Date:   Fri Jul 24 10:55:12 2015 +0200
@@ -3868,7 +8333,7 @@ Date:   Tue Apr 14 15:14:11 2015 +0200
     (cherry picked from commit bb3c3dcab1064e926c5fed70be96915c44b48f92)
     
     Conflicts:
-    	src/common/Makefile.am
+            src/common/Makefile.am
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Thu Jul 16 13:35:23 2015 +0200
@@ -4326,10 +8791,10 @@ Date:   Fri Jun 19 15:59:22 2015 +0200
     Before OpenSCAP-1.2.4 release.
     
     Conflicts:
-    	Makefile.am
-    	ac_probes/configure.ac.tpl
-    	configure.ac
-    	src/XCCDF_POLICY/xccdf_policy.c
+            Makefile.am
+            ac_probes/configure.ac.tpl
+            configure.ac
+            src/XCCDF_POLICY/xccdf_policy.c
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Thu Jun 18 18:56:11 2015 +0200
@@ -4462,7 +8927,7 @@ Date:   Thu Jun 11 12:51:06 2015 +0200
     Merge branch 'maint-1.1' into maint-1.2
     
     Conflicts:
-    	tests/API/OVAL/unittests/all.sh
+            tests/API/OVAL/unittests/all.sh
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Thu Jun 11 12:23:18 2015 +0200
@@ -4855,7 +9320,7 @@ Date:   Fri May 1 11:59:45 2015 +0200
     Before 1.2.3 release.
     
     Conflicts:
-    	xsl/xccdf-resources.xsl
+            xsl/xccdf-resources.xsl
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Fri May 1 11:24:52 2015 +0200
@@ -5108,8 +9573,8 @@ Date:   Fri Apr 17 15:25:34 2015 +0200
     Merge branch 'maint-1.1' into maint-1.2
     
     Conflicts:
-    	xsl/xccdf-report-impl.xsl
-    	xsl/xccdf-resources.xsl
+            xsl/xccdf-report-impl.xsl
+            xsl/xccdf-resources.xsl
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Fri Apr 17 15:09:57 2015 +0200
@@ -5529,7 +9994,7 @@ Date:   Thu Mar 19 17:10:32 2015 +0100
     Merge branch 'maint-1.1' into maint-1.2
     
     Conflicts:
-    	utils/oscap-ds.c
+            utils/oscap-ds.c
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Thu Mar 19 17:07:42 2015 +0100
@@ -5537,8 +10002,8 @@ Date:   Thu Mar 19 17:07:42 2015 +0100
     Merge branch 'maint-1.0' into maint-1.1
     
     Conflicts:
-    	ac_probes/configure.ac.tpl
-    	configure.ac
+            ac_probes/configure.ac.tpl
+            configure.ac
 
 Author: Martin Preisler <martin@preisler.me>
 Date:   Thu Mar 19 16:50:21 2015 +0100
@@ -5776,9 +10241,9 @@ Date:   Mon Feb 16 21:45:17 2015 +0100
     Merge branch 'maint-1.1' into maint-1.2
     
     Conflicts:
-    	ac_probes/configure.ac.tpl
-    	configure.ac
-    	tests/Makefile.am
+            ac_probes/configure.ac.tpl
+            configure.ac
+            tests/Makefile.am
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Mon Feb 16 21:12:40 2015 +0100
@@ -5788,9 +10253,9 @@ Date:   Mon Feb 16 21:12:40 2015 +0100
     After OpenSCAP 1.0.10 release.
     
     Conflicts:
-    	NEWS
-    	ac_probes/configure.ac.tpl
-    	configure.ac
+            NEWS
+            ac_probes/configure.ac.tpl
+            configure.ac
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Mon Feb 16 17:56:07 2015 +0100
@@ -6009,7 +10474,7 @@ Date:   Thu Jan 8 22:51:13 2015 +0100
     Merge branch 'maint-1.1' into maint-1.2
     
     Conflicts:
-    	xsl/xccdf-resources.xsl
+            xsl/xccdf-resources.xsl
     
     What a painful merge conflict.
 
@@ -6098,12 +10563,12 @@ Date:   Mon Jan 5 13:10:54 2015 +0100
     Merge commit '313650810d5727e1a259d13e9c454a1c3abbd73f' into maint-1.2
     
     Conflicts:
-    	schemas/oval/5.11/oval-definitions-schema.xsd
-    	schemas/oval/5.11/oval-directives-schema.xsd
-    	schemas/oval/5.11/oval-results-schema.xsd
-    	schemas/oval/5.11/oval-system-characteristics-schema.xsd
-    	schemas/oval/5.11/oval-variables-schema.xsd
-    	schemas/oval/5.11/xmldsig-core-schema.xsd
+            schemas/oval/5.11/oval-definitions-schema.xsd
+            schemas/oval/5.11/oval-directives-schema.xsd
+            schemas/oval/5.11/oval-results-schema.xsd
+            schemas/oval/5.11/oval-system-characteristics-schema.xsd
+            schemas/oval/5.11/oval-variables-schema.xsd
+            schemas/oval/5.11/xmldsig-core-schema.xsd
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Mon Jan 5 11:52:35 2015 +0100
@@ -7319,8 +11784,8 @@ Date:   Fri Oct 3 13:54:16 2014 +0200
     Merge branch 'maint-1.1'
     
     Conflicts:
-    	ac_probes/configure.ac.tpl
-    	configure.ac
+            ac_probes/configure.ac.tpl
+            configure.ac
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Fri Oct 3 13:52:39 2014 +0200
@@ -9064,9 +13529,9 @@ Date:   Fri Sep 5 19:14:30 2014 +0200
     
     Addressing (pre-export validation error):
     OpenSCAP Error: File '/tmp/oscap.HceiZV/stub-oval.xml.result.xml' line 0:
-    	Element '{http://oval.mitre.org/XMLSchema/oval-results-5}oval_results',
-    	attribute 'xsi:schemaLocation': The attribute 'xsi:schemaLocation' is not allowed.
-    		[xccdf_session.c:346]
+            Element '{http://oval.mitre.org/XMLSchema/oval-results-5}oval_results',
+            attribute 'xsi:schemaLocation': The attribute 'xsi:schemaLocation' is not allowed.
+                    [xccdf_session.c:346]
     Could not export OVAL Results correctly to /tmp/oscap.HceiZV/stub-oval.xml.result.xml [xccdf_session.c:1202]
 
 Author: Šimon Lukašík <slukasik@redhat.com>
@@ -9161,33 +13626,33 @@ Date:   Fri Sep 5 12:33:49 2014 +0200
     
     Addressing:
      #1  0x00007ffff7d5cd3b in strregcomp (pattern=0x629a70 ".*", test_str=0x0)
-    	at oval_cmp_basic.c:143
+            at oval_cmp_basic.c:143
      #2  0x00007ffff7d5cecf in oval_string_cmp (state=0x629a70 ".*", syschar=0x0,
-    	operation=OVAL_OPERATION_PATTERN_MATCH) at oval_cmp_basic.c:192
+            operation=OVAL_OPERATION_PATTERN_MATCH) at oval_cmp_basic.c:192
      #3  0x00007ffff7d5c362 in oval_ent_cmp_str (state_data=0x629a70 ".*",
-    	state_data_type=OVAL_DATATYPE_STRING, sysent=0x62a210,
-    	operation=OVAL_OPERATION_PATTERN_MATCH) at oval_cmp.c:99
+            state_data_type=OVAL_DATATYPE_STRING, sysent=0x62a210,
+            operation=OVAL_OPERATION_PATTERN_MATCH) at oval_cmp.c:99
      #4  0x00007ffff7d64a44 in _evaluate_sysent (syschar_model=0x61c870,
-    	item_entity=0x62a210, state_entity=0x6299c0,
-    	state_entity_operation=OVAL_OPERATION_PATTERN_MATCH,
-    	content=0x629970) at oval_resultTest.c:464
+            item_entity=0x62a210, state_entity=0x6299c0,
+            state_entity_operation=OVAL_OPERATION_PATTERN_MATCH,
+            content=0x629970) at oval_resultTest.c:464
      #5  0x00007ffff7d64cd5 in eval_item (syschar_model=0x61c870,
-    	cur_sysitem=0x61f200, state=0x61fab0) at oval_resultTest.c:546
+            cur_sysitem=0x61f200, state=0x61fab0) at oval_resultTest.c:546
      #6  0x00007ffff7d65021 in eval_check_state (test=0x627d60,
-    	args=0x7fffffffd600) at oval_resultTest.c:644
+            args=0x7fffffffd600) at oval_resultTest.c:644
      #7  0x00007ffff7d6553a in _oval_result_test_evaluate_items
-    	(test=0x627d60, syschar_object=0x61e180, args=0x7fffffffd600)
-    	at oval_resultTest.c:805
+            (test=0x627d60, syschar_object=0x61e180, args=0x7fffffffd600)
+            at oval_resultTest.c:805
      #8  0x00007ffff7d65765 in _oval_result_test_result (rtest=0x62a770,
-    	args=0x7fffffffd600) at oval_resultTest.c:870
+            args=0x7fffffffd600) at oval_resultTest.c:870
      #9  0x00007ffff7d65af4 in oval_result_test_eval (rtest=0x62a770) at
-    	oval_resultTest.c:966
+            oval_resultTest.c:966
      #10 0x00007ffff7d5f907 in _oval_result_criteria_node_result
-    	(node=0x62d510) at oval_resultCriteriaNode.c:357
+            (node=0x62d510) at oval_resultCriteriaNode.c:357
      #11 0x00007ffff7d5f99f in oval_result_criteria_node_eval (node=0x62d510)
-    	at oval_resultCriteriaNode.c:378
+            at oval_resultCriteriaNode.c:378
      #12 0x00007ffff7d5f8a5 in _oval_result_criteria_node_result
-    	(node=0x61e1e0) at oval_resultCriteriaNode.c:348
+            (node=0x61e1e0) at oval_resultCriteriaNode.c:348
 
 Author: Šimon Lukašík <slukasik@redhat.com>
 Date:   Fri Sep 5 11:05:54 2014 +0200
@@ -10564,8 +15029,8 @@ Date:   Tue Jul 15 13:01:48 2014 +0200
     Merge branch 'maint-1.0'
     
     Conflicts:
-    	ac_probes/configure.ac.tpl
-    	configure.ac
+            ac_probes/configure.ac.tpl
+            configure.ac
 
 Author: Simon Lukasik <slukasik@redhat.com>
 Date:   Tue Jul 15 12:56:07 2014 +0200
@@ -11918,9 +16383,9 @@ Date:   Tue Jan 7 13:20:38 2014 +0100
 
     [probes] probe API: item filtering bugfix
     
-    	 - fixed item filtering when there are no matching entities
-    	   between the filter state and filtered item. the code now
-    	   evaluates this case to FALSE.
+             - fixed item filtering when there are no matching entities
+               between the filter state and filtered item. the code now
+               evaluates this case to FALSE.
 
 Author: Daniel Kopecek <dkopecek@redhat.com>
 Date:   Tue Jan 7 10:34:12 2014 +0100
@@ -15569,10 +20034,10 @@ Date:   Tue Jul 2 10:31:39 2013 +0200
 
     [probes] Added new offline mode: rpm database scan
     
-    	 - generalized offline mode support so that it
-    	   allows sub-modes and combining them at run-time
-    	 - updated probes to correctly set which modes
-    	   they support
+             - generalized offline mode support so that it
+               allows sub-modes and combining them at run-time
+             - updated probes to correctly set which modes
+               they support
 
 Author: Simon Lukasik <slukasik@redhat.com>
 Date:   Tue Jul 2 09:08:27 2013 +0200
@@ -16222,10 +20687,10 @@ Date:   Mon May 13 15:43:56 2013 +0200
 
     [probes] family, rpminfo: enable in offline mode, these probes are heavily used to detect the operating system and platform
     
-    	- The family probe doesn't detect the platform at run-time, this has to be fixed. For now, the platforms of the
-    	  scanning and scanned machine must match to get sane results.
-    	- The rpm* probes emit warnings about /proc not being mounted, so that's an indication that these probe may not behave
-    	  correctly when run in offline mode (inside a different root directory)
+            - The family probe doesn't detect the platform at run-time, this has to be fixed. For now, the platforms of the
+              scanning and scanned machine must match to get sane results.
+            - The rpm* probes emit warnings about /proc not being mounted, so that's an indication that these probe may not behave
+              correctly when run in offline mode (inside a different root directory)
 
 Author: Daniel Kopecek <dkopecek@redhat.com>
 Date:   Mon May 13 15:42:07 2013 +0200
@@ -16247,13 +20712,13 @@ Date:   Mon May 13 13:55:52 2013 +0200
 
     [probes] system_info: implemented offline mode support
     
-    	- when in offline mode, get the system information from environment
-    	- the probe caller is responsible for setting sane values for the
-    	  following environment variables:
-    	  - OSCAP_PROBE_OS_NAME
-    	  - OSCAP_PROBE_OS_VERSION
-    	  - OSCAP_PROBE_ARCHITECTURE
-    	  - OSCAP_PROBE_PRIMARY_HOST_NAME
+            - when in offline mode, get the system information from environment
+            - the probe caller is responsible for setting sane values for the
+              following environment variables:
+              - OSCAP_PROBE_OS_NAME
+              - OSCAP_PROBE_OS_VERSION
+              - OSCAP_PROBE_ARCHITECTURE
+              - OSCAP_PROBE_PRIMARY_HOST_NAME
 
 Author: Daniel Kopecek <dkopecek@redhat.com>
 Date:   Mon May 13 13:55:00 2013 +0200
@@ -16265,10 +20730,10 @@ Date:   Thu May 9 13:57:39 2013 +0200
 
     [probes] Refactored the probe_{set,get}option API
     
-    	- moved the code to a separate file, we don't want
-    	  to add the required global symbols to the library
-    	- implemented the offline mode option
-    	- added support for the "get" operation from the public API
+            - moved the code to a separate file, we don't want
+              to add the required global symbols to the library
+            - implemented the offline mode option
+            - added support for the "get" operation from the public API
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Tue May 7 17:03:24 2013 +0200
@@ -18288,7 +22753,7 @@ Date:   Mon Jan 21 14:29:40 2013 +0100
     Merge branch 'master' into xccdf-tailoring-devel
     
     Conflicts:
-    	utils/oscap-xccdf.c
+            utils/oscap-xccdf.c
 
 Author: Simon Lukasik <slukasik@redhat.com>
 Date:   Fri Jan 18 10:15:53 2013 +0100
@@ -21121,7 +25586,7 @@ Date:   Tue Oct 16 18:25:34 2012 +0200
     
     The xmlSaveFormatFileEnc() prints out
     
-    	I/O error : No such file or directory
+            I/O error : No such file or directory
     
     to stderr, whenever the suplied filename contains % character.
     No matter that the operation succeeds. By opening the file
@@ -21842,7 +26307,7 @@ Date:   Thu Oct 4 15:14:22 2012 +0200
     Merge branch 'cpe23-devel'
     
     Conflicts:
-    	src/XCCDF_POLICY/xccdf_policy.c
+            src/XCCDF_POLICY/xccdf_policy.c
 
 Author: Simon Lukasik <slukasik@redhat.com>
 Date:   Thu Oct 4 14:19:12 2012 +0200
@@ -22212,28 +26677,28 @@ Date:   Tue Sep 25 15:30:44 2012 +0200
     Merge branch 'master' into cpe23-devel
     
     Conflicts:
-    	src/CPE/Makefile.am
-    	src/CPE/cpedict_priv.c
-    	src/CPE/cpedict_priv.h
-    	src/CPE/cpeuri.c
-    	src/CPE/public/cpe.h
-    	src/CPE/public/cpe_dict.h
-    	src/CPE/public/cpe_lang.h
-    	src/CPE/public/cpe_uri.h
-    	src/CPE/public/cpename.h
-    	src/CPE/public/cpeuri.h
-    	src/CVE/public/cve.h
-    	src/OVAL/Makefile.am
-    	src/XCCDF/Makefile.am
-    	src/XCCDF/benchmark.c
-    	src/XCCDF_POLICY/Makefile.am
-    	swig/openscap.i
-    	tests/API/CPE/Makefile.am
-    	tests/API/CPE/dict/test_api_cpe_dict.c
-    	tests/API/CPE/lang/test_api_cpe_lang.c
-    	tests/API/CPE/name/test_api_cpe_uri.c
-    	utils/oscap-cpe.c
-    	utils/oscap-tool.h
+            src/CPE/Makefile.am
+            src/CPE/cpedict_priv.c
+            src/CPE/cpedict_priv.h
+            src/CPE/cpeuri.c
+            src/CPE/public/cpe.h
+            src/CPE/public/cpe_dict.h
+            src/CPE/public/cpe_lang.h
+            src/CPE/public/cpe_uri.h
+            src/CPE/public/cpename.h
+            src/CPE/public/cpeuri.h
+            src/CVE/public/cve.h
+            src/OVAL/Makefile.am
+            src/XCCDF/Makefile.am
+            src/XCCDF/benchmark.c
+            src/XCCDF_POLICY/Makefile.am
+            swig/openscap.i
+            tests/API/CPE/Makefile.am
+            tests/API/CPE/dict/test_api_cpe_dict.c
+            tests/API/CPE/lang/test_api_cpe_lang.c
+            tests/API/CPE/name/test_api_cpe_uri.c
+            utils/oscap-cpe.c
+            utils/oscap-tool.h
 
 Author: Tomas Heinrich <theinric@redhat.com>
 Date:   Tue Sep 25 15:07:58 2012 +0200
@@ -22870,15 +27335,15 @@ Date:   Wed Sep 5 12:42:20 2012 +0200
     
     Thereby, following fruitless constants were dropped from public api:
     
-    	XCCDF_OPERATOR_NOT
-    	XCCDF_OPERATOR_NAND
-    	XCCDF_OPERATOR_NOR
-    	XCCDF_OPERATOR_MASK
+            XCCDF_OPERATOR_NOT
+            XCCDF_OPERATOR_NAND
+            XCCDF_OPERATOR_NOR
+            XCCDF_OPERATOR_MASK
     
     Addressing:
-    Rule ID:	xccdf_moc.elpmaxe.www_rule_1
-    Title:  	(null)
-    Result: 	(null)
+    Rule ID:        xccdf_moc.elpmaxe.www_rule_1
+    Title:          (null)
+    Result:         (null)
 
 Author: Simon Lukasik <slukasik@redhat.com>
 Date:   Wed Sep 5 10:28:19 2012 +0200
@@ -23942,7 +28407,7 @@ Date:   Thu Aug 2 15:50:54 2012 +0200
     Merge branch 'master' into datastreams-devel
     
     Conflicts:
-    	utils/oscap-xccdf.c
+            utils/oscap-xccdf.c
 
 Author: Martin Preisler <mpreisle@redhat.com>
 Date:   Thu Aug 2 15:43:39 2012 +0200
@@ -26029,10 +30494,10 @@ Date:   Sun Aug 14 12:33:40 2011 -0400
 
     Code cleanups
     
-    	* cleans up missing va_end calls
-    	* adds format check for SEXP_string_newf_r
-    	* Handles negative return for read in environ58 test
-    	* fixes a couple spelling mistakes.
+            * cleans up missing va_end calls
+            * adds format check for SEXP_string_newf_r
+            * Handles negative return for read in environ58 test
+            * fixes a couple spelling mistakes.
 
 Author: Daniel Kopecek <dkopecek@redhat.com>
 Date:   Mon Aug 15 13:24:01 2011 +0200
@@ -28791,9 +33256,9 @@ Date:   Wed Feb 23 00:44:31 2011 +0100
 
     [OVAL/probes] moved input handling into a separate thread + related changes
     
-    	- moved main probe source files into probe/ subdirectory
-    	- some API name cleanup (pcache, encache)
-    	- added a `filters' argument to probe_main
+            - moved main probe source files into probe/ subdirectory
+            - some API name cleanup (pcache, encache)
+            - added a `filters' argument to probe_main
 
 Author: Tomas Heinrich <theinric@redhat.com>
 Date:   Thu Feb 17 16:56:15 2011 +0100
@@ -33189,8 +37654,8 @@ Date:   Tue Apr 6 22:01:19 2010 +0200
 
     [SEAP] new minor features
     
-    	- added SEXP_refs call
-    	- execute SEXP_VALIDATE only if SEXP_VALIDATE_DISABLE env var. isn't defined
+            - added SEXP_refs call
+            - execute SEXP_VALIDATE only if SEXP_VALIDATE_DISABLE env var. isn't defined
 
 Author: Daniel Kopecek <dkopecek@redhat.com>
 Date:   Tue Apr 6 20:59:16 2010 +0200

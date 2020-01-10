@@ -1,8 +1,7 @@
 = OpenSCAP User Manual
-Michal Šrubař <msrubar@redhat.com>
-v1.0, 2015-31-08
 :imagesdir: ./images
-:workbench_url: https://fedorahosted.org/scap-workbench/
+:workbench_url: https://www.open-scap.org/tools/scap-workbench/
+:sce_web:       https://www.open-scap.org/features/other-standards/sce/
 :openscap_web: https://open-scap.org/
 :oscap_git:     https://github.com/OpenSCAP/openscap
 :ssg_git:       https://github.com/OpenSCAP/scap-security-guide
@@ -232,6 +231,16 @@ Definition file, *usgcb-rhel5desktop-oval.xml-0.variables-0.xml* is the
 file containing exported variables from the XCCDF file, and
 *usgcb-results-oval.xml* is the the OVAL Result file.
 
+An OVAL directives file can be used to control whether results should be "thin" or "full".
+This file can be loaded by OpenSCAP using *--directives <file>* option.
+
+---------------------------------------------------------------------------------------------------
+$ oscap oval eval --directives directives.xml --datastream-id ds.xml --oval-id xccdf.xml --results oval-results.xml scap-ds.xml
+---------------------------------------------------------------------------------------------------
+
+OVAL results file contains, by default, exported system characteristics.
+OpenSCAP provides *--without-syschar* option to change this behavior.
+
 ==== XCCDF
 When evaluating an XCCDF benchmark, ```oscap``` usually processes an XCCDF
 file, an OVAL file and the CPE dictionary. It performs system
@@ -386,10 +395,10 @@ results are as they are. Please note these files are not generated
 unless *--oval-results* is used.
 
 Some content may use alternative check engines, for example the
-link:/page/SCE[SCE] check engine.
+{sce_web}[SCE] check engine.
 
 Results of rules with a check that requires a check engine not supported
-by openscap will be reported as *notchecked*. Check contents are not
+by OpenSCAP will be reported as *notchecked*. Check contents are not
 read or interpreted in any way unless the check system is known and
 supported. Following is an evaluation output of an XCCDF with unknown
 check system:
@@ -447,11 +456,20 @@ displayed, only the identifiers themselves are displayed there.
 
 Identifiers are also part of the HTML report output. If the identifier
 is a CVE you can click it to display its metadata from the official NVD
-database (requires internet connection). openscap doesn't provide
+database (requires internet connection). OpenSCAP doesn't provide
 metadata for other types of identifiers.
 
+Another place where these identifiers can be found are machine-readable Result Datastream files.
+This file can be generated during the scan by adding *--results-arf* option.
+
+ $ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --fetch-remote-resources --results-arf results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml 
+
+Result data stream file **results.xml** contains these identifiers in <rule-result>
+elements.
+
+
 ==== Bundled CCE data
-openscap does not provide any static or product bundled CCE data. Thus
+OpenSCAP does not provide any static or product bundled CCE data. Thus
 it has no way of displaying the last generated, updated and officially
 published dates of static or product bundled CCE data because the dates
 are not defined.
@@ -578,7 +596,7 @@ can be either ```report```, ```guide```, ```custom``` or ```fix```. Please see
 === Content Transformation
 The oscap tool is also capable of using the {xslt}[XSLT] (Extensible Stylesheet
 Language Transformations) language, which allows transformation of a SCAP
-content XML file into another XML, HTML, plain text or {xsl}[XLS] document.
+content XML file into another XML, HTML, plain text or {xsl}[XSL] document.
 This feature is very useful when you need the SCAP document in a
 human-readable form. The following commands represent the most common
 cases:
@@ -1108,6 +1126,102 @@ https://github.com/OpenSCAP/scap-security-guide
 
 
 
+=== How to check that patches are up-to-date on Red Hat Enterprise Linux 6
+This section describes how to check that software patches are up-to-date using
+external OVAL content.
+
+1) Install the SSG
+
+ $ sudo yum install -y scap-security-guide
+
+2) Evaluate common profile
+
+ $ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --fetch-remote-resources --results-arf results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml
+
+This command evaluates common profile for Red Hat Enterprise Linux 6. Part of
+the profile is a rule to check that patches are up-to-date. To evaluate the rule
+correctly, oscap tool needs to download an up-to-date OVAL file from Red Hat servers. This can be
+allowed using *--fetch-remote-resources* option. Result of this scan will be saved
+in **results.xml** using ARF format.
+
+
+=== How to tailor Source data stream
+This section describes tailoring of content using Tailoring file. This allows
+you to change behavior of content without its direct modification.
+
+1) Obtain tailoring file
+
+Tailoring file can be easily generated using {workbench_url}[SCAP Workbench].
+
+2) List profiles of tailoring file
+
+ $ oscap info
+----
+Document type: XCCDF Tailoring
+Imported: 2016-08-31T11:08:16
+Benchmark Hint: /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml
+Profiles:
+	xccdf_org.ssgproject.content_profile_C2S_customized
+----
+
+3) Evaluate
+
+ $ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_C2S_customized --tailoring-file ssg-rhel6-ds-tailoring.xml --results results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml
+
+The command above evaluates tailored data stream by **ssg-rhel6-ds-tailoring.xml** tailoring file.
+XCCDF results can be found in **results.xml** file.
+
+Instead of external tailoring file, you can also use tailoring component integrated to data stream.
+
+ $ oscap info simple-ds.xml
+
+----
+Document type: Source Data Stream
+Imported: 2016-02-02T14:06:14
+
+Stream: scap_org.open-scap_datastream_from_xccdf_simple-xccdf.xml
+Generated: (null)
+Version: 1.2
+Checklists:
+	Ref-Id: scap_org.open-scap_cref_simple-xccdf.xml
+		Status: incomplete
+		Resolved: false
+		Profiles:
+			xccdf_org.open-scap_profile_override
+		Referenced check files:
+			simple-oval.xml
+				system: http://oval.mitre.org/XMLSchema/oval-definitions-5
+	Ref-Id: scap_org.open-scap_cref_simple-tailoring.xml
+		Benchmark Hint: (null)
+		Profiles:
+			xccdf_org.open-scap_profile_default
+			xccdf_org.open-scap_profile_unselecting
+			xccdf_org.open-scap_profile_override
+Checks:
+	Ref-Id: scap_org.open-scap_cref_simple-oval.xml
+No dictionaries.
+----
+
+To choose tailoring component "scap_org.open-scap_cref_simple-tailoring.xml", the command below can be used.
+
+ $ oscap xccdf eval --tailoring-id scap_org.open-scap_cref_simple-tailoring.xml --profile xccdf_org.open-scap_profile_default --results results.xml simple-ds.xml
+
+The command above evaluates content using tailoring component *scap_org.open-scap_cref_simple-tailoring.xml* from source data stream.
+Scan results are stored in *results.xml* file.
+
+
+=== Evaluation of content
+Specified XCCDF or data stream content can contain zero or more profiles.
+
+Scan can be evaluated without specific profile, otherwise profile can be selected using
+*--profile* option.
+
+ $ oscap xccdf eval --results results.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml
+
+The command above evaluates rules without specific profile. XCCDF results are stored in *results.xml* file.
+
+
+
 [[devs]]
 == Developer's operations
 This part of documentation is meant to serve mainly to developers who want to
@@ -1169,13 +1283,6 @@ installed on your system:
 
 . Run the installation procedure by executing the following command: # make install
 
-If you want to create a package for Fedora or Red Hat Enterprise Linux
-distribution, you will need the respective spec files. These spec files are
-available under the following directories:
-
-* dist/fedora
-* dist/rhel5
-* dist/rhel6
 
 === Debugging
 Developers and users who intend to help find and fix possible bugs in OpenSCAP
@@ -1190,12 +1297,10 @@ and ```oval analyse``` modules.
 There is no need to special compilation, the feature is available for all
 OpenSCAP users.
 
-To turn the verbose mode on, run ```oscap``` with both those two options:
+To turn the verbose mode on, run ```oscap``` with this option:
 
 * ```--verbose VERBOSITY_LEVEL``` - Turn on verbose mode at specified
 verbosity level.
-* ```--verbose-log-file FILE``` - Provide name of a log file that the log
-will be written into.
 
 The ```VERBOSITY_LEVEL``` can be one of:
 
@@ -1204,8 +1309,9 @@ The ```VERBOSITY_LEVEL``` can be one of:
 3. *WARNING* - possible failures which OpenSCAP can recover from
 4. *ERROR* - shows only serious errors
 
-If you omit one of those two options, verbose mode can't be turned on
-and you will get an error message.
+The verbose messages will be written on standard error output (stderr).
+Optionally, you can write the log into a file using
+ ```--verbose-log-file FILE```.
 
 This is an example describing how to run OpenSCAP in verbose mode:
 
@@ -1218,10 +1324,6 @@ Then see the log using eg.:
 ----
 $ less log.txt
 ----
-
-Each message contains identifier and name of the process and thread which produced
-the message, then its verbosity level, and also source file, line and function
-describing specific place of its origin.
 
 ==== Debug mode
 Debug mode is useful for programmers. You need to build OpenSCAP from source code
@@ -1243,7 +1345,7 @@ Next important step is to preload ```libopenscap_testing.so``` before you run
  ```oscap``` tool. The testing library allows you to specify custom path to
 probes via *OVAL_PROBE_DIR* environment variable. The easiest way how to
 achieve that without need to install libopenscap, is to use shell
-script called *run* in the openscap directory.
+script called *run* in the OpenSCAP directory.
 
 -------------------------------------------------
 $ ./run utils/.libs/oscap xccdf eval ... whatever
@@ -1303,7 +1405,7 @@ The Script Check Engine (SCE) is an alternative check engine for XCCDF checklist
 evaluation.  SCE allows you to call shell scripts out of the XCCDF document.
 This approach might be suitable for various use cases, mostly when OVAL checks
 are not required. More information about SCE usage is available on this page:
-http://open-scap.org/page/SCE[Using SCE].
+{sce_web}[Using SCE].
 
 WARNING: SCE is not part of any SCAP specification.
 
@@ -1319,9 +1421,9 @@ http://www.cygwin.com/[cygwin]. First install basic set of packages from
 * *autoconf automake libtool make gcc*
 * *pcre-devel libxml2-devel libcurl-devel libgrcypt-devel*
 * *swig perl python*
-2.  Checkout the portable branch of OpenSCAP:
+2.  Checkout the master branch of OpenSCAP:
 
- $ git clone -b portable git://git.fedorahosted.org/git/openscap.git
+ $ git clone -b master https://github.com/OpenSCAP/openscap.git
 
 3.  Run autotools machinery by
 
@@ -1354,6 +1456,41 @@ Example: gcc myapp.c -I/path/to/headers -L/path/to/dynamic/library -lcygopenscap
 If you want to run your app, make sure ```cygopenscap-0.dll``` is either in
 working directory or in PATH variable directories.
 
+=== Generating of code coverage
+Code coverage can be usefull during writing of test or performance profiling. 
+We could separate the process into five phases.
+
+1) *Get dependencies*
+
+ # dnf install lcov
+
+2) *Run configure & make*
+
+To allow code to generate statistics, we need to compile it with specific flags.
+
+ $ ./configure CFLAGS="--coverage" LDFLAGS=-lgcov --enable-debug
+ $ make
+
+3) *Run code.*
+
+In this phase we should run code. We can run it directly or via test suite.
+
+ $ ./run ./utils/.libs/oscap
+
+4) *Generate and browse results*
+
+ $ lcov -t "OpenSCAP coverage" -o ./coverage.info -c -d .
+ $ genhtml -o ./coverage ./coverage.info
+ $ xdg-open ./coverage/index.html # open results in browser
+
+5) *Clean stats*
+
+Every run only modify our current statistics and not rewrite them completely.
+If we want to generate new statistics, we should remove the old ones.
+ 
+ $ lcov --directory ./ --zerocounters ; find ./ -name "*.gcno" | xargs rm
+ $ rm -rf ./coverage
+
 === Building OpenSCAP for Windows (cross-compilation)
 Building OpenSCAP for Windows without a POSIX emulation layer is currently not
 possible. However, we are close to a native port of OpenSCAP for Windows. If you
@@ -1372,7 +1509,7 @@ OpenSCAP for Windows:
 2) Checkout the portable branch of the OpenSCAP repository
 
 ----------------------------------------------------------------------
- $ git clone -b portable git://git.fedorahosted.org/git/openscap.git \
+ $ git clone -b master https://github.com/OpenSCAP/openscap.git \
  openscap-portable.git
  $ cd openscap-portable.git/
 ----------------------------------------------------------------------

@@ -2,14 +2,14 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           openscap
-Version:        1.2.8
+Version:        1.2.13
 Release:        2%{?dist}
 Summary:        Set of open source libraries enabling integration of the SCAP line of standards
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.open-scap.org/
 Source0:        http://fedorahosted.org/releases/o/p/openscap/%{name}-%{version}.tar.gz
-Patch0:         0001-oscap-vm.patch
+Patch0:         0001-Fix-SCE-stderr-stalling-680.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  swig libxml2-devel libxslt-devel m4 perl-XML-Parser
 BuildRequires:  rpm-devel
@@ -124,7 +124,7 @@ for developing applications that use %{name}-engine-sce.
 
 %prep
 %setup -q
-%patch0 -p1 -b .oscap_vm
+%patch0 -p1 -b .Fix_SCE_stderr_stalling_680
 
 %build
 %ifarch sparc64
@@ -291,6 +291,38 @@ fi
 %{_libdir}/libopenscap_sce.so.*
 
 %changelog
+* Thu Jan 05 2017 Martin Preisler <mpreisle@redhat.com> - 1.2.13-1
+- Upgrade to the latest upstream release
+
+* Wed Nov 16 2016 Martin Preisler <mpreisle@redhat.com> - 1.2.12-1
+- Upgrade to the latest upstream release
+- improved HTML report by referencing links
+- fixed validity errors in ARF files
+- fixed CVE parsing
+- fixed injecting xccdf:check-content-ref references in ARF results
+- fixed oscap-docker incompliance reporting (#1387248)
+- fixed oscap-docker man page (#1387166)
+
+* Wed Nov 09 2016 Watson Sato <wsato@redhat.com> - 1.2.11-3
+- Patch to separate stderr from stdout in SCE (#1309491)
+
+* Fri Nov 04 2016 Watson Sato <wsato@redhat.com> - 1.2.11-2
+- patch fix issue with shebangs for SCE tests
+
+* Mon Oct 31 2016 Watson Sato <wsato@redhat.com> - 1.2.11-1
+- Upgrade to the latest upstream release
+- NIST certified OpenSCAP (#1364207)
+- Huge speed-up of generating HTML reports and guides
+- Support remote datastream components
+- Support tailoring of external datastreams
+- New option generating OVAL results without system characteristics
+- Support for extracting Ansible playbooks
+- Enabled fetching remote resources in OVAL module
+- Support --benchmark-id when running `oscap xccdf generate guide`
+- Enabled offline scanning in many probes
+- Added and updated various CPEs
+- Fixed manual page for oscap-ssh (#1299969)
+
 * Thu Jan 28 2016 Šimon Lukašík <slukasik@redhat.com> - 1.2.8-2
 - patch oscap-vm to support Red Hat Enterprise Linux 6
 

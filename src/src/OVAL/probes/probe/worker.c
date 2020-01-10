@@ -47,13 +47,15 @@ void *probe_worker_runfn(void *arg)
 	SEXP_t *probe_res, *obj, *oid;
 	int     probe_ret;
 
+#if defined(HAVE_PTHREAD_SETNAME_NP)
 	pthread_setname_np(pthread_self(), "probe_worker");
-	dI("handling SEAP message ID %u", pair->pth->sid);
+#endif
+	dD("handling SEAP message ID %u", pair->pth->sid);
 	//
 	probe_ret = -1;
 	probe_res = pair->pth->msg_handler(pair->probe, pair->pth->msg, &probe_ret);
 	//
-	dI("handler result = %p, return code = %d", probe_res, probe_ret);
+	dD("handler result = %p, return code = %d", probe_res, probe_ret);
 
 	/* Assuming that the red-black tree API is doing locking for us... */
 	if (rbt_i32_del(pair->probe->workers, pair->pth->sid, NULL) != 0) {
@@ -72,7 +74,7 @@ void *probe_worker_runfn(void *arg)
 	} else {
                 SEXP_t *items;
 
-		dI("probe thread deleted");
+		dD("probe thread deleted");
 
 		obj = SEAP_msg_get(pair->pth->msg);
 		oid = probe_obj_getattrval(obj, "id");
@@ -632,7 +634,7 @@ static SEXP_t *probe_set_eval(probe_t *probe, SEXP_t *set, size_t depth)
 	if (depth > MAX_EVAL_DEPTH) {
 		char *fmt = "probe_set_eval: Too many levels: max=%zu.";
 #ifndef NDEBUG
-                dI(fmt, (size_t) MAX_EVAL_DEPTH);
+                dD(fmt, (size_t) MAX_EVAL_DEPTH);
 		abort();
 #endif
 		r0 = probe_msg_creatf(OVAL_MESSAGE_LEVEL_ERROR, fmt, (size_t) MAX_EVAL_DEPTH);
@@ -706,7 +708,7 @@ static SEXP_t *probe_set_eval(probe_t *probe, SEXP_t *set, size_t depth)
 			SEXP_t *objres; /**< Result of the evaluation */
 			char    OID_cstr[128];
 
-			dI("Handling object_reference");
+			dD("Handling object_reference");
 
 			if ((OID = probe_ent_getval(member)) == NULL) {
 				Omsg = probe_msg_creatf(OVAL_MESSAGE_LEVEL_ERROR,
@@ -715,14 +717,14 @@ static SEXP_t *probe_set_eval(probe_t *probe, SEXP_t *set, size_t depth)
 			}
 #ifndef NDEBUG
 			SEXP_string_cstr_r(OID, OID_cstr, sizeof OID_cstr);
-			dI("Looking for the result in cache: OID=%s", OID_cstr);
+			dD("Looking for the result in cache: OID=%s", OID_cstr);
 #endif
 			if ((objres = probe_rcache_sexp_get(probe->rcache, OID)) == NULL) {
-				dI("MISS => requesting object evaluation from the library");
+				dD("MISS => requesting object evaluation from the library");
 
 				objres = probe_obj_eval(probe, OID);
 
-				dI("EVAL: result=%p", objres);
+				dD("EVAL: result=%p", objres);
 				if (objres != NULL) {
 					dO(OSCAP_DEBUGOBJ_SEXP, objres);
 				} else {
@@ -838,22 +840,20 @@ static SEXP_t *probe_set_eval(probe_t *probe, SEXP_t *set, size_t depth)
 
                 for (i = 0; i < s_subset_i; ++i) {
                         if (s_subset[i] != NULL) {
-                                dI("=== s_subset[%d] ===", i);
+                                dD("=== s_subset[%d] ===", i);
                                 dO(OSCAP_DEBUGOBJ_SEXP, s_subset[i]);
-                                dI("");
                         }
                 }
 
                 for (i = 0; i < o_subset_i; ++i) {
                         if (o_subset[i] != NULL) {
-                                dI("=== o_subset[%d] ===", i);
+                                dD("=== o_subset[%d] ===", i);
                                 dO(OSCAP_DEBUGOBJ_SEXP, o_subset[i]);
-                                dI("");
                         }
                 }
         }
 
-        dI("OP= %d", op_num);
+        dD("OP= %d", op_num);
 #endif
 
 	SEXP_free(filters_a);
@@ -864,9 +864,8 @@ static SEXP_t *probe_set_eval(probe_t *probe, SEXP_t *set, size_t depth)
 	SEXP_free(s_subset[0]);
 	SEXP_free(s_subset[1]);
 
-        dI("=== RESULT ===");
+        dD("=== RESULT ===");
         dO(OSCAP_DEBUGOBJ_SEXP, result);
-        dI("");
 
 	return (result);
  eval_fail:
@@ -966,7 +965,7 @@ SEXP_t *probe_worker(probe_t *probe, SEAP_msg_t *msg_in, int *ret)
 			 */
 			struct probe_varref_ctx *ctx;
 
-			dI("handling varrefs in object");
+			dD("handling varrefs in object");
 
 			if (probe_varref_create_ctx(probe_in, varrefs, &ctx) != 0) {
 				SEXP_vfree(varrefs, pctx.filters, probe_in, mask, NULL);

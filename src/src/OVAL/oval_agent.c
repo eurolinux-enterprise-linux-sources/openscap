@@ -118,7 +118,8 @@ oval_agent_session_t * oval_agent_new_session(struct oval_definition_model *mode
 	/* one system only */
 	ag_sess->sys_models[0] = ag_sess->sys_model;
 	ag_sess->sys_models[1] = NULL;
-	ag_sess->res_model = oval_results_model_new(model, ag_sess->sys_models);
+	ag_sess->res_model = oval_results_model_new_with_probe_session(
+			model, ag_sess->sys_models, ag_sess->psess);
 	generator = oval_results_model_get_generator(ag_sess->res_model);
 	oval_generator_set_product_version(generator, oscap_get_version());
 
@@ -160,20 +161,7 @@ static struct oval_result_system *_oval_agent_get_first_result_system(oval_agent
 int oval_agent_eval_definition(oval_agent_session_t *ag_sess, const char *id)
 {
 	int ret;
-	const char *title = NULL;
 	struct oval_result_system *rsystem;
-	struct oval_definition *oval_def;
-
-	oval_def = oval_definition_model_get_definition(ag_sess->def_model, id);
-	if (oval_def != NULL) {
-		title = oval_definition_get_title(oval_def);
-	}
-	dI("Evaluating definition '%s': %s.", id, title);
-
-	/* probe */
-	ret = oval_probe_query_definition(ag_sess->psess, id);
-	if (ret == -1)
-		return ret;
 
 	rsystem = _oval_agent_get_first_result_system(ag_sess);
 	/* eval */
@@ -240,8 +228,10 @@ int oval_agent_reset_session(oval_agent_session_t * ag_sess) {
         	oval_generator_set_product_name(generator, ag_sess->product_name);
 	}
 
-	oval_probe_session_destroy(ag_sess->psess);
-	ag_sess->psess = oval_probe_session_new(ag_sess->sys_model);
+	/* We have to reset probe_session inplace, because
+	 * ag_sess->res_model points to old probe_session
+	 * and we are not able to update the reference clearly */
+	oval_probe_session_reinit(ag_sess->psess, ag_sess->sys_model);
 
 	return 0;
 }

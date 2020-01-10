@@ -33,13 +33,7 @@
 #define XCCDF_SESSION_H_
 
 #include "xccdf_policy.h"
-
-/**
- * Type of the function used to report progress of download.
- * @param warning indicates whether the message is rather warning or notice
- * @param format printf-like format string
- */
-typedef void (*download_progress_calllback_t) (bool warning, const char * format, ...);
+#include "oscap_download_cb.h"
 
 /**
  * @struct xccdf_session
@@ -78,13 +72,26 @@ const char *xccdf_session_get_filename(const struct xccdf_session *session);
 bool xccdf_session_is_sds(const struct xccdf_session *session);
 
 /**
- * Set XSD validation level.
+ * Set XSD validation level to one of three possibilities:
+ *	- None: 	All XSD validations will be skipped.
+ *	- Default:	Partial (input) XSD validations will be done.
+ *	- Full Valid.:	Every possible (input & output) XSD validation will be done.
  * @memberof xccdf_session
  * @param session XCCDF Session
  * @param validate False value indicates to skip any XSD validation.
  * @param full_validation True value indicates that every possible step will be validated by XSD.
  */
 void xccdf_session_set_validation(struct xccdf_session *session, bool validate, bool full_validation);
+
+/**
+ * Set whether the thin results override is enabled.
+ * If true the OVAL results put in ARF or separate files will have thin results.
+ * Thin results do not contain details about the evaluated criteria, only
+ * minimal OVAL results.
+ * @memberof xccdf_session
+ * @param thin_results true to enable thin_results, default is false
+ */
+void xccdf_session_set_thin_results(struct xccdf_session *session, bool thin_result);
 
 /**
  * Set requested datastream_id for this session. This datastream_id is later
@@ -199,6 +206,14 @@ void xccdf_session_set_custom_oval_eval_fn(struct xccdf_session *session, xccdf_
  * @returns true on success
  */
 bool xccdf_session_set_product_cpe(struct xccdf_session *session, const char *product_cpe);
+
+/**
+ * Set whether the System Characteristics shall be exported in result files.
+ * @memberof xccdf_session
+ * @param session XCCDF Session
+ * @param without_sys_chars whether to export System Characteristics or not.
+ */
+void xccdf_session_set_without_sys_chars_export(struct xccdf_session *session, bool without_sys_chars);
 
 /**
  * Set whether the OVAL result files shall be exported.

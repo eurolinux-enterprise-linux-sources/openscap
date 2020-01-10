@@ -4,6 +4,7 @@ var searchData=
   ['oscap_5fdocument_5fcpe_5fdictionary',['OSCAP_DOCUMENT_CPE_DICTIONARY',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200fa2a2868aeedeafe930100ee5b7695d75f',1,'oscap.h']]],
   ['oscap_5fdocument_5fcpe_5flanguage',['OSCAP_DOCUMENT_CPE_LANGUAGE',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200faae51c5951377f65c31e676fdd2e7acf0',1,'oscap.h']]],
   ['oscap_5fdocument_5fcve_5ffeed',['OSCAP_DOCUMENT_CVE_FEED',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200fa828334bea80ec94d093251ec7d09c3c5',1,'oscap.h']]],
+  ['oscap_5fdocument_5focil',['OSCAP_DOCUMENT_OCIL',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200fa0377d627e51569faf62f96f0abb81afa',1,'oscap.h']]],
   ['oscap_5fdocument_5foval_5fdefinitions',['OSCAP_DOCUMENT_OVAL_DEFINITIONS',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200fafc43196d876e7510c731e9329268b270',1,'oscap.h']]],
   ['oscap_5fdocument_5foval_5fdirectives',['OSCAP_DOCUMENT_OVAL_DIRECTIVES',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200fac6e0c570f97813e5c7413786bf40d425',1,'oscap.h']]],
   ['oscap_5fdocument_5foval_5fresults',['OSCAP_DOCUMENT_OVAL_RESULTS',['../group__VALID.html#ggae11fc65de255d812d72c1f563146200faf668682d31530ba654ad6a501ff2c558',1,'oscap.h']]],
