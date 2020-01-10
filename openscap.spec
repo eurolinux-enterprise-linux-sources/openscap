@@ -3,7 +3,7 @@
 
 Name:           openscap
 Version:        1.0.8
-Release:        1%{?dist}.1
+Release:        1%{?dist}
 Summary:        Set of open source libraries enabling integration of the SCAP line of standards
 Group:          System Environment/Libraries
 License:        LGPLv2+
@@ -266,10 +266,6 @@ fi
 %{_libdir}/libopenscap_sce.so.*
 
 %changelog
-* Tue Jul 22 2014 Lubos Kocman <lkocman@redhat.com> - 1.0.8-1.1
-- release bump
-  Resolves: rhbz#1121992
-
 * Wed Mar 26 2014 Šimon Lukašík <slukasik@redhat.com> - 1.0.8-1
 - upgrade
 
