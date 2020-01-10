@@ -64,6 +64,8 @@ void *probe_signal_handler(void *arg)
 	siginfo_t siinf;
 	sigset_t  siset;
 
+	pthread_setname_np(pthread_self(), "signal_handler");
+
 	sigemptyset(&siset);
 	sigaddset(&siset, SIGHUP);
 	sigaddset(&siset, SIGUSR1);
@@ -75,23 +77,23 @@ void *probe_signal_handler(void *arg)
 
 #if defined(__linux__)
         if (prctl(PR_SET_PDEATHSIG, SIGTERM) != 0)
-                dW("prctl(PR_SET_PDEATHSIG, SIGTERM) failed\n");
+                dW("prctl(PR_SET_PDEATHSIG, SIGTERM) failed");
 #endif
        
-	dI("Signal handler ready\n");
+	dI("Signal handler ready");
 	switch (errno = pthread_barrier_wait(&OSCAP_GSYM(th_barrier)))
 	{
 	case 0:
 	case PTHREAD_BARRIER_SERIAL_THREAD:
 		break;
 	default:
-		dE("pthread_barrier_wait: %d, %s.\n", errno, strerror(errno));
+		dE("pthread_barrier_wait: %d, %s.", errno, strerror(errno));
 		return (NULL);
 	}
 
 	while (sigwaitinfo(&siset, &siinf) != -1) {
 
-		dI("Received signal %d from %u (%s)\n",
+		dI("Received signal %d from %u (%s)",
 		   siinf.si_signo, (unsigned int)siinf.si_pid,
 		   getppid() == siinf.si_pid ? "parent" : "not my parent");
 
@@ -125,19 +127,19 @@ void *probe_signal_handler(void *arg)
 			 * cancelability), but at most 60 seconds per thread.
 			 */
 			for (; coll.cnt > 0; --coll.cnt) {
+				probe_worker_t *thr = coll.thr[coll.cnt - 1];
 #if defined(HAVE_PTHREAD_TIMEDJOIN_NP) && defined(HAVE_CLOCK_GETTIME)
 				struct timespec j_tm;
-				probe_worker_t *thr = coll.thr[coll.cnt - 1];
 
 				if (clock_gettime(CLOCK_REALTIME, &j_tm) == -1) {
-					dE("clock_gettime(CLOCK_REALTIME): %d, %s.\n", errno, strerror(errno));
+					dE("clock_gettime(CLOCK_REALTIME): %d, %s.", errno, strerror(errno));
 					continue;
 				}
 
 				j_tm.tv_sec += 60;
 
 				if ((errno = pthread_timedjoin_np(thr->tid, NULL, &j_tm)) != 0) {
-					dE("[%llu] pthread_timedjoin_np: %d, %s.\n", (uint64_t)thr->sid, errno, strerror(errno));
+					dE("[%llu] pthread_timedjoin_np: %d, %s.", (uint64_t)thr->sid, errno, strerror(errno));
 					/*
 					 * Memory will be leaked here by continuing to the next thread. However, we are in the
 					 * process of shutting down the whole probe. We're just nice and gave the probe_main()
@@ -147,7 +149,7 @@ void *probe_signal_handler(void *arg)
 				}
 #else
 				if ((errno = pthread_join(thr->tid, NULL)) != 0) {
-					dE("pthread_join: %d, %s.\n", errno, strerror(errno));
+					dE("pthread_join: %d, %s.", errno, strerror(errno));
 					continue;
 				}
 #endif

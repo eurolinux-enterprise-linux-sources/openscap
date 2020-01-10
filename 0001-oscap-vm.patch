@@ -1,0 +1,59 @@
+From 5e9d5465e93562a6cf34b4042b7b11e326efbb4b Mon Sep 17 00:00:00 2001
+From: Marek Haicman <dahaic@gmail.com>
+Date: Tue, 26 Jan 2016 21:15:27 +0100
+Subject: [PATCH] Update oscap-vm to print --help even if dependencies are not
+ met
+
+Update oscap-vm to require only fuse for unmounting (to enable older versions of libguestfs)
+
+Updated oscap-vm to fallback to fusermount only if guestunmount is not present on the system
+---
+ utils/oscap-vm | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/utils/oscap-vm b/utils/oscap-vm
+index 4a9be98..fa935f6 100755
+--- a/utils/oscap-vm
++++ b/utils/oscap-vm
+@@ -22,10 +22,6 @@ function die()
+     exit 1
+ }
+ 
+-which guestmount > /dev/null || die "Cannot find guestmount, please install libguestfs utilities."
+-which guestunmount > /dev/null || die "Cannot find guestunmount, please install libguestfs utilities."
+-which mktemp > /dev/null || die "Cannot find mktemp, please install coreutils."
+-
+ function usage()
+ {
+     echo "oscap-vm -- Tool for offline SCAP evaluation of virtual machines."
+@@ -96,6 +92,19 @@ else
+     die
+ fi
+ 
++which guestmount > /dev/null || die "Cannot find guestmount, please install libguestfs utilities."
++
++if [ `which guestunmount` > /dev/null ]; then
++    UNMOUNT_COMMAND="guestunmount"
++elif [ `which fusermount` > /dev/null ]; then
++    echo "guestunmount command not present on the system, using simpler fusermount instead"
++    UNMOUNT_COMMAND="fusermount -u"
++else
++    die "Cannot find guestunmount or fusermount, please install libguestfs utilities, or fuse."
++fi
++
++which mktemp > /dev/null || die "Cannot find mktemp, please install coreutils."
++
+ MOUNTPOINT=$(mktemp -d)
+ 
+ if [ "$1" == "image" ]; then
+@@ -120,6 +129,6 @@ shift 2
+ oscap "$@"
+ EXIT_CODE=$?
+ echo "Unmounting '$MOUNTPOINT'..."
+-guestunmount "$MOUNTPOINT"
++$UNMOUNT_COMMAND "$MOUNTPOINT"
+ rmdir "$MOUNTPOINT"
+ exit $EXIT_CODE
+-- 
+2.5.0
+

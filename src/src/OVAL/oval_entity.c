@@ -6,7 +6,7 @@
  */
 
 /*
- * Copyright 2009--2013 Red Hat Inc., Durham, North Carolina.
+ * Copyright 2009--2014 Red Hat Inc., Durham, North Carolina.
  * All Rights Reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@
 
 #include "common/util.h"
 #include "common/debug_priv.h"
+#include "common/elements.h"
 #include "common/_error.h"
 
 /***************************************************************************/
@@ -301,7 +302,7 @@ int oval_entity_parse_tag(xmlTextReaderPtr reader,
 	oval_operation_t operation = oval_operation_parse(reader, "operation", OVAL_OPERATION_EQUALS);
 	int mask = oval_parser_boolean_attribute(reader, "mask", 0);
 
-	char *nil_attr = (char *) xmlTextReaderGetAttributeNs(reader, BAD_CAST "nil", OVAL_XMLNS_XSI);
+	char *nil_attr = (char *) xmlTextReaderGetAttributeNs(reader, BAD_CAST "nil", OSCAP_XMLNS_XSI);
 	int xsi_nil = oscap_streq(nil_attr, "true") != 0;
 	xmlFree(nil_attr);
 
@@ -317,14 +318,26 @@ int oval_entity_parse_tag(xmlTextReaderPtr reader,
 			struct oval_definition_model *model = context->definition_model;
 			varref_type = OVAL_ENTITY_VARREF_ELEMENT;
 			struct oval_consume_varref_context ctx = {.model = model, .variable = &variable, .value = &value};
-			return_code = oval_parser_text_value(reader, context, &oval_consume_varref, &ctx);
+			return_code = oscap_parser_text_value(reader, &oval_consume_varref, &ctx);
 		} else {
-			struct oval_definition_model *model = context->definition_model;
-			variable = oval_definition_model_get_variable(model, varref);
 			varref_type = OVAL_ENTITY_VARREF_ATTRIBUTE;
-			oscap_free(varref);
-			varref = NULL;
-			value = NULL;
+			struct oval_definition_model *model = context->definition_model;
+			oval_schema_version_t version = oval_definition_model_get_core_schema_version(model);
+			if (oval_schema_version_cmp(version, OVAL_SCHEMA_VERSION(5.6)) > 0) {
+				oscap_seterr(OSCAP_EFAMILY_OVAL, "The var_ref attribute for the var_ref entity "
+						"of a variable_object is prohibited since OVAL 5.6. Use plain "
+						"var_ref instead.");
+			}
+			variable = oval_definition_model_get_variable(model, varref);
+			if (variable == NULL) {
+				oscap_seterr(OSCAP_EFAMILY_OVAL,
+						"Could not found variable '%s' referenced by var_ref element.", varref);
+				return_code = -1;
+			} else {
+				oscap_free(varref);
+				varref = NULL;
+				value = NULL;
+			}
 		}
 	} else if (varref == NULL) {
 		variable = NULL;
@@ -357,7 +370,7 @@ int oval_entity_parse_tag(xmlTextReaderPtr reader,
 	(*consumer) (entity, user);
 
 	if (return_code != 0) {
-		dW("Parsing of <%s> terminated by an error at line %d.\n", name, xmlTextReaderGetParserLineNumber(reader));
+		dW("Parsing of <%s> terminated by an error at line %d.", name, xmlTextReaderGetParserLineNumber(reader));
 	}
 
 	oscap_free(name);
@@ -386,7 +399,10 @@ xmlNode *oval_entity_to_dom(struct oval_entity *entity, xmlDoc * doc, xmlNode * 
 	bool mask = oval_entity_get_mask(entity);
 
 	/* omit the value and operation used for testing in oval_results if mask=true */
-	if (mask && !xmlStrcmp(root_node->name, BAD_CAST OVAL_ROOT_ELM_RESULTS)) {
+	/* Omit it only for older versions of OVAL than 5.10 */
+	oval_schema_version_t oval_version = oval_definition_model_get_core_schema_version(entity->model);
+	if (oval_schema_version_cmp(oval_version, OVAL_SCHEMA_VERSION(5.10)) < 0 &&
+		mask && !xmlStrcmp(root_node->name, BAD_CAST OVAL_ROOT_ELM_RESULTS)) {
 		entity_node = xmlNewTextChild(parent, ent_ns, BAD_CAST tagname, BAD_CAST "");
 	} else {
 		entity_node = xmlNewTextChild(parent, ent_ns, BAD_CAST tagname, BAD_CAST content);
@@ -394,16 +410,8 @@ xmlNode *oval_entity_to_dom(struct oval_entity *entity, xmlDoc * doc, xmlNode * 
 		if (operation != OVAL_OPERATION_EQUALS)
 			xmlNewProp(entity_node, BAD_CAST "operation", BAD_CAST oval_operation_get_text(operation));
 		if (oscap_streq(content, "") && oval_entity_get_xsi_nil(entity)) {
-			// Look-up xsi namespace pointer. We can be pretty sure that this namespace
-			// is defined in root element, because it usually carries xsi:schemaLocation
-			// attribute.
-			xmlNsPtr ns_xsi = xmlSearchNsByHref(doc, xmlDocGetRootElement(doc), OVAL_XMLNS_XSI);
-			if (ns_xsi == NULL) {
-				assert(ns_xsi != NULL); // Spot this in testing
-				ns_xsi = xmlNewNs(xmlDocGetRootElement(doc), OVAL_XMLNS_XSI, BAD_CAST "xsi");
-			}
 			// Export @xsi:nil="true" only if it was imported and the content is still empty
-			xmlNewNsProp(entity_node, ns_xsi, BAD_CAST "nil", BAD_CAST "true");
+			xmlNewNsProp(entity_node, lookup_xsi_ns(doc), BAD_CAST "nil", BAD_CAST "true");
 		}
 	}
 

@@ -2,14 +2,14 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           openscap
-Version:        1.0.10
-Release:        3%{?dist}
+Version:        1.2.8
+Release:        2%{?dist}
 Summary:        Set of open source libraries enabling integration of the SCAP line of standards
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.open-scap.org/
 Source0:        http://fedorahosted.org/releases/o/p/openscap/%{name}-%{version}.tar.gz
-Patch0:         bz998824-754e5643-Fix-possible-double-free.patch
+Patch0:         0001-oscap-vm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  swig libxml2-devel libxslt-devel m4 perl-XML-Parser
 BuildRequires:  rpm-devel
@@ -18,6 +18,7 @@ BuildRequires:  pcre-devel
 BuildRequires:  libacl-devel
 BuildRequires:  libselinux-devel libcap-devel
 BuildRequires:  libblkid-devel
+BuildRequires:  bzip2-devel
 %if %{?_with_check:1}%{!?_with_check:0}
 BuildRequires:  perl-XML-XPath
 %endif
@@ -123,7 +124,7 @@ for developing applications that use %{name}-engine-sce.
 
 %prep
 %setup -q
-%patch0 -p1 -b .bz998824
+%patch0 -p1 -b .oscap_vm
 
 %build
 %ifarch sparc64
@@ -134,7 +135,7 @@ export LDFLAGS="-pie -Wl,-z,relro -Wl,-z,now"
 export CFLAGS="$RPM_OPT_FLAGS -fpie"
 export LDFLAGS="-pie -Wl,-z,relro -Wl,-z,now"
 %endif
-%configure --enable-sce
+%configure --enable-sce --disable-util-oscap-docker
 
 make %{?_smp_mflags}
 # Remove shebang from bash-completion script
@@ -176,6 +177,10 @@ install -pm 644 dist/bash_completion.d/oscap $RPM_BUILD_ROOT%{_sysconfdir}/bash_
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
+# remove probes not applicable to this OS
+rm $RPM_BUILD_ROOT/%{_libexecdir}/openscap/probe_systemdunitproperty
+rm $RPM_BUILD_ROOT/%{_libexecdir}/openscap/probe_systemdunitdependency
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -196,7 +201,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING ChangeLog NEWS README
+%doc AUTHORS COPYING ChangeLog NEWS README.md
 %{_libdir}/libopenscap.so.*
 %{_libexecdir}/openscap/probe_dnscache
 %{_libexecdir}/openscap/probe_environmentvariable
@@ -222,6 +227,7 @@ fi
 %{_libexecdir}/openscap/probe_selinuxboolean
 %{_libexecdir}/openscap/probe_selinuxsecuritycontext
 %{_libexecdir}/openscap/probe_shadow
+%{_libexecdir}/openscap/probe_symlink
 %{_libexecdir}/openscap/probe_sysctl
 %{_libexecdir}/openscap/probe_system_info
 %{_libexecdir}/openscap/probe_textfilecontent
@@ -285,8 +291,21 @@ fi
 %{_libdir}/libopenscap_sce.so.*
 
 %changelog
-* Wed Apr 15 2015 Šimon Lukašík <slukasik@redhat.com> - 1.0.10-3
-- fixed minor coverity defect
+* Thu Jan 28 2016 Šimon Lukašík <slukasik@redhat.com> - 1.2.8-2
+- patch oscap-vm to support Red Hat Enterprise Linux 6
+
+* Mon Jan 18 2016 Šimon Lukašík <slukasik@redhat.com> - 1.2.8-1
+- upgrade to the latest upstream release
+- Report failures on non-utf8 systems (#1285757)
+
+* Fri Dec 04 2015 Šimon Lukašík <slukasik@redhat.com> - 1.2.7-1
+- upgrade to the latest upstream release (#1259037)
+- Introduced '--verbose' mode (#1287295)
+- Detailed OVAL results present in HTML report (#1140240)
+- fixed issues in scap-as-rpm tool (#1226398, #1258958)
+- introduced support for non-decimal OVAL vetsions (#1248378)
+- 'oscap oval eval --report' command (#1258958)
+- 'oscap xccdf generate --profile <custom-profile> guide' (#1139822)
 
 * Mon Feb 16 2015 Šimon Lukašík <slukasik@redhat.com> - 1.0.10-2
 - introduce openscap-scanner sub-package: #1115114

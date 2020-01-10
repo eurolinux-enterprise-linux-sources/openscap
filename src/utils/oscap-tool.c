@@ -34,8 +34,8 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <limits.h>
-#include <ftw.h>
 #include <cvss_score.h>
+#include <oscap_debug.h>
 
 #ifndef PATH_MAX
 # define PATH_MAX 1024
@@ -377,37 +377,22 @@ void oscap_print_error(void)
 	}
 }
 
-#ifndef P_tmpdir
-#define P_tmpdir "/tmp"
-#endif
-
-#define TEMP_DIR_TEMPLATE P_tmpdir "/oscap.XXXXXX"
-
-char *oscap_acquire_temp_dir_bundled()
+bool check_verbose_options(struct oscap_action *action)
 {
-	char *temp_dir = strdup(TEMP_DIR_TEMPLATE);
-	if (mkdtemp(temp_dir) == NULL) {
-		free(temp_dir);
-		fprintf(stderr, "Could not create temp directory " TEMP_DIR_TEMPLATE ". %s", strerror(errno));
-		return NULL;
+	if (action->verbosity_level == NULL && action->f_verbose_log != NULL) {
+		oscap_module_usage(action->module, stderr,
+			"Verbosity level is not specified! Please provide --verbose VERBOSITY_LEVEL option together with --verbose-log-file.");
+		return false;
 	}
-	return temp_dir;
-}
-
-static int __unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
-{
-	int rv = remove(fpath);
-	if (rv)
-		fprintf(stderr, "Could not remove %s. %s", fpath, strerror(errno));
-	return rv;
-}
-
-void oscap_acquire_cleanup_dir_bundled(char **dir_path)
-{
-	if (*dir_path != NULL) {
-		nftw(*dir_path, __unlink_cb, 64, FTW_DEPTH | FTW_PHYS | FTW_MOUNT);
-		free(*dir_path);
-		*dir_path = NULL;
+	if (action->verbosity_level != NULL && action->f_verbose_log == NULL) {
+		oscap_module_usage(action->module, stderr,
+			"Log file is not specified! Please provide --verbose-log-file FILE option together with --verbose.");
+		return false;
 	}
+	if (action->verbosity_level != NULL && oscap_verbosity_level_from_cstr(action->verbosity_level) == -1) {
+		oscap_module_usage(action->module, stderr,
+			"Invalid verbosity level! Verbosity level must be one of: DEVEL, INFO, WARNING, ERROR.");
+		return false;
+	}
+	return true;
 }
-

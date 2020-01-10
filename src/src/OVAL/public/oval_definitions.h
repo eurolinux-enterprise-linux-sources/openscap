@@ -14,7 +14,7 @@
  */
 
 /*
- * Copyright 2009-2013 Red Hat Inc., Durham, North Carolina.
+ * Copyright 2009-2014 Red Hat Inc., Durham, North Carolina.
  * All Rights Reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -39,9 +39,12 @@
 #ifndef OVAL_DEFINITIONS
 #define OVAL_DEFINITIONS
 
+#include "oscap.h"
+#include "oscap_source.h"
 #include "oval_adt.h"
 #include "oval_types.h"
 #include "oval_version.h"
+#include "oval_schema_version.h"
 #include <stdbool.h>
 
 /**
@@ -159,6 +162,7 @@ typedef enum {
 	OVAL_DATATYPE_STRING,
 	OVAL_DATATYPE_STRING_M,
 	OVAL_DATATYPE_VERSION,
+	OVAL_DATATYPE_DEBIAN_EVR_STRING
 } oval_datatype_t;
 
 /// Varref types
@@ -211,7 +215,8 @@ typedef enum {
 	OVAL_FUNCTION_ARITHMETIC = OVAL_FUNCTION + 9,
 	OVAL_FUNCTION_COUNT = OVAL_FUNCTION + 10,
 	OVAL_FUNCTION_UNIQUE = OVAL_FUNCTION + 11,
-	OVAL_FUNCTION_LAST = OVAL_FUNCTION + 12
+	OVAL_FUNCTION_GLOB_TO_REGEX = OVAL_FUNCTION + 12,
+	OVAL_FUNCTION_LAST = OVAL_FUNCTION + 13
 } oval_component_type_t;
 
 /// Arithmetic format enumeration
@@ -230,7 +235,8 @@ typedef enum {
 	OVAL_DATETIME_MONTH_DAY_YEAR = 2,
 	OVAL_DATETIME_DAY_MONTH_YEAR = 3,
 	OVAL_DATETIME_WIN_FILETIME = 4,
-	OVAL_DATETIME_SECONDS_SINCE_EPOCH = 5
+	OVAL_DATETIME_SECONDS_SINCE_EPOCH = 5,
+	OVAL_DATETIME_CIM_DATETIME = 6
 } oval_datetime_format_t;
 
 typedef enum {
@@ -328,6 +334,18 @@ struct oval_state_iterator;
  *		then the local variable would represent these 5 values.
  */
 struct oval_variable;
+/**
+ * @struct oval_variable_possible_value
+ */
+struct oval_variable_possible_value;
+/**
+ * @struct oval_variable_possible_restriction
+ */
+struct oval_variable_possible_restriction;
+/**
+ * @struct oval_variable_restriction
+ */
+struct oval_variable_restriction;
 /**
  * @struct oval_variable_iterator
  * @see oval_definition_model_get_variables
@@ -579,25 +597,41 @@ void oval_generator_free(struct oval_generator *generator);
 struct oval_generator *oval_generator_clone(struct oval_generator *old_generator);
 char *oval_generator_get_product_name(struct oval_generator *generator);
 char *oval_generator_get_product_version(struct oval_generator *generator);
-char *oval_generator_get_schema_version(struct oval_generator *generator);
+OSCAP_DEPRECATED(char *oval_generator_get_schema_version(struct oval_generator *generator));
+const char *oval_generator_get_core_schema_version(struct oval_generator *generator);
 char *oval_generator_get_timestamp(struct oval_generator *generator);
-void oval_generator_set_product_name(struct oval_generator *generator, char *product_name);
-void oval_generator_set_product_version(struct oval_generator *generator, char *product_version);
-void oval_generator_set_schema_version(struct oval_generator *generator, char *schema_version);
-void oval_generator_set_timestamp(struct oval_generator *generator, char *timestamp);
+const char *oval_generator_get_platform_schema_version (struct oval_generator *generator, const char *platform);
+void oval_generator_set_product_name(struct oval_generator *generator, const char *product_name);
+void oval_generator_set_product_version(struct oval_generator *generator, const char *product_version);
+OSCAP_DEPRECATED(void oval_generator_set_schema_version(struct oval_generator *generator, const char *schema_version));
+void oval_generator_set_core_schema_version(struct oval_generator *generator, const char *schema_version);
+void oval_generator_add_platform_schema_version(struct oval_generator *generator, const char *platform, const char *schema_version);
+void oval_generator_set_timestamp(struct oval_generator *generator, const char *timestamp);
+void oval_generator_update_timestamp(struct oval_generator *generator);
 
 /**
  * Create an empty oval_definition_model.
  * @memberof oval_definition_model
  */
 struct oval_definition_model *oval_definition_model_new(void);
+
+/**
+ * Import the content of the oscap_source into the oval_definition_model
+ * @memberof oval_definition_model
+ * @param source The oscap_source to import from
+ * @returns newly build oval_definition_model, or NULL if something went wrong
+ */
+struct oval_definition_model *oval_definition_model_import_source(struct oscap_source *source);
+
 /**
  * Import the content from the file into an oval_definition_model.
  * @param file filename
  * @return new oval_definition_model, or NULL if an error occurred
  * @memberof oval_definition_model
+ * @deprecated This function has been deprecated and it may be dropped from later
+ * OpenSCAP releases. Please use oval_definition_model_import_source instead.
  */
-struct oval_definition_model * oval_definition_model_import(const char *file);
+OSCAP_DEPRECATED(struct oval_definition_model *oval_definition_model_import(const char *file));
 
 /**
  * Merge the content from the file with specified oval_definition_model.
@@ -606,8 +640,10 @@ struct oval_definition_model * oval_definition_model_import(const char *file);
  * @param file filename 
  * @return -1 if an error occurred
  * @memberof oval_definition_model
+ * @deprecated This function has been deprecated and it may be dropped from later
+ * OpenSCAP releases.
  */
-int oval_definition_model_merge(struct oval_definition_model *model, const char *file);
+OSCAP_DEPRECATED(int oval_definition_model_merge(struct oval_definition_model *model, const char *file));
 
 /**
  * Copy an oval_definition_model.
@@ -1332,7 +1368,13 @@ int oval_object_get_version(struct oval_object *);
 /**
  * Returns schema version of the associated definition model
  */
-oval_version_t oval_object_get_schema_version(struct oval_object *object);
+OSCAP_DEPRECATED(oval_version_t oval_object_get_schema_version(struct oval_object *object));
+
+/**
+ * Returns schema version of the associated platform extension definition model
+ * @memberof oval_object
+ */
+oval_schema_version_t oval_object_get_platform_schema_version(struct oval_object *object);
 
 /**
  * Returns attribute @ref oval_object->contents.
@@ -1596,6 +1638,49 @@ struct oval_variable *oval_variable_clone(struct oval_definition_model *new_mode
 void oval_variable_free(struct oval_variable *);
 
 /**
+ * Construct new instance of possible_value element.
+ * @param hint A short description of what the value means or represents.
+ * @param value An expected value of an external variable
+ * @memberof oval_variable_possible_value
+ */
+struct oval_variable_possible_value *oval_variable_possible_value_new(const char *hint, const char *value);
+
+/**
+ * Free instance of possible_value
+ * @memberof oval_variable_possible_value
+ */
+void oval_variable_possible_value_free(struct oval_variable_possible_value *pv);
+
+/**
+ * Construct new instance of possible_restriction element.
+ * @param operator Operator to evaluation
+ * @param hint A short description of what the value means or represents.
+ * @memberof oval_variable_possible_restriction
+ */
+struct oval_variable_possible_restriction *oval_variable_possible_restriction_new(oval_operator_t operator, const char *hint);
+
+
+/**
+ * Free instance of possible_restriction
+ * @memberof oval_variable_possible_restriction
+ */
+void oval_variable_possible_restriction_free(struct oval_variable_possible_restriction *pr);
+
+/**
+ * Construct new instance of restriction element.
+ * @param operation Operation of restriction.
+ * @param value Restriction placed on expected values for an external variable.
+ * @memberof oval_variable_restriction
+ */
+struct oval_variable_restriction *oval_variable_restriction_new(oval_operation_t operation, const char *value);
+
+/**
+ * Free instance of restriction element.
+ * @memberof oval_variable_restriction
+ */
+void oval_variable_restriction_free(struct oval_variable_restriction *r);
+
+/**
  * @name Setters
  * @{
  */
@@ -1645,6 +1730,31 @@ void oval_variable_set_datatype(struct oval_variable *, oval_datatype_t);
 void oval_variable_add_value(struct oval_variable *, struct oval_value *);	//type==OVAL_VARIABLE_CONSTANT
 
 void oval_variable_clear_values(struct oval_variable *);
+
+/**
+ * Add a new possible value to an external variable.
+ * @param variable Variable to add.
+ * @param pv The new possible_value.
+ * @memberof oval_variable
+ */
+void oval_variable_add_possible_value(struct oval_variable *variable, struct oval_variable_possible_value *pv);
+
+/**
+ * Add a new possible restriction to an external variable.
+ * @param variable Variable to add.
+ * @param pr The new possible_restriction.
+ * @memberof oval_variable
+ */
+void oval_variable_add_possible_restriction(struct oval_variable *variable, struct oval_variable_possible_restriction *pr);
+
+/**
+ * Add a restriction to the list of possible restrictions.
+ * @param pr A possible_restriction type
+ * @param r Restriction which will be added
+ * @memberof oval_variable_possible_restriction
+ */
+void oval_variable_possible_restriction_add_restriction(struct oval_variable_possible_restriction *pr, struct oval_variable_restriction *r);
+
 /**
  * Bind an instance of @ref Oval_component to the attribute @ref Oval_local->component.
  * If attribute type <> @ref OVAL_VARIABLE_LOCAL, the component attribute <> NULL or the component parameter is NULL the state of the oval_variable shall not be changed by this
@@ -1711,6 +1821,39 @@ struct oval_value_iterator *oval_variable_get_values(struct oval_variable *);	//
  * @memberof oval_variable
  */
 struct oval_component *oval_variable_get_component(struct oval_variable *);	//type==OVAL_VARIABLE_LOCAL
+
+/**
+ * Get list of allowed values for an external variable.
+ * @return A new iterator for the possible_value attribute of the specified @ref oval_variable.
+ * It should be freed after use by the calling application.
+ * @memberof oval_variable
+ */
+struct oval_iterator *oval_variable_get_possible_values(struct oval_variable *variable);
+
+/**
+ * Get list of constraints for an external variable.
+ * @return A new iterator for the possible_restriction attribute of the specified @ref oval_variable.
+ * It should be freed after use by the calling application.
+ * @memberof oval_variable
+ */
+struct oval_iterator *oval_variable_get_possible_restrictions(struct oval_variable *variable);
+
+
+/**
+ * Get restrictions from one possible_restriction element.
+ * @return A new iterator for the restriction attribute of possible_restriction.
+ * It should be freed after use by the calling application.
+ * @memberof oval_variable_possible_restriction
+ */
+struct oval_iterator *oval_variable_possible_restriction_get_restrictions(struct oval_variable_possible_restriction *possible_restriction);
+
+/**
+ * Get operator of possible_restriction element
+ * @return operator
+ * @memberof oval_variable_possible_restriction
+ */
+oval_operator_t oval_variable_possible_restriction_get_operator(struct oval_variable_possible_restriction *possible_restriction);
+
 /**
  * Returns attribute @ref Oval_component_type->text.
  * @memberof oval_variable
@@ -2308,6 +2451,13 @@ void oval_state_content_set_varcheck(struct oval_state_content *, oval_check_t);
  * @memberof oval_state_content
  */
 void oval_state_content_set_entcheck(struct oval_state_content *, oval_check_t);
+/**
+ * Sets the "check_existence" attribute of an OVAL state entity
+ * @param content An entity within the state element
+ * @param existence New value of check_existence attribute of that entity
+ * @memberof oval_state_content
+ */
+void oval_state_content_set_check_existence(struct oval_state_content *content, oval_existence_t existence);
 /** @} */
 
 /**
@@ -2334,6 +2484,13 @@ oval_check_t oval_state_content_get_var_check(struct oval_state_content *);
  * @memberof oval_state_content
  */
 oval_check_t oval_state_content_get_ent_check(struct oval_state_content *);
+/**
+ * Get "check_existence" attribute of an OVAL state entity
+ * @param content An entity within the state element
+ * @return Value of the check_existence attribute
+ * @memberof oval_state_content
+ */
+oval_existence_t oval_state_content_get_check_existence(struct oval_state_content *content);
 /** @} */
 
 /**
@@ -2964,6 +3121,10 @@ void oval_component_set_split_delimiter(struct oval_component *, char *);	//type
 /**
  * @memberof oval_component
  */
+void oval_component_set_glob_to_regex_glob_noescape(struct oval_component *, bool);	//type==OVAL_COMPONENT_GLOB
+/**
+ * @memberof oval_component
+ */
 void oval_component_set_substring_start(struct oval_component *, int);	//type==OVAL_COMPONENT_SUBSTRING
 /**
  * @memberof oval_component
@@ -3065,6 +3226,13 @@ char *oval_component_get_suffix(struct oval_component *);	//type==OVAL_COMPONENT
  */
 char *oval_component_get_split_delimiter(struct oval_component *);	//type==OVAL_COMPONENT_SPLIT
 /**
+ * Returns attribute @ref Oval_function_GLOB_TO_REGEX->glob_noescape.
+ * IF component->type <> @ref OVAL_FUNCTION_GLOB_TO_REGEX, this method shall return false
+ * @return An attribute of the specified @ref oval_component.
+ * @memberof oval_component
+ */
+bool oval_component_get_glob_to_regex_glob_noescape(struct oval_component *);	//type==OVAL_COMPONENT_GLOB
+/**
  * Returns attribute @ref Oval_function_SUBSTRING->start.
  * IF component->type <> @ref OVAL_FUNCTION_SUBSTRING, this method shall return 0
  * @memberof oval_component
@@ -3147,8 +3315,10 @@ int oval_component_iterator_remaining(struct oval_component_iterator *);
  * Returns the version of the schema this document should be validated against
  *
  * Deallocate the result after use with "free(..)".
+ * @deprecated This function has been deprecated by @ref oscap_source_get_schema_version.
+ * This function may be dropped from later versions of the library.
  */
-char *oval_determine_document_schema_version(const char *, oscap_document_type_t);
+OSCAP_DEPRECATED(char *oval_determine_document_schema_version(const char *, oscap_document_type_t));
 
 /**
  * @} END OVAL

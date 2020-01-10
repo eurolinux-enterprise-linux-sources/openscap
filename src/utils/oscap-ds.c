@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Red Hat Inc., Durham, North Carolina.
+ * Copyright 2012--2014 Red Hat Inc., Durham, North Carolina.
  * All Rights Reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -33,6 +33,9 @@
 
 /* DS */
 #include <scap_ds.h>
+#include <oscap_source.h>
+#include <ds_rds_session.h>
+#include <ds_sds_session.h>
 
 #include "oscap-tool.h"
 
@@ -64,7 +67,8 @@ static struct oscap_module DS_SDS_SPLIT_MODULE = {
 		"\n"
 		"Options:\n"
 		"   --datastream-id <id> \r\t\t\t\t - ID of the datastream in the collection to use.\n"
-		"   --xccdf-id <id> \r\t\t\t\t - ID of XCCDF in the datastream that should be evaluated.\n",
+		"   --xccdf-id <id> \r\t\t\t\t - ID of XCCDF in the datastream that should be evaluated.\n"
+		"   --skip-valid \r\t\t\t\t - Skips validating of given XCCDF.\n",
 	.opt_parser = getopt_ds,
 	.func = app_ds_sds_split
 };
@@ -73,8 +77,9 @@ static struct oscap_module DS_SDS_COMPOSE_MODULE = {
 	.name = "sds-compose",
 	.parent = &OSCAP_DS_MODULE,
 	.summary = "Compose SourceDataStream from given XCCDF",
-	.usage = "xccdf-file.xml target_datastream.xml",
-	.help = NULL,
+	.usage = "[options] xccdf-file.xml target_datastream.xml",
+	.help = "Options:\n"
+		"   --skip-valid \r\t\t\t\t - Skips validating of given XCCDF.\n",
 	.opt_parser = getopt_ds,
 	.func = app_ds_sds_compose
 };
@@ -86,7 +91,7 @@ static struct oscap_module DS_SDS_ADD_MODULE = {
 	.usage = "[options] new-component.xml existing_datastream.xml",
 	.help =	"Options:\n"
 		"   --datastream-id <id> \r\t\t\t\t - ID of the datastream in the collection for adding to.\n"
-		,
+		"   --skip-valid \r\t\t\t\t - Skips validating of given XCCDF.\n",
 	.opt_parser = getopt_ds,
 	.func = app_ds_sds_add
 };
@@ -108,7 +113,7 @@ static struct oscap_module DS_RDS_SPLIT_MODULE = {
 	.usage = "[OPTIONS] rds.xml TARGET_DIRECTORY",
 	.help =	"Options:\n"
 		"   --report-id <id> \r\t\t\t\t - ID of report inside ARF that should be split.\n"
-		,
+		"   --skip-valid \r\t\t\t\t - Skips validating of given XCCDF.\n",
 	.opt_parser = getopt_ds,
 	.func = app_ds_rds_split
 };
@@ -117,8 +122,9 @@ static struct oscap_module DS_RDS_CREATE_MODULE = {
 	.name = "rds-create",
 	.parent = &OSCAP_DS_MODULE,
 	.summary = "Create a ResultDataStream from given SourceDataStream, XCCDF results and one or more OVAL results",
-	.usage = "sds.xml target-arf.xml results-xccdf.xml [results-oval1.xml [results-oval2.xml]]",
-	.help = NULL,
+	.usage = "[options] sds.xml target-arf.xml results-xccdf.xml [results-oval1.xml [results-oval2.xml]]",
+	.help =	"Options:\n"
+		"   --skip-valid \r\t\t\t\t - Skips validating of given XCCDF.\n",
 	.opt_parser = getopt_ds,
 	.func = app_ds_rds_create
 };
@@ -156,6 +162,7 @@ bool getopt_ds(int argc, char **argv, struct oscap_action *action) {
 	/* Command-options */
 	const struct option long_options[] = {
 	// options
+		{"skip-valid",      no_argument, &action->validate, 0},
 		{"datastream-id",		required_argument, NULL, DS_OPT_DATASTREAM_ID},
 		{"xccdf-id",		required_argument, NULL, DS_OPT_XCCDF_ID},
 		{"report-id",		required_argument, NULL, DS_OPT_REPORT_ID},
@@ -184,14 +191,23 @@ bool getopt_ds(int argc, char **argv, struct oscap_action *action) {
 		action->ds_action->file = argv[optind];
 		action->ds_action->target = argv[optind + 1];
 	}
-	else if ((action->module == &DS_SDS_COMPOSE_MODULE) || action->module == &DS_SDS_ADD_MODULE) {
-		if(  argc != 5 ) {
+	else if (action->module == &DS_SDS_COMPOSE_MODULE) {
+		if(optind + 2 != argc) {
 			oscap_module_usage(action->module, stderr, "Wrong number of parameters.\n");
 			return false;
 		}
 		action->ds_action = malloc(sizeof(struct ds_action));
-		action->ds_action->file = argv[3];
-		action->ds_action->target = argv[4];
+		action->ds_action->file = argv[optind];
+		action->ds_action->target = argv[optind + 1];
+	}
+	else if (action->module == &DS_SDS_ADD_MODULE) {
+		if (optind + 2 != argc) {
+			oscap_module_usage(action->module, stderr, "Wrong number of parameters.\n");
+			return false;
+		}
+		action->ds_action = malloc(sizeof(struct ds_action));
+		action->ds_action->file = argv[optind];
+		action->ds_action->target = argv[optind + 1];
 	}
 	else if( (action->module == &DS_SDS_VALIDATE_MODULE) ) {
 		if(  argc != 4 ) {
@@ -211,16 +227,16 @@ bool getopt_ds(int argc, char **argv, struct oscap_action *action) {
 		action->ds_action->target = argv[optind + 1];
 	}
 	else if( (action->module == &DS_RDS_CREATE_MODULE) ) {
-		if(  argc < 6 ) {
+		if(argc - optind < 3 ) {
 			oscap_module_usage(action->module, stderr, "Wrong number of parameters.\n");
 			return false;
 		}
 		action->ds_action = malloc(sizeof(struct ds_action));
-		action->ds_action->file = argv[3];
-		action->ds_action->target = argv[4];
-		action->ds_action->xccdf_result = argv[5];
-		action->ds_action->oval_results = &argv[6];
-		action->ds_action->oval_result_count = argc - 6;
+		action->ds_action->file = argv[optind];
+		action->ds_action->target = argv[optind + 1];
+		action->ds_action->xccdf_result = argv[optind + 2];
+		action->ds_action->oval_results = &argv[optind + 3];
+		action->ds_action->oval_result_count = argc - optind - 3;
 	}
 	else if( (action->module == &DS_RDS_VALIDATE_MODULE) ) {
 		if(  argc != 4 ) {
@@ -233,41 +249,50 @@ bool getopt_ds(int argc, char **argv, struct oscap_action *action) {
 	return true;
 }
 
+static inline char *_gcwd(void)
+{
+	char *cwd = malloc(sizeof(char) * (PATH_MAX + 1));
+	if (getcwd(cwd, PATH_MAX) == NULL) {
+		perror("Can't find out current working directory.\n");
+		free(cwd);
+		cwd = NULL;
+	}
+	return cwd;
+}
+
 int app_ds_sds_split(const struct oscap_action *action) {
-	int ret;
-	struct ds_sds_index* sds_idx = NULL;
+	int ret = OSCAP_ERROR;
 	const char* f_datastream_id = action->f_datastream_id;
 	const char* f_component_id = action->f_xccdf_id;
+	struct ds_sds_session *session = NULL;
 
+	struct oscap_source *source = oscap_source_new_from_file(action->ds_action->file);
 	/* Validate */
 	if (action->validate)
 	{
-		int valret;
-		if ((valret = oscap_validate_document(action->ds_action->file, OSCAP_DOCUMENT_SDS, "1.2", reporter, (void*) action)))
-		{
-			if (valret == 1)
-				validation_failed(action->ds_action->file, OSCAP_DOCUMENT_SDS, "1.2");
-
-			ret = OSCAP_ERROR;
+		if (oscap_source_validate(source, reporter, (void *) action) != 0) {
 			goto cleanup;
 		}
 	}
 
-	sds_idx = ds_sds_index_import(action->ds_action->file);
-
-	if (ds_sds_index_select_checklist(sds_idx, &f_datastream_id, &f_component_id) != 0) {
+	session = ds_sds_session_new_from_source(source);
+	if (session == NULL) {
+		goto cleanup;
+	}
+	if (ds_sds_index_select_checklist(ds_sds_session_get_sds_idx(session), &f_datastream_id, &f_component_id) != 0) {
 		fprintf(stdout, "Failed to locate a datastream with ID matching '%s' ID "
 				"and checklist inside matching '%s' ID.\n",
 				action->f_datastream_id == NULL ? "<any>" : action->f_datastream_id,
 				action->f_xccdf_id == NULL ? "<any>" : action->f_xccdf_id);
-		ret = OSCAP_ERROR;
 		goto cleanup;
 	}
+	ds_sds_session_set_datastream_id(session, f_datastream_id);
 
-	if (ds_sds_decompose(action->ds_action->file, f_datastream_id, f_component_id, action->ds_action->target, NULL) != 0)
-	{
-		fprintf(stdout, "Failed to split given source datastream '%s'.\n", action->ds_action->file);
-		ret = OSCAP_ERROR;
+	ds_sds_session_set_target_dir(session, action->ds_action->target);
+	if (ds_sds_session_register_component_with_dependencies(session, "checklists", f_component_id, NULL) != 0) {
+		goto cleanup;
+	}
+	if (ds_sds_session_dump_component_files(session) != 0) {
 		goto cleanup;
 	}
 
@@ -276,7 +301,8 @@ int app_ds_sds_split(const struct oscap_action *action) {
 cleanup:
 	oscap_print_error();
 
-	ds_sds_index_free(sds_idx);
+	ds_sds_session_free(session);
+	oscap_source_free(source);
 	free(action->ds_action);
 
 	return ret;
@@ -292,11 +318,8 @@ int app_ds_sds_compose(const struct oscap_action *action) {
 	// To fix this we will chdir to parent dir of the given XCCDF and chdir
 	// back after we are done.
 
-	char previous_cwd[PATH_MAX + 1];
-	if (getcwd(previous_cwd, PATH_MAX) == NULL)
-	{
-		fprintf(stdout, "Can't find out current working directory.\n");
-
+	char *previous_cwd = _gcwd();
+	if (previous_cwd == NULL) {
 		goto cleanup;
 	}
 
@@ -317,14 +340,16 @@ int app_ds_sds_compose(const struct oscap_action *action) {
 	free(source_xccdf);
 
 	chdir(previous_cwd);
+	free(previous_cwd);
 
 	if (action->validate)
 	{
-		if (oscap_validate_document(target_abs_path, OSCAP_DOCUMENT_SDS, "1.2", reporter, (void*) action) != 0)
-		{
-			validation_failed(target_abs_path, OSCAP_DOCUMENT_SDS, "1.2");
+		struct oscap_source *source = oscap_source_new_from_file(target_abs_path);
+		if (oscap_source_validate(source, reporter, (void *) action) != 0) {
+			oscap_source_free(source);
 			goto cleanup;
 		}
+		oscap_source_free(source);
 	}
 
 	ret = OSCAP_OK;
@@ -342,10 +367,11 @@ int app_ds_sds_add(const struct oscap_action *action)
 	// TODO: chdir to the directory of the component (same as when composing new sds)
 	ret = ds_sds_compose_add_component(action->ds_action->target, action->f_datastream_id, action->ds_action->file, false);
 	if (action->validate) {
-		if (oscap_validate_document(action->ds_action->target, OSCAP_DOCUMENT_SDS, "1.2", reporter, (void*) action) != 0) {
-			validation_failed(action->ds_action->target, OSCAP_DOCUMENT_SDS, "1.2");
+		struct oscap_source *source = oscap_source_new_from_file(action->ds_action->file);
+		if (oscap_source_validate(source, reporter, (void *) action) != 0) {
 			ret = OSCAP_ERROR;
 		}
+		oscap_source_free(source);
 	}
 	oscap_print_error();
 
@@ -354,15 +380,9 @@ int app_ds_sds_add(const struct oscap_action *action)
 }
 
 int app_ds_sds_validate(const struct oscap_action *action) {
-	int ret;
-
-	int valret;
-	if ((valret = oscap_validate_document(action->ds_action->file, OSCAP_DOCUMENT_SDS, "1.2", reporter, (void*) action)))
-	{
-		if (valret == 1)
-			validation_failed(action->ds_action->file, OSCAP_DOCUMENT_SDS, "1.2");
-
-		ret = OSCAP_ERROR;
+	int ret = OSCAP_ERROR;
+	struct oscap_source *source = oscap_source_new_from_file(action->ds_action->file);
+	if (oscap_source_validate(source, reporter, (void*) action) != 0) {
 		goto cleanup;
 	}
 
@@ -372,44 +392,28 @@ cleanup:
 	oscap_print_error();
 
 	free(action->ds_action);
+	oscap_source_free(source);
 	return ret;
 }
 
 int app_ds_rds_split(const struct oscap_action *action) {
-	int ret;
-	struct rds_index *rds_idx = NULL;
+	int ret = OSCAP_ERROR;
+	struct ds_rds_session *session = NULL;
 
+	struct oscap_source *source = oscap_source_new_from_file(action->ds_action->file);
 	if (action->validate)
 	{
-		int valret;
-		if ((valret = oscap_validate_document(action->ds_action->file, OSCAP_DOCUMENT_ARF, "1.1", reporter, (void*) action)))
-		{
-			if (valret == 1)
-				validation_failed(action->ds_action->file, OSCAP_DOCUMENT_ARF, "1.1");
-
-			ret = OSCAP_ERROR;
+		if (oscap_source_validate(source, reporter, (void *) action) != 0) {
 			goto cleanup;
 		}
 	}
-
-	rds_idx = rds_index_import(action->ds_action->file);
-
-	const char* f_report_id = action->f_report_id;
-	if (rds_index_select_report(rds_idx, &f_report_id) != 0) {
-		fprintf(stdout, "Failed to locate a report with ID matching '%s' ID.",
-				action->f_report_id == NULL ? "<any>" : action->f_report_id);
-		ret = OSCAP_ERROR;
-		goto cleanup;
-	}
-
-	struct rds_report_index *report = rds_index_get_report(rds_idx, f_report_id);
-	struct rds_report_request_index *request = rds_report_index_get_request(report);
-	const char *request_id = request ? rds_report_request_index_get_id(request) : NULL;
-
-	if (ds_rds_decompose(action->ds_action->file, f_report_id, request_id, action->ds_action->target) != 0)
-	{
+	session = ds_rds_session_new_from_source(source);
+	if (session == NULL
+			|| ds_rds_session_set_target_dir(session, action->ds_action->target) != 0
+			|| ds_rds_session_select_report(session, action->f_report_id) == NULL
+			|| ds_rds_session_select_report_request(session, NULL) == NULL
+			|| ds_rds_session_dump_component_files(session) != 0) {
 		fprintf(stdout, "Failed to split given result datastream '%s'.\n", action->ds_action->file);
-		ret = OSCAP_ERROR;
 		goto cleanup;
 	}
 
@@ -418,42 +422,32 @@ int app_ds_rds_split(const struct oscap_action *action) {
 cleanup:
 	oscap_print_error();
 
-	rds_index_free(rds_idx);
+	ds_rds_session_free(session);
 	free(action->ds_action);
+	oscap_source_free(source);
 
 	return ret;
 }
 
 int app_ds_rds_create(const struct oscap_action *action) {
-	int ret;
+	int ret = OSCAP_ERROR;
 
 	if (action->validate)
 	{
-		int valret;
-		if ((valret = oscap_validate_document(action->ds_action->file, OSCAP_DOCUMENT_SDS, "1.2", reporter, (void*) action)))
-		{
-			if (valret == 1)
-				validation_failed(action->ds_action->file, OSCAP_DOCUMENT_SDS, "1.2");
-
-			ret = OSCAP_ERROR;
+		struct oscap_source *sds = oscap_source_new_from_file(action->ds_action->file);
+		if (oscap_source_validate(sds, reporter, (void *) action) != 0) {
+			oscap_source_free(sds);
 			goto cleanup;
 		}
+		oscap_source_free(sds);
 
-		char *doc_version = NULL;
-		doc_version = xccdf_detect_version(action->ds_action->xccdf_result);
-		if (!doc_version) {
+		struct oscap_source *result = oscap_source_new_from_file(action->ds_action->xccdf_result);
+		if (oscap_source_validate(result, reporter, (void *) action) != 0) {
 			ret = OSCAP_ERROR;
+			oscap_source_free(result);
 			goto cleanup;
 		}
-		if ((valret = oscap_validate_document(action->ds_action->xccdf_result, OSCAP_DOCUMENT_XCCDF, doc_version, reporter, (void*) action))) {
-			if (valret == 1)
-				validation_failed(action->ds_action->xccdf_result, OSCAP_DOCUMENT_XCCDF, doc_version);
-
-			ret = OSCAP_ERROR;
-			free(doc_version);
-			goto cleanup;
-		}
-		free(doc_version);
+		oscap_source_free(result);
 	}
 
 	char** oval_result_files = malloc(sizeof(char*) * (action->ds_action->oval_result_count + 1));
@@ -465,22 +459,14 @@ int app_ds_rds_create(const struct oscap_action *action) {
 
 		if (action->validate)
 		{
-			char *doc_version;
-			doc_version = oval_determine_document_schema_version((const char *) oval_result_files[i],
-				OSCAP_DOCUMENT_OVAL_RESULTS);
-
-			int valret;
-			if ((valret = oscap_validate_document(oval_result_files[i], OSCAP_DOCUMENT_OVAL_RESULTS, doc_version, reporter, (void*) action)))
-			{
-				if (valret == 1)
-					validation_failed(oval_result_files[i], OSCAP_DOCUMENT_OVAL_RESULTS, doc_version);
-
+			struct oscap_source *source = oscap_source_new_from_file(oval_result_files[i]);
+			if (oscap_source_validate(source, reporter, (void *) action) != 0) {
 				ret = OSCAP_ERROR;
-				free(doc_version);
+				oscap_source_free(source);
 				free(oval_result_files);
 				goto cleanup;
 			}
-			free(doc_version);
+			oscap_source_free(source);
 		}
 	}
 	oval_result_files[i] = NULL;
@@ -501,15 +487,12 @@ int app_ds_rds_create(const struct oscap_action *action) {
 
 	if (action->validate && full_validation)
 	{
-		int valret;
-		if ((valret = oscap_validate_document(action->ds_action->target, OSCAP_DOCUMENT_ARF, "1.1", reporter, (void*) action)))
-		{
-			if (valret == 1)
-				validation_failed(action->ds_action->target, OSCAP_DOCUMENT_ARF, "1.1");
-
-			ret = OSCAP_ERROR;
+		struct oscap_source *rds = oscap_source_new_from_file(action->ds_action->target);
+		if (oscap_source_validate(rds, reporter, (void *) action) != 0) {
+			oscap_source_free(rds);
 			goto cleanup;
 		}
+		oscap_source_free(rds);
 	}
 
 	ret = OSCAP_OK;
@@ -522,17 +505,14 @@ cleanup:
 }
 
 int app_ds_rds_validate(const struct oscap_action *action) {
-	int ret;
+	int ret = OSCAP_ERROR;
 
-	int valret;
-	if ((valret = oscap_validate_document(action->ds_action->file, OSCAP_DOCUMENT_ARF, "1.1", reporter, (void*) action)))
-	{
-		if (valret == 1)
-			validation_failed(action->ds_action->file, OSCAP_DOCUMENT_ARF, "1.2");
-
-		ret = OSCAP_ERROR;
+	struct oscap_source *rds = oscap_source_new_from_file(action->ds_action->file);
+	if (oscap_source_validate(rds, reporter, (void *) action) != 0) {
+		oscap_source_free(rds);
 		goto cleanup;
 	}
+	oscap_source_free(rds);
 
 	ret = OSCAP_OK;
 

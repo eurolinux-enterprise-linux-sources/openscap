@@ -1,5 +1,5 @@
 /*
- * Copyright 2010--2013 Red Hat Inc., Durham, North Carolina.
+ * Copyright 2010--2014 Red Hat Inc., Durham, North Carolina.
  * All Rights Reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -34,15 +34,18 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <linux/limits.h>
+#include <limits.h>
 
 #include <oscap.h>
+#include "oscap_source.h"
 #include <xccdf_policy.h>
 #include <oval_results.h>
 #include <oval_variables.h>
 #include <oval_system_characteristics.h>
 #include <oval_directives.h>
 #include <scap_ds.h>
+#include <ds_rds_session.h>
+#include <ds_sds_session.h>
 
 #include "oscap-tool.h"
 
@@ -69,23 +72,95 @@ static void print_time(const char *file) {
 	}
 }
 
+static inline void _print_xccdf_status(struct xccdf_status *status, const char *prefix)
+{
+	if (status) {
+		printf("%sStatus: %s\n", prefix, xccdf_status_type_to_text(xccdf_status_get_status(status)));
+		const time_t date_time = xccdf_status_get_date(status);
+		if (date_time != 0) {
+			struct tm *date = localtime(&date_time);
+			char date_str[] = "YYYY-DD-MM";
+			snprintf(date_str, sizeof(date_str), "%04d-%02d-%02d", date->tm_year + 1900, date->tm_mon + 1, date->tm_mday);
+			printf("%sGenerated: %s\n", prefix, date_str);
+		}
+	}
+}
+
+static inline void _print_xccdf_profiles(struct xccdf_profile_iterator *prof_it, const char *prefix)
+{
+	printf("%sProfiles:\n", prefix);
+	while (xccdf_profile_iterator_has_more(prof_it)) {
+		struct xccdf_profile * prof = xccdf_profile_iterator_next(prof_it);
+		printf("%s\t%s\n", prefix, xccdf_profile_get_id(prof));
+	}
+	xccdf_profile_iterator_free(prof_it);
+}
+
+static inline void _print_xccdf_referenced_files(struct xccdf_policy_model *policy_model, const char *prefix)
+{
+	struct oscap_file_entry_list *referenced_files = xccdf_policy_model_get_systems_and_files(policy_model);
+	struct oscap_file_entry_iterator *files_it = oscap_file_entry_list_get_files(referenced_files);
+	printf("%sReferenced check files:\n", prefix);
+	while (oscap_file_entry_iterator_has_more(files_it)) {
+		struct oscap_file_entry *file_entry = (struct oscap_file_entry *) oscap_file_entry_iterator_next(files_it);
+		printf("%s\t%s\n", prefix, oscap_file_entry_get_file(file_entry));
+		printf("%s\t\tsystem: %s\n", prefix, oscap_file_entry_get_system(file_entry));
+	}
+	oscap_file_entry_iterator_free(files_it);
+	oscap_file_entry_list_free(referenced_files);
+}
+
+static inline void _print_xccdf_testresults(struct xccdf_benchmark *bench, const char *prefix)
+{
+	struct xccdf_result_iterator *res_it = xccdf_benchmark_get_results(bench);
+	if (xccdf_result_iterator_has_more(res_it))
+		printf("%sTest Results:\n", prefix);
+	while (xccdf_result_iterator_has_more(res_it)) {
+		struct xccdf_result *test_result = xccdf_result_iterator_next(res_it);
+		printf("%s\t%s\n", prefix, xccdf_result_get_id(test_result));
+	}
+	xccdf_result_iterator_free(res_it);
+}
+
+static inline void _print_xccdf_benchmark(struct xccdf_benchmark *bench, const char *prefix)
+{
+	_print_xccdf_status(xccdf_benchmark_get_status_current(bench), prefix);
+	printf("%sResolved: %s\n", prefix, xccdf_benchmark_get_resolved(bench) ? "true" : "false");
+	_print_xccdf_profiles(xccdf_benchmark_get_profiles(bench), prefix);
+
+	struct xccdf_policy_model *policy_model = xccdf_policy_model_new(bench);
+	_print_xccdf_referenced_files(policy_model, prefix);
+	_print_xccdf_testresults(bench, prefix);
+
+	xccdf_policy_model_free(policy_model);
+	// xccdf_benchmark_free not needed, it si already freed by the policy!
+}
+
+static inline void _print_xccdf_tailoring(struct oscap_source *source, const char *prefix)
+{
+	struct xccdf_tailoring *tailoring = xccdf_tailoring_import_source(source, NULL);
+	if (tailoring == NULL) {
+		return;
+	}
+	printf("%sBenchmark Hint: %s\n", prefix, xccdf_tailoring_get_benchmark_ref(tailoring));
+	_print_xccdf_profiles(xccdf_tailoring_get_profiles(tailoring), prefix);
+	xccdf_tailoring_free(tailoring);
+}
 
 static int app_info(const struct oscap_action *action)
 {
-	oscap_document_type_t doc_type;
         int result = OSCAP_ERROR;
 
-	if(oscap_determine_document_type(action->file, &doc_type))
-		goto cleanup;
+	struct oscap_source *source = oscap_source_new_from_file(action->file);
 
-	switch (doc_type) {
+	switch (oscap_source_get_scap_type(source)) {
 	case OSCAP_DOCUMENT_OVAL_DEFINITIONS: {
 		printf("Document type: OVAL Definitions\n");
-		struct oval_definition_model * def_model = oval_definition_model_import(action->file);
+		struct oval_definition_model *def_model = oval_definition_model_import_source(source);
 		if(!def_model)
 			goto cleanup;
 		struct oval_generator *gen = oval_definition_model_get_generator(def_model);
-		printf("OVAL version: %s\n", oval_generator_get_schema_version(gen));
+		printf("OVAL version: %s\n", oval_generator_get_core_schema_version(gen));
 		printf("Generated: %s\n", oval_generator_get_timestamp(gen));
 		print_time(action->file);
 		oval_definition_model_free(def_model);
@@ -93,11 +168,11 @@ static int app_info(const struct oscap_action *action)
 	break;
 	case OSCAP_DOCUMENT_OVAL_VARIABLES: {
 		printf("Document type: OVAL Variables\n");
-		struct oval_variable_model * var_model = oval_variable_model_import(action->file);
+		struct oval_variable_model *var_model = oval_variable_model_import_source(source);
 		if(!var_model)
 			goto cleanup;
 		struct oval_generator *gen = oval_variable_model_get_generator(var_model);
-		printf("OVAL version: %s\n", oval_generator_get_schema_version(gen));
+		printf("OVAL version: %s\n", oval_generator_get_core_schema_version(gen));
 		printf("Generated: %s\n", oval_generator_get_timestamp(gen));
 		print_time(action->file);
 		oval_variable_model_free(var_model);
@@ -106,11 +181,11 @@ static int app_info(const struct oscap_action *action)
 	case OSCAP_DOCUMENT_OVAL_DIRECTIVES: {
 		printf("Document type: OVAL Directives\n");
 		struct oval_directives_model *dir_model = oval_directives_model_new();
-		int ret = oval_directives_model_import(dir_model, action->file);
+		int ret = oval_directives_model_import_source(dir_model, source);
 		if(ret)
 			goto cleanup;
 		struct oval_generator *gen = oval_directives_model_get_generator(dir_model);
-		printf("OVAL version: %s\n", oval_generator_get_schema_version(gen));
+		printf("OVAL version: %s\n", oval_generator_get_core_schema_version(gen));
 		printf("Generated: %s\n", oval_generator_get_timestamp(gen));
 		print_time(action->file);
 		oval_directives_model_free(dir_model);
@@ -120,11 +195,11 @@ static int app_info(const struct oscap_action *action)
 		printf("Document type: OVAL System Characteristics\n");
 		struct oval_definition_model * def_model = oval_definition_model_new();
 		struct oval_syschar_model * sys_model = oval_syschar_model_new(def_model);
-		int ret = oval_syschar_model_import(sys_model, action->file);
+		int ret = oval_syschar_model_import_source(sys_model, source);
 		if(ret)
 			goto cleanup;
 		struct oval_generator *gen = oval_syschar_model_get_generator(sys_model);
-		printf("OVAL version: %s\n", oval_generator_get_schema_version(gen));
+		printf("OVAL version: %s\n", oval_generator_get_core_schema_version(gen));
 		printf("Generated: %s\n", oval_generator_get_timestamp(gen));
 		print_time(action->file);
 		oval_syschar_model_free(sys_model);
@@ -135,11 +210,11 @@ static int app_info(const struct oscap_action *action)
 		printf("Document type: OVAL Results\n");
 		struct oval_definition_model * def_model=oval_definition_model_new();
 		struct oval_results_model * res_model = oval_results_model_new(def_model,NULL);
-		int ret = oval_results_model_import(res_model, action->file);
+		int ret = oval_results_model_import_source(res_model, source);
 		if(ret)
 			goto cleanup;
 		struct oval_generator *gen = oval_results_model_get_generator(res_model);
-		printf("OVAL version: %s\n", oval_generator_get_schema_version(gen));
+		printf("OVAL version: %s\n", oval_generator_get_core_schema_version(gen));
 		printf("Generated: %s\n", oval_generator_get_timestamp(gen));
 		print_time(action->file);
 		oval_results_model_free(res_model);
@@ -148,66 +223,13 @@ static int app_info(const struct oscap_action *action)
 	break;
 	case OSCAP_DOCUMENT_XCCDF: {
 		printf("Document type: XCCDF Checklist\n");
-		struct xccdf_benchmark* bench = xccdf_benchmark_import(action->file);
+		struct xccdf_benchmark* bench = xccdf_benchmark_import_source(source);
 		if(!bench)
 			goto cleanup;
-		char * doc_version =  xccdf_detect_version(action->file);
-		printf("Checklist version: %s\n", doc_version);
-		/* get current status */
-		struct xccdf_status * status = NULL;
-		status = xccdf_benchmark_get_status_current(bench);
-		if (status) {
-			printf("Status: %s\n", xccdf_status_type_to_text(xccdf_status_get_status(status)));
-			const time_t date_time = xccdf_status_get_date(status);
-			if (date_time != 0) {
-				struct tm *date = localtime(&date_time);
-				char date_str[] = "YYYY-DD-MM";
-				snprintf(date_str, sizeof(date_str), "%04d-%02d-%02d", date->tm_year + 1900, date->tm_mon + 1, date->tm_mday);
-				printf("Generated: %s\n", date_str);
-			}
-		}
+		printf("Checklist version: %s\n", oscap_source_get_schema_version(source));
 		print_time(action->file);
-		printf("Resolved: %s\n", xccdf_benchmark_get_resolved(bench) ? "true" : "false");
 
-		struct xccdf_profile_iterator * prof_it = xccdf_benchmark_get_profiles(bench);
-		printf("Profiles:\n");
-		struct xccdf_profile * prof = NULL;
-		while (xccdf_profile_iterator_has_more(prof_it)) {
-			prof = xccdf_profile_iterator_next(prof_it);
-			printf("\t%s\n", xccdf_profile_get_id(prof));
-		}
-		xccdf_profile_iterator_free(prof_it);
-
-		struct xccdf_policy_model *policy_model = xccdf_policy_model_new(bench);
-		struct oscap_file_entry_list *referenced_files = xccdf_policy_model_get_systems_and_files(policy_model);
-		struct oscap_file_entry_iterator *files_it = oscap_file_entry_list_get_files(referenced_files);
-		printf("Referenced check files:\n");
-		while (oscap_file_entry_iterator_has_more(files_it)) {
-			struct oscap_file_entry *file_entry;
-
-			file_entry = (struct oscap_file_entry *) oscap_file_entry_iterator_next(files_it);
-
-			printf("\t%s\n", oscap_file_entry_get_file(file_entry));
-			printf("\t\tsystem: %s\n", oscap_file_entry_get_system(file_entry));
-		}
-		oscap_file_entry_iterator_free(files_it);
-		oscap_file_entry_list_free(referenced_files);
-
-		struct xccdf_result_iterator * res_it = xccdf_benchmark_get_results(bench);
-		if (xccdf_result_iterator_has_more(res_it))
-			printf("Test Results:\n");
-		struct xccdf_result * test_result = NULL;
-		while (xccdf_result_iterator_has_more(res_it)) {
-			test_result = xccdf_result_iterator_next(res_it);
-			printf("\t%s\n", xccdf_result_get_id(test_result));
-		}
-		xccdf_result_iterator_free(res_it);
-
-		free(doc_version);
-
-		xccdf_policy_model_free(policy_model);
-		// already freed by policy!
-		//xccdf_benchmark_free(bench);
+		_print_xccdf_benchmark(bench, "");
 	}
 	break;
 	case OSCAP_DOCUMENT_CPE_LANGUAGE: {
@@ -217,7 +239,7 @@ static int app_info(const struct oscap_action *action)
 	break;
 	case OSCAP_DOCUMENT_CPE_DICTIONARY: {
 		printf("Document type: CPE Dictionary\n");
-		struct cpe_dict_model *dict_model = cpe_dict_model_import(action->file);
+		struct cpe_dict_model *dict_model = cpe_dict_model_import_source(source);
 		if (!dict_model)
 			goto cleanup;
 		struct cpe_generator *gen = cpe_dict_model_get_generator(dict_model);
@@ -232,10 +254,16 @@ static int app_info(const struct oscap_action *action)
 	case OSCAP_DOCUMENT_SDS: {
 		printf("Document type: Source Data Stream\n");
 		print_time(action->file);
-		/* get collection */
-		struct ds_sds_index *sds = ds_sds_index_import(action->file);
-		if (!sds)
+		struct ds_sds_session *session = ds_sds_session_new_from_source(source);
+		if (session == NULL) {
 			goto cleanup;
+		}
+		/* get collection */
+		struct ds_sds_index *sds = ds_sds_session_get_sds_idx(session);
+		if (!sds) {
+			ds_sds_session_free(session);
+			goto cleanup;
+		}
 		/* iterate over streams */
 		struct ds_stream_index_iterator* sds_it = ds_sds_index_get_streams(sds);
 		while (ds_stream_index_iterator_has_more(sds_it)) {
@@ -251,79 +279,29 @@ static int app_info(const struct oscap_action *action)
 				const char * id = oscap_string_iterator_next(checklist_it);
 				printf("\tRef-Id: %s\n", id);
 
-				char * temp_dir = NULL;
-				char * xccdf_file = NULL;
-
-		                temp_dir = oscap_acquire_temp_dir_bundled();
-		                if (temp_dir == NULL) {
-					ds_sds_index_free(sds);
-					oscap_string_iterator_free(checklist_it);
-					ds_stream_index_iterator_free(sds_it);
-					goto cleanup;
-				}
-
 				/* decompose */
-				ds_sds_decompose(action->file, ds_stream_index_get_id(stream), id, temp_dir, "xccdf.xml");
-
-				/* import xccdf */
-		                xccdf_file = malloc(PATH_MAX * sizeof(char));
-				snprintf(xccdf_file, PATH_MAX, "%s/%s", temp_dir, "xccdf.xml");
-				struct xccdf_benchmark* bench = NULL;
-		                bench = xccdf_benchmark_import(xccdf_file);
-				free(xccdf_file);
-				if(!bench) {
-					ds_sds_index_free(sds);
+				struct oscap_source *xccdf_source = ds_sds_session_select_checklist(session, ds_stream_index_get_id(stream), id, NULL);
+				if (xccdf_source == NULL) {
 					oscap_string_iterator_free(checklist_it);
-					oscap_acquire_cleanup_dir_bundled(&temp_dir);
 					ds_stream_index_iterator_free(sds_it);
+					ds_sds_session_free(session);
 					goto cleanup;
 				}
 
-				/* print profiles */
-				struct xccdf_profile_iterator * prof_it = xccdf_benchmark_get_profiles(bench);
-				printf("\t\tProfiles:\n");
-				while (xccdf_profile_iterator_has_more(prof_it)) {
-					struct xccdf_profile * prof = xccdf_profile_iterator_next(prof_it);
-					printf("\t\t\t%s\n", xccdf_profile_get_id(prof));
+				const char *prefix = "\t\t";
+				if (oscap_source_get_scap_type(xccdf_source) == OSCAP_DOCUMENT_XCCDF) {
+					struct xccdf_benchmark* bench = xccdf_benchmark_import_source(xccdf_source);
+					if(!bench) {
+						oscap_string_iterator_free(checklist_it);
+						ds_stream_index_iterator_free(sds_it);
+						ds_sds_session_free(session);
+						goto cleanup;
+					}
+					_print_xccdf_benchmark(bench, prefix);
+				} else if (oscap_source_get_scap_type(xccdf_source) == OSCAP_DOCUMENT_XCCDF_TAILORING) {
+					_print_xccdf_tailoring(xccdf_source, prefix);
 				}
-				xccdf_profile_iterator_free(prof_it);
-
-				struct xccdf_policy_model *policy_model = xccdf_policy_model_new(bench);
-				struct oscap_file_entry_list *referenced_files = xccdf_policy_model_get_systems_and_files(policy_model);
-				struct oscap_file_entry_iterator *files_it = oscap_file_entry_list_get_files(referenced_files);
-				printf("\t\tReferenced check files:\n");
-				while (oscap_file_entry_iterator_has_more(files_it)) {
-					struct oscap_file_entry *file_entry;
-
-					file_entry = (struct oscap_file_entry *) oscap_file_entry_iterator_next(files_it);
-
-					printf("\t\t\t%s\n", oscap_file_entry_get_file(file_entry));
-					printf("\t\t\t\tsystem: %s\n", oscap_file_entry_get_system(file_entry));
-				}
-				oscap_file_entry_iterator_free(files_it);
-				oscap_file_entry_list_free(referenced_files);
-
-				struct xccdf_result_iterator * res_it = xccdf_benchmark_get_results(bench);
-				if (xccdf_result_iterator_has_more(res_it))
-					printf("\t\tTest Results:\n");
-				struct xccdf_result * test_result = NULL;
-				while (xccdf_result_iterator_has_more(res_it)) {
-					test_result = xccdf_result_iterator_next(res_it);
-					printf("\t\t\t%s\n", xccdf_result_get_id(test_result));
-				}
-				xccdf_result_iterator_free(res_it);
-
-				xccdf_policy_model_free(policy_model);
-				// already freed by policy!
-				//xccdf_benchmark_free(bench);
-
-				oscap_acquire_cleanup_dir_bundled(&temp_dir);
-				if (oscap_err()) {
-					/* This might have set error, when some of the removals failed.
-					   No need to abort this operation, we can safely procceed. */
-					fprintf(stderr, "%s %s\n", OSCAP_ERR_MSG, oscap_err_desc());
-					oscap_clearerr();
-				}
+				ds_sds_session_reset(session);
 			}
 			oscap_string_iterator_free(checklist_it);
 
@@ -347,14 +325,20 @@ static int app_info(const struct oscap_action *action)
 			oscap_string_iterator_free(dict_it);
 		}
 		ds_stream_index_iterator_free(sds_it);
-		ds_sds_index_free(sds);
+		ds_sds_session_free(session);
 	}
 	break;
 	case OSCAP_DOCUMENT_ARF: {
 		printf("Document type: Result Data Stream\n");
-		struct rds_index *rds = rds_index_import(action->file);
-		if (!rds)
+		struct ds_rds_session *session = ds_rds_session_new_from_source(source);
+		if (session == NULL) {
 			goto cleanup;
+		}
+		struct rds_index *rds = ds_rds_session_get_rds_idx(session);
+		if (!rds) {
+			ds_rds_session_free(session);
+			goto cleanup;
+		}
 
 		struct rds_asset_index_iterator* asset_it = rds_index_get_assets(rds);
 		while (rds_asset_index_iterator_has_more(asset_it)) {
@@ -373,17 +357,13 @@ static int app_info(const struct oscap_action *action)
 			rds_report_index_iterator_free(report_it);
 		}
 		rds_asset_index_iterator_free(asset_it);
-		rds_index_free(rds);
+		ds_rds_session_free(session);
 	}
 	break;
 	case OSCAP_DOCUMENT_XCCDF_TAILORING:
 		printf("Document type: XCCDF Tailoring\n");
-
-		// XCCDF Tailoring is not trivial to parse and interpret without
-		// knowing which content file it is supposed to be used with.
-		//
-		// Since we don't have this info when `oscap info` is called, we
-		// can't list profiles the tailoring file adds.
+		print_time(action->file);
+		_print_xccdf_tailoring(source, "");
 	break;
 	case OSCAP_DOCUMENT_CVE_FEED:
 		printf("Document type: CVE Feed\n");
@@ -394,13 +374,15 @@ static int app_info(const struct oscap_action *action)
 		// Currently, we do not have any SCE result file parsing capabilities.
 	break;
 	default:
-		printf("Document type not handled yet\n");
+		printf("Could not determine document type\n");
+		goto cleanup;
 		break;
 	}
 
 	result=OSCAP_OK;
 
 cleanup:
+	oscap_source_free(source);
 	oscap_print_error();
 
 	return result;

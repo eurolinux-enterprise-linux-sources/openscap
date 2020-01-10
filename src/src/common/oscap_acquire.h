@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Red Hat Inc., Durham, North Carolina.
+ * Copyright 2012--2014 Red Hat Inc., Durham, North Carolina.
  * All Rights Reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -54,14 +54,6 @@ void oscap_acquire_cleanup_dir(char **dir_path);
 int oscap_acquire_temp_file(const char *dir, const char *template, char **filename);
 
 /**
- * Download the given url to a random file in the given directory.
- * @param temp_dir Directory to store the result in.
- * @param url The url to acquire.
- * @return the filename of the newly created file or NULL on error.
- */
-char *oscap_acquire_url_download(const char *temp_dir, const char *url);
-
-/**
  * Is the given url supported by OpenSCAP?
  * @param url Requested url
  * @return true if the given string reminds supported url.
@@ -74,6 +66,50 @@ bool oscap_acquire_url_is_supported(const char *url);
  * @return escaped url or NULL
  */
 char *oscap_acquire_url_to_filename(const char *url);
+
+/**
+ * Download the given url to memory
+ * @param url The url to acquire
+ * @param memory_size Size of memory. If NULL is returned, variable is not modified.
+ * @return the pointer to memory with downloaded data or NULL on error
+ */
+char *
+oscap_acquire_url_download(const char *url, size_t* memory_size);
+
+/**
+ * Guess how the realpath of given file may look like. Do your best!
+ * Unlike realpath() this works for non-existent files.
+ * @param filepath
+ * @returns the normalized filepath
+ */
+char *oscap_acquire_guess_realpath(const char *filepath);
+
+/**
+ * Creates the directory, if it does not already exist. Further it makes parent
+ * directories as needed.
+ * @param path filepath to the target directory
+ * @returns the zero on success
+ */
+int oscap_acquire_mkdir_p(const char* path);
+
+/**
+ * Ensures the parent directory of the filepath, if it does not already exists.
+ * Further it makes parent directories as needed.
+ * @param filepath filepath to the descendant file or dir
+ * @returns the zero on success
+ */
+int oscap_acquire_ensure_parent_dir(const char *filepath);
+
+/**
+ * CURL WRITEFUNCTION callback
+ * @param ptr The pointer to received data
+ * @param size_t
+ * @param nmemb
+ * @param userdata Pointer to storage of received data
+ * @return Number of stored bytes
+ */
+size_t
+write_to_memory_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
 
 // FIXME: SCE engine uses this particular function
 OSCAP_HIDDEN_END;

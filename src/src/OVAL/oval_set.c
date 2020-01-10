@@ -40,6 +40,7 @@
 #include "oval_agent_api_impl.h"
 #include "common/util.h"
 #include "common/debug_priv.h"
+#include "common/elements.h"
 
 typedef struct oval_setobject {
 	struct oval_definition_model *model;
@@ -312,18 +313,18 @@ static int _oval_set_parse_tag(xmlTextReaderPtr reader, struct oval_parser_conte
 			oval_setobject_set_type(set, OVAL_SET_COLLECTIVE);
 		}
 		if (strcmp(tagname, "object_reference") == 0) {
-			return_code = oval_parser_text_value(reader, context, &oval_consume_object_ref, &ctx);
+			return_code = oscap_parser_text_value(reader, &oval_consume_object_ref, &ctx);
 		} else if (strcmp(tagname, "filter") == 0) {
 			return_code = oval_filter_parse_tag(reader, context, &oval_set_consume_filter, set);
 		} else {
-			oscap_dlprintf(DBG_W, "Unknown tag: <%s>, line: %d.\n", tagname,
+			dW("Unknown tag: <%s>, line: %d.", tagname,
                                       xmlTextReaderGetParserLineNumber(reader));
 			return_code = oval_parser_skip_tag(reader, context);
 		}
 	}
 
 	if (return_code != 0) {
-		dW("Parsing of <%s> terminated by an error at line %d.\n", tagname, xmlTextReaderGetParserLineNumber(reader));
+		dW("Parsing of <%s> terminated by an error at line %d.", tagname, xmlTextReaderGetParserLineNumber(reader));
 	}
 
 	oscap_free(tagname);

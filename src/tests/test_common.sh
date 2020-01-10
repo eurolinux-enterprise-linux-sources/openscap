@@ -11,8 +11,21 @@
 # Normalized path.
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 
-[ -z "$builddir" ] || export OSCAP=$(cd $builddir/utils/.libs; pwd)/oscap
-export XMLDIFF=$(cd $(dirname $BASH_SOURCE); pwd)/xmldiff.pl
+# Some of the tests rely on the "C" locale and would fail with some locales.
+LC_ALL=C
+export LC_ALL
+
+enable_valgrind=no
+if [ $enable_valgrind = "yes" ] ; then
+  actualdir=/home/jcerny/openscap
+  export actualdir
+  [ -z "$builddir" ] || export OSCAP="/home/jcerny/openscap/tests/valgrind_test.sh"
+else
+  [ -z "$builddir" ] || export OSCAP=$(cd $builddir/utils/.libs; pwd)/oscap
+fi
+
+export XMLDIFF="/home/jcerny/openscap/tests/xmldiff.pl"
+
 if ! XPATH=`command -v xpath 2>&1`; then
   echo "I require xpath tool but it's not installed. Aborting." >&2
   exit 1
@@ -143,7 +156,7 @@ function verify_results {
 }
 
 assert_exists() {
-        real_cnt="$($XPATH $result 'count('"$2"')')"
+        real_cnt="$($XPATH $result 'count('"$2"')' 2>/dev/null)"
         if [ "$real_cnt" != "$1" ]; then
                 echo "Failed: expected count: $1, real count: $real_cnt, xpath: '$2'"
                 return 1

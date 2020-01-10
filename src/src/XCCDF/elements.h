@@ -28,6 +28,7 @@
 
 #include "common/util.h"
 #include "common/elements.h"
+#include "common/_error.h"
 
 #include <libxml/xmlreader.h>
 
@@ -39,6 +40,13 @@ OSCAP_HIDDEN_START;
  * The reader has to be at the root <Benchmark> element
  */
 const struct xccdf_version_info* xccdf_detect_version_parser(xmlTextReaderPtr reader);
+
+/**
+ * Detects version from the xmlTextReader.
+ *
+ * The reader needs to be at the start of document.
+ */
+char *xccdf_detect_version_priv(xmlTextReader *reader);
 
 /**
  * Return true if the given namespace is supported XCCDF namespace.
@@ -128,9 +136,10 @@ typedef enum {
 	XCCDFE_END_
 } xccdf_element_t;
 
+const char *xccdf_element_to_str(xccdf_element_t element);
 xccdf_element_t xccdf_element_get(xmlTextReaderPtr reader);
 
-#define XCCDF_ASSERT_ELEMENT(reader, element) do { if (xccdf_element_get(reader) != element) return false; } while(false)
+#define XCCDF_ASSERT_ELEMENT(reader, element) do { if (xccdf_element_get(reader) != element) { oscap_seterr(OSCAP_EFAMILY_XCCDF, "Find element '%s' while expecting element: '%s'", xccdf_element_to_str((xccdf_element_get(reader))), xccdf_element_to_str(element)); return false; } } while(false)
 
 typedef enum {
 	XCCDFA_NONE,
@@ -205,6 +214,8 @@ void xccdf_print_depth(int depth);
 void xccdf_print_max(const char *str, int max, const char *ellipsis);
 void xccdf_print_max_text(const struct oscap_text *txt, int max, const char *ellipsis);
 void xccdf_print_textlist(struct oscap_text_iterator *txt, int depth, int max, const char *ellipsis);
+
+xmlNs *lookup_xccdf_ns(xmlDoc *doc, xmlNode *parent, const struct xccdf_version_info *version_info);
 
 OSCAP_HIDDEN_END;
 

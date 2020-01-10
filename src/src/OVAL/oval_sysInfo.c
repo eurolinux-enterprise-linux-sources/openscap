@@ -40,6 +40,7 @@
 #include "oval_agent_api_impl.h"
 #include "common/util.h"
 #include "common/debug_priv.h"
+#include "common/elements.h"
 
 typedef struct oval_sysinfo {
 	struct oval_syschar_model *model;
@@ -252,13 +253,13 @@ static int _oval_sysinfo_parse_tag(xmlTextReaderPtr reader, struct oval_parser_c
 
 	int is_ovalsys = strcmp((const char *)OVAL_SYSCHAR_NAMESPACE, namespace) == 0;
 	if (is_ovalsys && (strcmp(tagname, "os_name") == 0)) {
-		return_code = oval_parser_text_value(reader, context, &_oval_sysinfo_parse_tag_consume_os_name, sysinfo);
+		return_code = oscap_parser_text_value(reader, &_oval_sysinfo_parse_tag_consume_os_name, sysinfo);
 	} else if (is_ovalsys && (strcmp(tagname, "os_version") == 0)) {
-		return_code = oval_parser_text_value(reader, context, &_oval_sysinfo_parse_tag_consume_os_version, sysinfo);
+		return_code = oscap_parser_text_value(reader, &_oval_sysinfo_parse_tag_consume_os_version, sysinfo);
 	} else if (is_ovalsys && (strcmp(tagname, "architecture") == 0)) {
-		return_code = oval_parser_text_value(reader, context, &_oval_sysinfo_parse_tag_consume_os_architecture, sysinfo);
+		return_code = oscap_parser_text_value(reader, &_oval_sysinfo_parse_tag_consume_os_architecture, sysinfo);
 	} else if (is_ovalsys && (strcmp(tagname, "primary_host_name") == 0)) {
-		return_code = oval_parser_text_value(reader, context, &_oval_sysinfo_parse_tag_consume_primary_host_name, sysinfo);
+		return_code = oscap_parser_text_value(reader,  &_oval_sysinfo_parse_tag_consume_primary_host_name, sysinfo);
 	} else if (is_ovalsys && (strcmp(tagname, "interfaces") == 0)) {
 		return_code = oval_parser_parse_tag(reader, context, &_oval_sysinfo_parse_tag_parse_tag, sysinfo);
 	} else {
@@ -285,12 +286,12 @@ int oval_sysinfo_parse_tag(xmlTextReaderPtr reader, struct oval_parser_context *
 	if (is_ovalsys) {
 		return_code = oval_parser_parse_tag(reader, context, &_oval_sysinfo_parse_tag, sysinfo);
 	} else {
-		dW("Expected <system_info>, got <%s:%s>\n", namespace, tagname);
+		dW("Expected <system_info>, got <%s:%s>", namespace, tagname);
 		oval_parser_skip_tag(reader, context);
 	}
 
 	if (return_code != 0) {
-		dW("Parsing of <%s> terminated by an error at line %d.\n", tagname, xmlTextReaderGetParserLineNumber(reader));
+		dW("Parsing of <%s> terminated by an error at line %d.", tagname, xmlTextReaderGetParserLineNumber(reader));
 	}
 
 	oval_syschar_model_set_sysinfo(context->syschar_model, sysinfo);

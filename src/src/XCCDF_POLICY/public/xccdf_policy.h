@@ -193,20 +193,45 @@ char *xccdf_policy_get_readable_item_description(struct xccdf_policy *policy, st
  * Registers an additional CPE dictionary for applicability testing
  * The one embedded in the evaluated XCCDF take precedence!
  */
+bool xccdf_policy_model_add_cpe_dict_source(struct xccdf_policy_model * model, struct oscap_source *source);
+
+/**
+ * Registers an additional CPE dictionary for applicability testing
+ * The one embedded in the evaluated XCCDF take precedence!
+ *
+ * @deprecated Deprecated in favor of @ref xccdf_policy_model_add_cpe_dict_source
+ */
 bool xccdf_policy_model_add_cpe_dict(struct xccdf_policy_model * model, const char * cpe_dict);
 
 /**
  * Registers an additional CPE lang model for applicability testing
  * The one embedded in the evaluated XCCDF take precedence!
  */
-bool xccdf_policy_model_add_cpe_lang_model(struct xccdf_policy_model * model, const char * cpe_lang);
+bool xccdf_policy_model_add_cpe_lang_model_source(struct xccdf_policy_model * model, struct oscap_source *source);
+
+/**
+ * Registers an additional CPE lang model for applicability testing
+ * The one embedded in the evaluated XCCDF take precedence!
+ *
+ * @deprecated Deprecated in favor of @ref xccdf_policy_model_add_cpe_lang_model_source
+ */
+OSCAP_DEPRECATED(bool xccdf_policy_model_add_cpe_lang_model(struct xccdf_policy_model * model, const char *cpe_lang));
 
 /**
  * Registers an additional CPE resource (either dictionary or language)
  * Autodetects given file and acts accordingly.
  * The one embedded in the evaluated XCCDF take precedence!
  */
-bool xccdf_policy_model_add_cpe_autodetect(struct xccdf_policy_model *model, const char* filepath);
+bool xccdf_policy_model_add_cpe_autodetect_source(struct xccdf_policy_model *model, struct oscap_source *source);
+
+/**
+ * Registers an additional CPE resource (either dictionary or language)
+ * Autodetects given file and acts accordingly.
+ * The one embedded in the evaluated XCCDF take precedence!
+ *
+ * @deprecated Deprecated in favor of @ref xccdf_policy_model_add_cpe_autodetect_source
+ */
+OSCAP_DEPRECATED(bool xccdf_policy_model_add_cpe_autodetect(struct xccdf_policy_model *model, const char *filepath));
 
 /**
  * Retrieves an iterator of all OVAL sessions created for CPE applicability evaluation
@@ -515,8 +540,9 @@ int xccdf_policy_generate_fix(struct xccdf_policy *policy, struct xccdf_result *
  * @param policy Policy with profile
  * @param item XCCDF item to be tailored
  * @return new item that has to be freed by user
+ * @deprecated This function is deprecated and might be dropped from future releases.
  */
-struct xccdf_item * xccdf_policy_tailor_item(struct xccdf_policy * policy, struct xccdf_item * item);
+OSCAP_DEPRECATED(struct xccdf_item * xccdf_policy_tailor_item(struct xccdf_policy * policy, struct xccdf_item * item));
 
 /**
  * xccdf_policy_model_get_files and xccdf_item_get_files each return oscap_file_entries instead of raw strings
