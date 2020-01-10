@@ -599,7 +599,11 @@ static struct xccdf_instance *xccdf_instance_new_parse(xmlTextReaderPtr reader);
 struct xccdf_result *xccdf_result_new_parse(xmlTextReaderPtr reader)
 {
 	assert(reader != NULL);
-	XCCDF_ASSERT_ELEMENT(reader, XCCDFE_TESTRESULT);
+	if (xccdf_element_get(reader) != XCCDFE_TESTRESULT) {
+		oscap_seterr(OSCAP_EFAMILY_XCCDF, "Expected 'TestResult' element while found '%s'.",
+				xmlTextReaderConstLocalName(reader));
+		return NULL;
+	}
 
 	struct xccdf_item *res = XITEM(xccdf_result_new());
 
@@ -629,7 +633,7 @@ struct xccdf_result *xccdf_result_new_parse(xmlTextReaderPtr reader)
 			break;
 		case XCCDFE_RESULT_PROFILE:
 			if (res->sub.result.profile == NULL)
-				res->sub.result.profile = oscap_element_string_copy(reader);
+				res->sub.result.profile = xccdf_attribute_copy(reader, XCCDFA_IDREF);
 			break;
 		case XCCDFE_TARGET:
 			oscap_list_add(res->sub.result.targets, oscap_element_string_copy(reader));
@@ -767,6 +771,9 @@ void xccdf_result_to_dom(struct xccdf_result *result, xmlNode *result_node, xmlD
 		xmlNewProp(result_node, BAD_CAST "start-time", BAD_CAST start);
 	}
 	xmlNewProp(result_node, BAD_CAST "end-time", BAD_CAST xccdf_result_get_end_time(result));
+	char *version = xccdf_result_get_version(result);
+        if (version != NULL)
+		xmlNewProp(result_node, BAD_CAST "version", BAD_CAST version);
 
 	/* Handle children */
 	xccdf_texts_to_dom(xccdf_result_get_remarks(result), result_node, "remark");
@@ -800,13 +807,6 @@ void xccdf_result_to_dom(struct xccdf_result *result, xmlNode *result_node, xmlD
 		xmlNode *prof_node = xmlNewTextChild(result_node, ns_xccdf, BAD_CAST "profile", NULL);
 		xmlNewProp(prof_node, BAD_CAST "idref", BAD_CAST profile);
 	}
-
-	struct xccdf_setvalue_iterator *setvalues = xccdf_result_get_setvalues(result);
-	while (xccdf_setvalue_iterator_has_more(setvalues)) {
-		struct xccdf_setvalue *setvalue = xccdf_setvalue_iterator_next(setvalues);
-		xccdf_setvalue_to_dom(setvalue, doc, result_node, version_info);
-	}
-	xccdf_setvalue_iterator_free(setvalues);
 
 	struct oscap_string_iterator *targets = xccdf_result_get_targets(result);
 	while (oscap_string_iterator_has_more(targets)) {
@@ -867,6 +867,13 @@ void xccdf_result_to_dom(struct xccdf_result *result, xmlNode *result_node, xmlD
 		xmlNewProp(platform_element, BAD_CAST "idref", BAD_CAST platform);
 	}
 	oscap_string_iterator_free(applicable_platforms);
+
+	struct xccdf_setvalue_iterator *setvalues = xccdf_result_get_setvalues(result);
+	while (xccdf_setvalue_iterator_has_more(setvalues)) {
+		struct xccdf_setvalue *setvalue = xccdf_setvalue_iterator_next(setvalues);
+		xccdf_setvalue_to_dom(setvalue, doc, result_node, version_info);
+	}
+	xccdf_setvalue_iterator_free(setvalues);
 
 	struct xccdf_rule_result_iterator *rule_results = xccdf_result_get_rule_results(result);
 	while (xccdf_rule_result_iterator_has_more(rule_results)) {

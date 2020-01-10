@@ -1,0 +1,24 @@
+From 754e5643b1f02d81a8fee55dccbb7f362971f316 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jan=20=C4=8Cern=C3=BD?= <jcerny@redhat.com>
+Date: Mon, 13 Apr 2015 10:01:36 +0200
+Subject: [PATCH] Fix possible double free
+
+---
+ src/OVAL/probes/probe/input_handler.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/OVAL/probes/probe/input_handler.c b/src/OVAL/probes/probe/input_handler.c
+index 6a245d2..f6b9dea 100644
+--- a/src/OVAL/probes/probe/input_handler.c
++++ b/src/OVAL/probes/probe/input_handler.c
+@@ -132,6 +132,7 @@ void *probe_input_handler(void *arg)
+ 					skip_flag = probe_obj_getattrval(probe_in, "skip_eval");
+ 	                                obj_mask  = probe_obj_getmask(probe_in);
+ 					SEXP_free(probe_in);
++					probe_in = NULL;
+ 
+ 					if (skip_flag != NULL) {
+ 						oval_syschar_collection_flag_t cobj_flag;
+-- 
+2.1.0
+

@@ -40,7 +40,7 @@ struct rds_report_request_index
 
 struct rds_report_request_index *rds_report_request_index_new(void)
 {
-	struct rds_report_request_index *ret = oscap_alloc(sizeof(struct rds_report_request_index));
+	struct rds_report_request_index *ret = oscap_calloc(1, sizeof(struct rds_report_request_index));
 	ret->id = NULL;
 
 	return ret;
@@ -48,9 +48,10 @@ struct rds_report_request_index *rds_report_request_index_new(void)
 
 void rds_report_request_index_free(struct rds_report_request_index *s)
 {
-	if (s->id != NULL)
+	if (s != NULL) {
 		oscap_free(s->id);
-	oscap_free(s);
+		oscap_free(s);
+	}
 }
 
 const char *rds_report_request_index_get_id(struct rds_report_request_index *s)
@@ -85,7 +86,7 @@ struct rds_asset_index
 
 struct rds_asset_index *rds_asset_index_new(void)
 {
-	struct rds_asset_index *ret = oscap_alloc(sizeof(struct rds_asset_index));
+	struct rds_asset_index *ret = oscap_calloc(1, sizeof(struct rds_asset_index));
 	ret->id = NULL;
 	ret->reports = oscap_list_new();
 
@@ -94,10 +95,11 @@ struct rds_asset_index *rds_asset_index_new(void)
 
 void rds_asset_index_free(struct rds_asset_index *s)
 {
-	oscap_list_free0(s->reports);
-	if (s->id != NULL)
+	if (s != NULL) {
+		oscap_list_free0(s->reports);
 		oscap_free(s->id);
-	oscap_free(s);
+		oscap_free(s);
+	}
 }
 
 const char *rds_asset_index_get_id(struct rds_asset_index *s)
@@ -142,7 +144,7 @@ struct rds_report_index
 
 struct rds_report_index* rds_report_index_new(void)
 {
-	struct rds_report_index *ret = oscap_alloc(sizeof(struct rds_report_index));
+	struct rds_report_index *ret = oscap_calloc(1, sizeof(struct rds_report_index));
 	ret->id = NULL;
 
 	return ret;
@@ -150,9 +152,10 @@ struct rds_report_index* rds_report_index_new(void)
 
 void rds_report_index_free(struct rds_report_index *s)
 {
-	if (s->id != NULL)
+	if (s != NULL) {
 		oscap_free(s->id);
-	oscap_free(s);
+		oscap_free(s);
+	}
 }
 
 const char *rds_report_index_get_id(struct rds_report_index *s)
@@ -198,7 +201,7 @@ struct rds_index
 
 struct rds_index *rds_index_new(void)
 {
-	struct rds_index *ret = oscap_alloc(sizeof(struct rds_index));
+	struct rds_index *ret = oscap_calloc(1, sizeof(struct rds_index));
 	ret->report_requests = oscap_list_new();
 	ret->assets = oscap_list_new();
 	ret->reports = oscap_list_new();
@@ -208,11 +211,12 @@ struct rds_index *rds_index_new(void)
 
 void rds_index_free(struct rds_index *s)
 {
-	oscap_list_free(s->report_requests, (oscap_destruct_func)rds_report_request_index_free);
-	oscap_list_free(s->assets, (oscap_destruct_func)rds_asset_index_free);
-	oscap_list_free(s->reports, (oscap_destruct_func)rds_report_index_free);
-
-	oscap_free(s);
+	if (s != NULL) {
+		oscap_list_free(s->report_requests, (oscap_destruct_func)rds_report_request_index_free);
+		oscap_list_free(s->assets, (oscap_destruct_func)rds_asset_index_free);
+		oscap_list_free(s->reports, (oscap_destruct_func)rds_report_index_free);
+		oscap_free(s);
+	}
 }
 
 static void rds_index_add_report_request(struct rds_index *s, struct rds_report_request_index *rr_index)

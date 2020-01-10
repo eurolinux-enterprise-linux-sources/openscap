@@ -2,13 +2,14 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           openscap
-Version:        1.0.8
-Release:        1%{?dist}
+Version:        1.0.10
+Release:        3%{?dist}
 Summary:        Set of open source libraries enabling integration of the SCAP line of standards
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.open-scap.org/
 Source0:        http://fedorahosted.org/releases/o/p/openscap/%{name}-%{version}.tar.gz
+Patch0:         bz998824-754e5643-Fix-possible-double-free.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  swig libxml2-devel libxslt-devel m4 perl-XML-Parser
 BuildRequires:  rpm-devel
@@ -51,20 +52,31 @@ BuildRequires:  python-devel
 The %{name}-python package contains the bindings so that %{name}
 libraries can be used by python.
 
+%package        scanner
+Summary:        OpenSCAP Scanner Tool (oscap)
+Group:          Applications/System
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       libcurl >= 7.12.0
+BuildRequires:  libcurl-devel >= 7.12.0
+
+%description    scanner
+The %{name}-scanner package contains oscap command-line tool. The oscap
+is configuration and vulnerability scanner, capable of performing
+compliance checking using SCAP content.
+
 %package        utils
-Summary:        Openscap utilities
+Summary:        OpenSCAP Utilities
 Group:          Applications/System
 Requires:       %{name} = %{version}-%{release}
-Requires:       libcurl >= 7.12.0
 Requires:       rpmdevtools rpm-build
-BuildRequires:  libcurl-devel >= 7.12.0
+Requires:       %{name}-scanner%{?_isa} = %{version}-%{release}
 Requires(post):  chkconfig
 Requires(preun): chkconfig initscripts
 
 %description    utils
-The %{name}-utils package contains oscap command-line tool. The oscap
-is configuration and vulnerability scanner, capable of performing
-compliance checking using SCAP content.
+The %{name}-utils package contains command-line tools build on top
+of OpenSCAP library. Historically, openscap-utils included oscap
+tool which is now separated to %{name}-scanner sub-package.
 
 %package        content
 Summary:        SCAP content
@@ -111,6 +123,7 @@ for developing applications that use %{name}-engine-sce.
 
 %prep
 %setup -q
+%patch0 -p1 -b .bz998824
 
 %build
 %ifarch sparc64
@@ -242,14 +255,20 @@ fi
 %{_libdir}/libopenscap_sce.so
 %{_includedir}/openscap/sce_engine_api.h
 
+%files scanner
+%{_mandir}/man8/oscap.8.gz
+%{_bindir}/oscap
+%{_sysconfdir}/bash_completion.d
+
 %files utils
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/sysconfig/oscap-scan
 %doc docs/oscap-scan.cron
 %{_initrddir}/oscap-scan
 %{_mandir}/man8/*
+%exclude %{_mandir}/man8/oscap.8.gz
 %{_bindir}/*
-%{_sysconfdir}/bash_completion.d
+%exclude %{_bindir}/oscap
 
 %files content
 %defattr(-,root,root,-)
@@ -266,6 +285,16 @@ fi
 %{_libdir}/libopenscap_sce.so.*
 
 %changelog
+* Wed Apr 15 2015 Šimon Lukašík <slukasik@redhat.com> - 1.0.10-3
+- fixed minor coverity defect
+
+* Mon Feb 16 2015 Šimon Lukašík <slukasik@redhat.com> - 1.0.10-2
+- introduce openscap-scanner sub-package: #1115114
+
+* Mon Feb 16 2015 Šimon Lukašík <slukasik@redhat.com> - 1.0.10-1
+- upgrade
+- This upstream release addresses: #1192428, #1036741, #998824, #1092013
+
 * Wed Mar 26 2014 Šimon Lukašík <slukasik@redhat.com> - 1.0.8-1
 - upgrade
 

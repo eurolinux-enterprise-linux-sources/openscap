@@ -403,7 +403,8 @@ xmlNode *oval_object_content_to_dom(struct oval_object_content *content, xmlDoc 
 			struct oval_entity *entity = oval_object_content_get_entity(content);
 			content_node = oval_entity_to_dom(entity, doc, parent);
 			oval_check_t check = oval_object_content_get_varCheck(content);
-			if (check != OVAL_CHECK_ALL)
+
+			if (check != OVAL_CHECK_ALL || xmlHasProp(content_node, BAD_CAST "var_ref"))
 				xmlNewProp(content_node, BAD_CAST "var_check", BAD_CAST oval_check_get_text(check));
 		}
 		break;

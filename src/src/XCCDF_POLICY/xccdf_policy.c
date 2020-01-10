@@ -196,6 +196,8 @@ char *xccdf_policy_get_readable_item_title(struct xccdf_policy *policy, struct x
 	struct oscap_text_iterator *title_it = xccdf_item_get_title(item);
 	char *unresolved = oscap_textlist_get_preferred_plaintext(title_it, preferred_lang);
 	oscap_text_iterator_free(title_it);
+	if (!unresolved)
+		return oscap_strdup("");
 	char *resolved = xccdf_policy_substitute(unresolved, policy);
 	oscap_free(unresolved);
 	return resolved;
@@ -207,6 +209,8 @@ char *xccdf_policy_get_readable_item_description(struct xccdf_policy *policy, st
 	struct oscap_text_iterator *description_it = xccdf_item_get_description(item);
 	struct oscap_text *unresolved_text = oscap_textlist_get_preferred_text(description_it, preferred_lang);
 	oscap_text_iterator_free(description_it);
+	if (!unresolved_text)
+		return oscap_strdup("");
 	const char *unresolved = oscap_text_get_text(unresolved_text);
 	/* Resolve <xccdf:sub> elements */
 	const char *resolved = xccdf_policy_substitute(unresolved, policy);
@@ -510,7 +514,7 @@ static struct oscap_list * xccdf_policy_check_get_value_bindings(struct xccdf_po
             if (r_value != NULL) {
                 selector = xccdf_refine_value_get_selector(r_value);
                 /* This refine value changes the value content */
-                if (xccdf_refine_value_get_oper(r_value) > 0) {
+                if ((int)xccdf_refine_value_get_oper(r_value) > 0) {
                     binding->operator = xccdf_refine_value_get_oper(r_value);
                 } else binding->operator = xccdf_value_get_oper(value);
 
@@ -823,6 +827,11 @@ static bool _xccdf_policy_cpe_check_cb(const char* sys, const char* href, const 
 		}
 
 		session = oval_agent_new_session(oval_model, prefixed_href);
+		if (session == NULL) {
+			oscap_seterr(OSCAP_EFAMILY_OSCAP, "Cannot create OVAL session for '%s' for CPE applicability checking", prefixed_href);
+			oscap_free(prefixed_href);
+			return false;
+		}
 		oscap_htable_add(model->cpe_oval_sessions, prefixed_href, session);
 	}
 	oscap_free(prefixed_href);
@@ -2160,9 +2169,9 @@ bool xccdf_policy_resolve(struct xccdf_policy * policy)
                 
             } else if (xccdf_item_get_type(item) == XCCDF_RULE) {
                 /* Perform all changes in rule */
-                if (xccdf_refine_rule_get_role(r_rule) > 0)
+                if ((int)xccdf_refine_rule_get_role(r_rule) > 0)
                     xccdf_rule_set_role((struct xccdf_rule *) item, xccdf_refine_rule_get_role(r_rule));
-                if (!xccdf_refine_rule_get_severity(r_rule) > 0)
+                if ((int)xccdf_refine_rule_get_severity(r_rule) > 0)
                     xccdf_rule_set_severity((struct xccdf_rule *) item, xccdf_refine_rule_get_severity(r_rule));
 
             } else {}/* TODO oscap_err ? */;
@@ -2333,17 +2342,16 @@ const char *xccdf_policy_get_value_of_item(struct xccdf_policy * policy, struct 
 	if (profile != NULL) {
 		/* Get set_value for this item */
 		struct xccdf_setvalue *s_value = NULL;
+		struct xccdf_setvalue *last_s_value = NULL;
 		struct xccdf_setvalue_iterator *s_value_it = xccdf_profile_get_setvalues(profile);
 		while (xccdf_setvalue_iterator_has_more(s_value_it)) {
 			s_value = xccdf_setvalue_iterator_next(s_value_it);
-			if (!strcmp(xccdf_setvalue_get_item(s_value), xccdf_value_get_id((struct xccdf_value *) item)))
-				break;
-			else
-				s_value = NULL;
+			if (strcmp(xccdf_setvalue_get_item(s_value), xccdf_value_get_id((struct xccdf_value *) item)) == 0)
+				last_s_value = s_value;
 		}
 		xccdf_setvalue_iterator_free(s_value_it);
-		if (s_value != NULL)
-			return xccdf_setvalue_get_value(s_value);
+		if (last_s_value != NULL)
+			return xccdf_setvalue_get_value(last_s_value);
 
 		/* We don't have set-value in profile, look for refine-value */
 		struct xccdf_refine_value_iterator *r_value_it = xccdf_profile_get_refine_values(profile);
@@ -2393,9 +2401,9 @@ struct xccdf_item * xccdf_policy_tailor_item(struct xccdf_policy * policy, struc
             if (r_rule == NULL) return item;
 
             new_item = (struct xccdf_item *) xccdf_rule_clone((struct xccdf_rule *) item);
-            if (xccdf_refine_rule_get_role(r_rule) > 0)
+            if ((int)xccdf_refine_rule_get_role(r_rule) > 0)
                 xccdf_rule_set_role((struct xccdf_rule *) new_item, xccdf_refine_rule_get_role(r_rule));
-            if (xccdf_refine_rule_get_severity(r_rule) > 0)
+            if ((int)xccdf_refine_rule_get_severity(r_rule) > 0)
                 xccdf_rule_set_severity((struct xccdf_rule *) new_item, xccdf_refine_rule_get_severity(r_rule));
             if (xccdf_refine_rule_weight_defined(r_rule))
                 xccdf_rule_set_weight((struct xccdf_rule *) new_item, xccdf_refine_rule_get_weight(r_rule));

@@ -5,7 +5,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([openscap], [1.0.8], [open-scap-list@redhat.com])
+AC_INIT([openscap], [1.0.10], [open-scap-list@redhat.com])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
@@ -39,15 +39,15 @@ AC_PROG_SWIG([])
 # See http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91 for details
 
 ## increment if the interface has additions, changes, removals.
-LT_CURRENT=10
+LT_CURRENT=11
 
 ## increment any time the source changes; set 0 to if you increment CURRENT
-LT_REVISION=3
+LT_REVISION=1
 
 ## increment if any interfaces have been added; set to 0
 ## if any interfaces have been changed or removed. removal has
 ## precedence over adding, so set to 0 if both happened.
-LT_AGE=2
+LT_AGE=3
 
 LT_CURRENT_MINUS_AGE=`expr $LT_CURRENT - $LT_AGE`
 
@@ -331,6 +331,8 @@ PKG_CHECK_MODULES([xslt], [libxslt >= 1.1],[],
 
 PKG_CHECK_MODULES([exslt], [libexslt >= 0.8],[],
 			  AC_MSG_FAILURE([libexslt devel support is missing]))
+
+AC_CHECK_HEADER(pcre.h, , [AC_MSG_ERROR([pcre.h is missing] )])
 
 crapi_CFLAGS=""
 crapi_LIBS=""

@@ -75,7 +75,7 @@ static struct oscap_module XCCDF_RESOLVE = {
     .usage = "[options] -o output-xccdf.xml input-xccdf.xml",
     .help =
         "Options:\n"
-        "   --force or -f\r\t\t\t\t - Force resolving XCCDF document even if it is aleready marked as resolved.",
+        "   --force\r\t\t\t\t - Force resolving XCCDF document even if it is aleready marked as resolved.",
     .opt_parser = getopt_xccdf,
     .func = app_xccdf_resolve
 };
@@ -683,7 +683,7 @@ int app_xccdf_resolve(const struct oscap_action *action)
 	else {
 		if (!xccdf_benchmark_resolve(bench))
 			fprintf(stderr, "Benchmark resolving failure (probably a dependency loop)!\n");
-
+		else
 		{
 			if (xccdf_benchmark_export(bench, action->f_results)) {
 				ret = OSCAP_OK;

@@ -362,6 +362,10 @@ int oval_test_parse_tag(xmlTextReaderPtr reader, struct oval_parser_context *con
 	struct oval_definition_model *model = context->definition_model;
 
 	char *id = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "id");
+        if (id == NULL) {
+		oscap_seterr(OSCAP_EFAMILY_OVAL, "Found test element without id attribute.");
+		return -1;
+	}
 	struct oval_test *test = oval_definition_model_get_new_test(model, id);
 
 	oval_subtype_t subtype = oval_subtype_parse(reader);
@@ -398,7 +402,9 @@ int oval_test_parse_tag(xmlTextReaderPtr reader, struct oval_parser_context *con
 	oval_test_set_deprecated(test, deprecated);
 
 	version = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "version");
-	oval_test_set_version(test, atoi(version));
+	if (version != NULL) {
+		oval_test_set_version(test, atoi(version));
+	}
 
 
 	ret = oval_parser_parse_tag(reader, context, &_oval_test_parse_tag, test);

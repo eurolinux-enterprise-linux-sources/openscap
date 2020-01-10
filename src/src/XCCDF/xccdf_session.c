@@ -135,6 +135,7 @@ void xccdf_session_free(struct xccdf_session *session)
 		return;
 	oscap_free(session->xccdf.profile_id);
 	oscap_free(session->export.xccdf_file);
+	oscap_free(session->export.report_file);
 	oscap_free(session->export.arf_file);
 	_xccdf_session_free_oval_result_files(session);
 	xccdf_session_unload_check_engine_plugins(session);
@@ -912,6 +913,9 @@ int xccdf_session_evaluate(struct xccdf_session *session)
 	struct oscap_text *title = oscap_text_new();
 	oscap_text_set_text(title, "OSCAP Scan Result");
 	xccdf_result_add_title(session->xccdf.result, title);
+	struct xccdf_benchmark *benchmark = xccdf_policy_get_benchmark(policy);
+	xccdf_result_set_version(session->xccdf.result,
+			benchmark != NULL ? xccdf_benchmark_get_version(benchmark) : NULL);
 
 	xccdf_result_fill_sysinfo(session->xccdf.result);
 
@@ -988,6 +992,11 @@ int xccdf_session_export_xccdf(struct xccdf_session *session)
 
 	/* Export results */
 	if (session->export.xccdf_file != NULL) {
+		if (session->xccdf.result == NULL) {
+			// Attempt to export session before evaluation
+			oscap_seterr(OSCAP_EFAMILY_OSCAP, "No XCCDF results to export.");
+			return 1;
+		}
 		xccdf_benchmark_add_result(xccdf_policy_model_get_benchmark(session->xccdf.policy_model),
 				xccdf_result_clone(session->xccdf.result));
 		xccdf_benchmark_export(xccdf_policy_model_get_benchmark(session->xccdf.policy_model), session->export.xccdf_file);
@@ -1316,8 +1325,11 @@ int xccdf_session_export_arf(struct xccdf_session *session)
 			ds_sds_compose_from_xccdf(session->filename, sds_path);
 		}
 
-		ds_rds_create(sds_path, session->export.xccdf_file, (const char**)(session->oval.result_files), session->export.arf_file);
+		int res = ds_rds_create(sds_path, session->export.xccdf_file, (const char**)(session->oval.result_files), session->export.arf_file);
 		free(sds_path);
+		if (res != 0) {
+			return res;
+		}
 
 		if (session->full_validation) {
 			if (oscap_validate_document(session->export.arf_file, OSCAP_DOCUMENT_ARF, "1.1", _reporter, NULL)) {
@@ -1399,6 +1411,9 @@ int xccdf_session_remediate(struct xccdf_session *session)
 	xccdf_policy_model_unregister_engines(session->xccdf.policy_model, oval_sysname);
 	if ((res = xccdf_session_load_oval(session)) != 0)
 		return res;
+	struct xccdf_benchmark *benchmark = xccdf_policy_get_benchmark(xccdf_session_get_xccdf_policy(session));
+	xccdf_result_set_version(session->xccdf.result,
+			benchmark != NULL ? xccdf_benchmark_get_version(benchmark) : NULL);
 	xccdf_result_fill_sysinfo(session->xccdf.result);
 	return xccdf_policy_remediate(xccdf_session_get_xccdf_policy(session), session->xccdf.result);
 }

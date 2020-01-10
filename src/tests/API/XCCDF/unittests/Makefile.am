@@ -15,7 +15,7 @@ AM_CPPFLAGS =   -I$(top_srcdir)/tests/include \
 
 LDADD = $(top_builddir)/src/libopenscap_testing.la @pcre_LIBS@
 
-EXTRA_DIST = $(top_srcdir)/tests/test_common.sh
+EXTRA_DIST = $(top_srcdir)/tests/test_common.sh \
 	     $(top_srcdir)/tests/assume.h
 
 check_DATA = not_executable
@@ -54,6 +54,9 @@ EXTRA_DIST += \
 	test_deriving_xccdf_result_from_oval_multicheck.sh \
 	test_deriving_xccdf_result_from_oval_multicheck.xccdf.xml \
 	test_deriving_xccdf_result_from_oval_pass.oval.xml \
+	test_empty_variable.oval.xml \
+	test_empty_variable.sh \
+	test_empty_variable.xccdf.xml \
 	test_fix_filtering.xccdf.xml \
 	test_fix_filtering.sh \
 	test_inherit_selector.oval.xml \
