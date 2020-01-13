@@ -1,0 +1,112 @@
+diff -Naur openscap-1.2.16/cpe/openscap-cpe-dict.xml openscap-1.2.16p/cpe/openscap-cpe-dict.xml
+--- openscap-1.2.16/cpe/openscap-cpe-dict.xml	2017-11-13 13:27:24.589459823 +0000
++++ openscap-1.2.16p/cpe/openscap-cpe-dict.xml	2018-09-13 09:16:50.870295283 +0000
+@@ -53,6 +53,18 @@
+             <title xml:lang="en-us">Scientific Linux 7</title>
+             <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5" href="openscap-cpe-oval.xml">oval:org.open-scap.cpe.scientific:def:7</check>
+       </cpe-item>
++      <cpe-item name="cpe:/o:eurolinux:eurolinux:5">
++            <title xml:lang="en-us">EuroLinux 5</title>
++            <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5" href="openscap-cpe-oval.xml">oval:org.open-scap.cpe.eurolinux:def:5</check>
++      </cpe-item>
++      <cpe-item name="cpe:/o:eurolinux:eurolinux:6">
++            <title xml:lang="en-us">EuroLinux 6</title>
++            <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5" href="openscap-cpe-oval.xml">oval:org.open-scap.cpe.eurolinux:def:6</check>
++      </cpe-item>
++      <cpe-item name="cpe:/o:eurolinux:eurolinux:7">
++            <title xml:lang="en-us">EuroLinux 7</title>
++            <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5" href="openscap-cpe-oval.xml">oval:org.open-scap.cpe.eurolinux:def:7</check>
++      </cpe-item>
+       <cpe-item name="cpe:/o:fedoraproject:fedora:16">
+             <title xml:lang="en-us">Fedora 16</title>
+             <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5" href="openscap-cpe-oval.xml">oval:org.open-scap.cpe.fedora:def:16</check>
+diff -Naur openscap-1.2.16/cpe/openscap-cpe-oval.xml openscap-1.2.16p/cpe/openscap-cpe-oval.xml
+--- openscap-1.2.16/cpe/openscap-cpe-oval.xml	2017-11-13 13:27:24.589459823 +0000
++++ openscap-1.2.16p/cpe/openscap-cpe-oval.xml	2018-09-13 09:16:13.816303645 +0000
+@@ -185,6 +185,45 @@
+                         <criterion comment="Scientific Linux 7 is installed" test_ref="oval:org.open-scap.cpe.scientific:tst:7"/>
+                   </criteria>
+             </definition>
++            <definition class="inventory" id="oval:org.open-scap.cpe.eurolinux:def:5" version="1">
++                  <metadata>
++                        <title>EuroLinux 5</title>
++                        <affected family="unix">
++                              <platform>EuroLinux 5</platform>
++                        </affected>
++                        <reference ref_id="cpe:/o:eurolinux:eurolinux:5" source="CPE"/>
++                        <description>The operating system installed on the system is EuroLinux 5</description>
++                  </metadata>
++                  <criteria>
++                        <criterion comment="EuroLinux 5 is installed" test_ref="oval:org.open-scap.cpe.eurolinux:tst:5"/>
++                  </criteria>
++            </definition>
++            <definition class="inventory" id="oval:org.open-scap.cpe.eurolinux:def:6" version="1">
++                  <metadata>
++                        <title>EuroLinux 6</title>
++                        <affected family="unix">
++                              <platform>EuroLinux 6</platform>
++                        </affected>
++                        <reference ref_id="cpe:/o:eurolinux:eurolinux:6" source="CPE"/>
++                        <description>The operating system installed on the system is EuroLinux 6</description>
++                  </metadata>
++                  <criteria>
++                        <criterion comment="EuroLinux 6 is installed" test_ref="oval:org.open-scap.cpe.eurolinux:tst:6"/>
++                  </criteria>
++            </definition>
++            <definition class="inventory" id="oval:org.open-scap.cpe.eurolinux:def:7" version="1">
++                  <metadata>
++                        <title>EuroLinux 7</title>
++                        <affected family="unix">
++                              <platform>EuroLinux 7</platform>
++                        </affected>
++                        <reference ref_id="cpe:/o:eurolinux:eurolinux:7" source="CPE"/>
++                        <description>The operating system installed on the system is EuroLinux 7</description>
++                  </metadata>
++                  <criteria>
++                        <criterion comment="EuroLinux 7 is installed" test_ref="oval:org.open-scap.cpe.eurolinux:tst:7"/>
++                  </criteria>
++            </definition>
+             <definition class="inventory" id="oval:org.open-scap.cpe.fedora:def:16" version="1">
+                   <metadata>
+                         <title>Fedora 16</title>
+@@ -624,6 +663,21 @@
+                   <object object_ref="oval:org.open-scap.cpe.redhat-release:obj:3"/>
+                   <state state_ref="oval:org.open-scap.cpe.scientific:ste:7"/>
+             </rpmverifyfile_test>
++            <rpmverifyfile_test check_existence="at_least_one_exists" id="oval:org.open-scap.cpe.eurolinux:tst:5" version="1" check="at least one" comment="el-release is version 5"
++                  xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
++                  <object object_ref="oval:org.open-scap.cpe.redhat-release:obj:3"/>
++                  <state state_ref="oval:org.open-scap.cpe.eurolinux:ste:5"/>
++            </rpmverifyfile_test>
++            <rpmverifyfile_test check_existence="at_least_one_exists" id="oval:org.open-scap.cpe.eurolinux:tst:6" version="1" check="at least one" comment="el-release is version 6"
++                  xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
++                  <object object_ref="oval:org.open-scap.cpe.redhat-release:obj:3"/>
++                  <state state_ref="oval:org.open-scap.cpe.eurolinux:ste:6"/>
++            </rpmverifyfile_test>
++            <rpmverifyfile_test check_existence="at_least_one_exists" id="oval:org.open-scap.cpe.eurolinux:tst:7" version="1" check="at least one" comment="el-release is version 7"
++                  xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
++                  <object object_ref="oval:org.open-scap.cpe.redhat-release:obj:3"/>
++                  <state state_ref="oval:org.open-scap.cpe.eurolinux:ste:7"/>
++            </rpmverifyfile_test>
+             <rpminfo_test check_existence="at_least_one_exists" id="oval:org.open-scap.cpe.fedora:tst:16" version="1" check="at least one" comment="fedora-release is version Fedora 16"
+                   xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
+                   <object object_ref="oval:org.open-scap.cpe.fedora-release:obj:2"/>
+@@ -889,6 +943,18 @@
+                   <name operation="pattern match">^sl-release</name>
+                   <version operation="pattern match">^7</version>
+             </rpmverifyfile_state>
++            <rpmverifyfile_state id="oval:org.open-scap.cpe.eurolinux:ste:5" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
++                  <name operation="pattern match">^el-release</name>
++                  <version operation="pattern match">^5</version>
++            </rpmverifyfile_state>
++            <rpmverifyfile_state id="oval:org.open-scap.cpe.eurolinux:ste:6" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
++                  <name operation="pattern match">^el-release</name>
++                  <version operation="pattern match">^6</version>
++            </rpmverifyfile_state>
++            <rpmverifyfile_state id="oval:org.open-scap.cpe.eurolinux:ste:7" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
++                  <name operation="pattern match">^el-release</name>
++                  <version operation="pattern match">^7</version>
++            </rpmverifyfile_state>
+             <rpminfo_state id="oval:org.open-scap.cpe.ol:ste:5" version="1" xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux">
+                   <name operation="pattern match">^oraclelinux-release</name>
+                   <version operation="pattern match">^5</version>

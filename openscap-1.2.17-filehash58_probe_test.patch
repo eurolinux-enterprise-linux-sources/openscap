@@ -1,0 +1,131 @@
+diff --git a/tests/probes/filehash58/check_filehash_simple.xml b/tests/probes/filehash58/check_filehash_simple.xml
+new file mode 100644
+index 000000000..2f6fa877e
+--- /dev/null
++++ b/tests/probes/filehash58/check_filehash_simple.xml
+@@ -0,0 +1,40 @@
++<ns0:oval_definitions xmlns:ns0="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:ns2="http://oval.mitre.org/XMLSchema/oval-common-5" xmlns:ns3="http://oval.mitre.org/XMLSchema/oval-definitions-5#independent" xmlns:ns4="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" xmlns:ns5="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#independent independent-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#unix unix-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#linux linux-definitions-schema.xsd">
++  <ns0:generator>
++    <ns2:product_name>combine_ovals.py from SCAP Security Guide</ns2:product_name>
++    <ns2:product_version>ssg: [0, 1, 40], python: 3.6.5</ns2:product_version>
++    <ns2:schema_version>5.11</ns2:schema_version>
++    <ns2:timestamp>2018-07-20T09:33:24</ns2:timestamp>
++  </ns0:generator>
++  <ns0:definitions>
++    <ns0:definition class="compliance" id="oval:ssg-oval_test_has_hash:def:1" version="1">
++      <ns0:metadata>
++        <ns0:title>Verify that hash of a file that should contain just "foo\n".</ns0:title>
++        <ns0:affected family="unix">
++          <ns0:platform>Red Hat Enterprise Linux 7</ns0:platform>
++        </ns0:affected>
++        <ns0:description>This description in OVALs is mandatory, but the most important is to have description in XCCDF.</ns0:description>
++      <reference ref_id="oval_test_has_hash" source="ssg" /></ns0:metadata>
++      <ns0:criteria>
++        <ns0:criterion comment="Check file hash of /oval-test" test_ref="oval:ssg-oval_test_hash_matches:tst:1" />
++      </ns0:criteria>
++    </ns0:definition>
++  </ns0:definitions>
++  <ns0:tests>
++    <ns3:filehash58_test check="all" comment="-" id="oval:ssg-oval_test_hash_matches:tst:1" version="1">
++      <ns3:object object_ref="oval:ssg-concerned_file:obj:1" />
++      <ns3:state state_ref="oval:ssg-hash_value:ste:1" />
++    </ns3:filehash58_test>
++  </ns0:tests>
++  <ns0:objects>
++    <ns3:filehash58_object id="oval:ssg-concerned_file:obj:1" version="1">
++      <ns3:filepath>/oval-test</ns3:filepath>
++      <ns3:hash_type>SHA-1</ns3:hash_type>
++    </ns3:filehash58_object>
++  </ns0:objects>
++  <ns0:states>
++    <ns3:filehash58_state id="oval:ssg-hash_value:ste:1" version="1">
++      <ns3:hash_type>SHA-1</ns3:hash_type>
++      <ns3:hash>f1d2d2f924e986ac86fdf7b36c94bcdf32beec15</ns3:hash>
++    </ns3:filehash58_state>
++  </ns0:states>
++</ns0:oval_definitions>
+diff -r -U3 op0/tests/probes/filehash58/Makefile.in op1/tests/probes/filehash58/Makefile.in
+--- op0/tests/probes/filehash58/Makefile.in	2018-08-14 10:45:06.065438575 +0200
++++ op1/tests/probes/filehash58/Makefile.in	2018-08-14 10:53:57.248937836 +0200
+@@ -1106,7 +1106,7 @@
+ 		$(top_builddir)/run
+ 
+ TESTS = test_probes_filehash58.sh
+-EXTRA_DIST = test_probes_filehash58.sh test_probes_filehash58.xml.sh
++EXTRA_DIST = test_probes_filehash58.sh test_probes_filehash58.xml.sh check_filehash_simple.xml
+ all: all-am
+ 
+ .SUFFIXES:
+diff -r -U3 op0/tests/probes/filehash58/test_probes_filehash58.sh op1/tests/probes/filehash58/test_probes_filehash58.sh
+--- op0/tests/probes/filehash58/test_probes_filehash58.sh	2018-08-14 10:36:09.914512125 +0200
++++ op1/tests/probes/filehash58/test_probes_filehash58.sh	2018-08-14 10:53:32.366536647 +0200
+@@ -38,15 +38,69 @@
+ 	ret_val=1
+     fi
+ 
++    # The file was created as a side-effect of test_probes_filehash58.xml.sh
+     [ $ret_val -eq 0 ] && rm -f /tmp/test_probes_filehash58.tmp
+ 
+     return $ret_val
+ }
+ 
++
++# $1: The chroot directory
++function test_probes_filehash58_chroot {
++
++    probecheck "filehash58" || return 255
++    require "sha1sum" || return 255
++
++    local ret_val=0;
++    local DF="$srcdir/check_filehash_simple.xml"
++
++    absolute_probe_root=$(cd "$1" && pwd)
++
++    # oscap-chroot is not readily available during test run, so we use oscap + env var setting.
++    result_keyword=$(OSCAP_PROBE_ROOT="$absolute_probe_root" "$OSCAP" oval eval "$DF" | grep oval_test_has_hash | grep -o '\w*$')
++    
++    [ "$result_keyword" == "$2" ] && return 0
++    # vvv This is more a test error than a failure or "warning" vvv
++    [ "$result_keyword" == "" ] && return 2
++    return 1
++}
++
++
++function test_probes_filehash58_chroot_pass {
++	local ret_val=0
++
++	mkdir -p pass
++	echo foo > pass/oval-test
++
++	test_probes_filehash58_chroot pass true
++	ret_val=$?
++	rm -rf pass
++
++	return $ret_val
++}
++
++
++function test_probes_filehash58_chroot_fail {
++	local ret_val=0
++
++	mkdir -p fail
++	echo bar > fail/oval-test
++
++	test_probes_filehash58_chroot fail false
++	ret_val=$?
++	rm -rf fail
++
++	return $ret_val
++}
++
+ # Testing.
+ 
+ test_init "test_probes_filehash58.log"
+ 
+ test_run "test_probes_filehash58" test_probes_filehash58
+ 
++test_run "test_probes_filehash58_chroot_fail" test_probes_filehash58_chroot_fail
++
++test_run "test_probes_filehash58_chroot_pass" test_probes_filehash58_chroot_pass
++
+ test_exit
